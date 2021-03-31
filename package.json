@@ -10,10 +10,12 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:LTC.helloWorld",
     "onCommand:LTC.askQuestion",
     "onCommand:LTC.refresh",
-    "onView:LTC-sidebar"
+    "onCommand:LTC.addMessage",
+    "onView:LTC-sidebar",
+    "onWebviewPanel:devices",
+    "onCommand:LTC.start"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -39,10 +41,6 @@
     },
     "commands": [
       {
-        "command": "LTC.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "LTC.askQuestion",
         "category": "LTC",
         "title": "Ask Question"
@@ -51,7 +49,17 @@
         "command": "LTC.refresh",
         "category": "LTC",
         "title": "Refresh"
-      }
+      },
+      {
+        "command": "LTC.addMessage",
+        "category": "LTC",
+        "title": "Add message"
+      },
+      {
+				"command": "LTC.start",
+				"title": "Start devicesPanel",
+				"category": "LTC"
+			}
     ]
   },
   "scripts": {
