@@ -6,16 +6,13 @@ import { TesterPanel } from "./TesterPanel";
 import { Alma } from "./alma";
 
 export function activate(context: vscode.ExtensionContext) {
+  vscode.commands.executeCommand('LTC.start');
   const sidebarProvider = new SidebarProvider(context.extensionUri);
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider("LTC-sidebar", sidebarProvider),
   );
 
-  context.subscriptions.push(
-		vscode.commands.registerCommand("LTC.start", () => {
-			TesterPanel.createOrShow(context.extensionUri);
-		})
-	);
+  //vscode.workspace.getConfiguration("editor.suggest.showConstants").update("editor.suggest.showConstants", true, false);
 
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.addMessage", () => {
@@ -41,6 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
       await vscode.commands.executeCommand(
         "workbench.view.extension.LTC-sidebar-view"
       );
+      
       setTimeout(() => {
         vscode.commands.executeCommand(
           "workbench.action.webview.openDeveloperTools"
@@ -65,6 +63,12 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
+  context.subscriptions.push(
+    vscode.commands.registerCommand("LTC.start", () => {
+      vscode.window.
+    }
+  )
+
   if (vscode.window.registerWebviewPanelSerializer) {
 		// Make sure we register a serializer in activation event
 		vscode.window.registerWebviewPanelSerializer(TesterPanel.viewType, {
@@ -76,6 +80,8 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		});
 	}
+
+  
 }
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
