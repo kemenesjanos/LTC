@@ -17,15 +17,12 @@
     })
 
     let jsonData = {
-        "DescriptionTabData":
-            {
             "name": "Kezd",
             "picture": "",
             "shortDescription": "sk",
             "description": "sf",
             "example": "sfdv"
             }
-}
 
         window.addEventListener("message", (event) => {
             const message = event.data;
@@ -33,18 +30,18 @@
                 case "test-message":
                     test = message.value
                     return;
-                case 'add-message':
+                case "add-message":
 
                     jsonData = JSON.parse(message.value);
 
 				    return;
-                case 'update':
-                    const text = message.text;
+                case "update":
+                    const value = message.value;
                     // Update our webview's content
-                    jsonData = JSON.parse(text);
+                    jsonData = JSON.parse(value);
                     // Then persist state information.
                     // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
-                    tsvscode.setState({ text });
+                    tsvscode.setState({ value });
 
                     return;
             }
@@ -77,4 +74,4 @@ almaaaaaaaaaa
 
 <div/><div/><div/>
 
-<DescriptionTab bind:data={jsonData.DescriptionTabData} on:message={handleMessage} />
+<DescriptionTab bind:data={jsonData} on:message={handleMessage} />

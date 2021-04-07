@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { getNonce } from './getNonce';
 import { DescriptionTabData } from './Models/descriptionTabData';
 
-
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
 		// Enable javascript in the webview
@@ -27,6 +26,11 @@ export class TesterPanel {
 	public readonly _panel: vscode.WebviewPanel;
 	private readonly _extensionUri: vscode.Uri;
 	private _disposables: vscode.Disposable[] = [];
+
+
+	//////////////////////////////////////////////////////////////////////////////
+	private _model: DescriptionTabData = new DescriptionTabData();
+	//////////////////////////////////////////////////////////////////////////////
 
 	public static createOrShow(extensionUri: vscode.Uri) {
 		const column = vscode.window.activeTextEditor
@@ -87,9 +91,11 @@ export class TesterPanel {
 						vscode.window.showInformationMessage("átjött");
 						panel.webview.postMessage({
 							command: "add-message",
-        					value: JSON.stringify( new DescriptionTabData()),
+        					value: JSON.stringify(this._model),
 						});
 						return;
+					case 'update':
+						this.updateDocument(message.value);
 				}
 			},
 			null,
@@ -165,5 +171,16 @@ export class TesterPanel {
 			</body>
       <script src="${scriptUri}" nonce="${nonce}">
 			</html>`;
+	}
+
+	private updateDocument(json: string) {
+
+		const dtd = JSON.parse(json);
+		if(dtd===DescriptionTabData){
+			this._model = dtd;
+		}
+		else{
+			throw new Error('json cannot be parsed');
+		}
 	}
 }
