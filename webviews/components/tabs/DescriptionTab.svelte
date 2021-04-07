@@ -4,15 +4,11 @@
     const dispatch = createEventDispatcher();
     
     function dataUpdated() {
-        tsvscode.postMessage(
-            {
-                //Todo: implement
-                command: 'update'
-            }
-        )
+        dispatch('message', {
+		"type" : "update"
+	});
     }
 </script>
-
     <div>
         <div>Name: <input type="text" bind:value={data.name} on:input={dataUpdated}/></div>
         <div>Picture: <input type="file" accept="image/png, image/jpeg" bind:value={data.picture} on:input={dataUpdated}/></div>

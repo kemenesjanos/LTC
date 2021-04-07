@@ -4,8 +4,12 @@ import * as vscode from "vscode";
 import { SidebarProvider } from "./SidebarProvider";
 import { TesterPanel } from "./TesterPanel";
 import { Alma } from "./alma";
+import {DescriptionTabData} from "./Models/descriptionTabData";
+
+const model = new DescriptionTabData();
 
 export function activate(context: vscode.ExtensionContext) {
+
   vscode.commands.executeCommand('LTC.start');
   const sidebarProvider = new SidebarProvider(context.extensionUri);
   context.subscriptions.push(
@@ -65,9 +69,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.start", () => {
-      TesterPanel.createOrShow(context.extensionUri);
-    })
-  );
+      TesterPanel.createOrShow(context.extensionUri, model);
+    }
+  ));
 
   if (vscode.window.registerWebviewPanelSerializer) {
 		// Make sure we register a serializer in activation event
@@ -81,6 +85,18 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	}
 
+  setTimeout(() => {
+    TesterPanel.currentPanel?._panel.webview.onDidReceiveMessage(
+      message => {
+        switch (message.command) {
+          case 'update':
+            const dtd = JSON.parse(message.value);
+            Object.assign(model,dtd);
+        }
+      },
+      null,
+    );
+  }, 1000);
   
 }
 

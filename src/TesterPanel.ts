@@ -29,10 +29,11 @@ export class TesterPanel {
 
 
 	//////////////////////////////////////////////////////////////////////////////
-	private _model: DescriptionTabData = new DescriptionTabData();
+	public model: DescriptionTabData = new DescriptionTabData();
 	//////////////////////////////////////////////////////////////////////////////
 
-	public static createOrShow(extensionUri: vscode.Uri) {
+	public static createOrShow(extensionUri: vscode.Uri, model: DescriptionTabData) {
+
 		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
 			: undefined;
@@ -52,6 +53,9 @@ export class TesterPanel {
 		);
 
 		TesterPanel.currentPanel = new TesterPanel(panel, extensionUri);
+
+		TesterPanel.currentPanel.model = model;
+
 	}
 
 	public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -88,13 +92,13 @@ export class TesterPanel {
 						vscode.window.showErrorMessage(message.value);
 						return;
 					case 'init-view':
-						vscode.window.showInformationMessage("átjött");
+						//always run if the panel is in focus
 						panel.webview.postMessage({
 							command: "add-message",
-        					value: JSON.stringify(this._model),
+        					value: JSON.stringify(this.model),
 						});
 						return;
-					case 'update':
+					case 'update':						
 						this.updateDocument(message.value);
 				}
 			},
@@ -119,12 +123,8 @@ export class TesterPanel {
 
 	private _update() {
 		const webview = this._panel.webview;
-        this._updateForCat(webview);
+        this._panel.webview.html = this._getHtmlForWebview(webview);
 
-	}
-
-	private _updateForCat(webview: vscode.Webview) {
-		this._panel.webview.html = this._getHtmlForWebview(webview);
 	}
 
 	private _getHtmlForWebview(webview: vscode.Webview) {
@@ -174,13 +174,7 @@ export class TesterPanel {
 	}
 
 	private updateDocument(json: string) {
-
 		const dtd = JSON.parse(json);
-		if(dtd===DescriptionTabData){
-			this._model = dtd;
-		}
-		else{
-			throw new Error('json cannot be parsed');
-		}
+		Object.assign(this.model,dtd);
 	}
 }

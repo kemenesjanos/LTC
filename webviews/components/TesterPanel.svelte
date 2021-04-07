@@ -49,11 +49,11 @@
     function pushDataUpdate() {
 		tsvscode.postMessage({
 			command: 'update',
-			value: jsonData
+			value:  JSON.stringify(jsonData)
 		});
 	}
 
-    function handleMessage(event: { detail: { type: any; }; }) {
+    function handleMessage(event: any) {
 	switch (event.detail.type) {
 		case "update":
 			pushDataUpdate();
