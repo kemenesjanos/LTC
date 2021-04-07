@@ -65,9 +65,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.start", () => {
-      vscode.window.
-    }
-  )
+      TesterPanel.createOrShow(context.extensionUri);
+    })
+  );
 
   if (vscode.window.registerWebviewPanelSerializer) {
 		// Make sure we register a serializer in activation event
