@@ -1,15 +1,15 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import Sidebar from "./Sidebar.svelte";
-    import DescriptionTab from "./tabs/DescriptionTab.svelte"
+    import DescriptionTab from "./tabs/DescriptionTab.svelte";
     let test = "w";
+    let loaded = false;
 
     //it is called when the svelte is ready
     onMount(() => {
 
         tsvscode.postMessage(
             {
-                //Todo: implement this
                 command: 'init-view',
                 value: null
             }
@@ -17,11 +17,12 @@
     })
 
     let jsonData = {
-            "name": "Kezd",
-            "picture": "",
-            "shortDescription": "sk",
-            "description": "sf",
-            "example": "sfdv"
+        "descriptionTabData":{}
+            // "name": "",
+             //"picture":""
+            // "shortDescription": "",
+            // "description": "",
+            // "example": ""
             }
 
         window.addEventListener("message", (event) => {
@@ -30,12 +31,12 @@
                 case "test-message":
                     test = message.value
                     return;
-                case "add-message":
-
-                    jsonData = JSON.parse(message.value);
-
+                case "init-message":
+                    jsonData=JSON.parse(message.value);
+                    
+                    loaded = true;
 				    return;
-                case "update":
+                /* case "update":
                     const value = message.value;
                     // Update our webview's content
                     jsonData = JSON.parse(value);
@@ -43,20 +44,23 @@
                     // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
                     tsvscode.setState({ value });
 
-                    return;
+                    return; */
             }
         })
-    function pushDataUpdate() {
-		tsvscode.postMessage({
-			command: 'update',
-			value:  JSON.stringify(jsonData)
-		});
-	}
 
     function handleMessage(event: any) {
 	switch (event.detail.type) {
-		case "update":
-			pushDataUpdate();
+		case "update-descriptionTab":
+            tsvscode.postMessage({
+                command: 'update-descriptionTab',
+                value:  JSON.stringify(jsonData.descriptionTabData)
+            });
+			break;
+        case "update":
+            tsvscode.postMessage({
+                command: 'update',
+                value:  JSON.stringify(jsonData)
+            });
 			break;
 		default:
 			break;
@@ -74,4 +78,9 @@ almaaaaaaaaaa
 
 <div/><div/><div/>
 
-<DescriptionTab bind:data={jsonData} on:message={handleMessage} />
+{#if loaded}
+    <DescriptionTab bind:data={jsonData.descriptionTabData} on:message={handleMessage} />
+{:else}
+    Loading
+{/if}
+

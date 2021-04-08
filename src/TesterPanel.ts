@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { getNonce } from './getNonce';
-import { DescriptionTabData } from './Models/descriptionTabData';
+import { Device } from './Models/deviceData';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -29,10 +29,10 @@ export class TesterPanel {
 
 
 	//////////////////////////////////////////////////////////////////////////////
-	public model: DescriptionTabData = new DescriptionTabData();
+	public model: Device = new Device();
 	//////////////////////////////////////////////////////////////////////////////
 
-	public static createOrShow(extensionUri: vscode.Uri, model: DescriptionTabData) {
+	public static createOrShow(extensionUri: vscode.Uri, model: Device) {
 
 		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
@@ -94,12 +94,14 @@ export class TesterPanel {
 					case 'init-view':
 						//always run if the panel is in focus
 						panel.webview.postMessage({
-							command: "add-message",
+							command: "init-message",
         					value: JSON.stringify(this.model),
 						});
 						return;
-					case 'update':						
-						this.updateDocument(message.value);
+					case 'update-descriptionTab':
+						this.updateDocument("descriptionTab", message.value);
+					case 'update':	
+						this.updateDocument("full", message.value);
 				}
 			},
 			null,
@@ -173,8 +175,20 @@ export class TesterPanel {
 			</html>`;
 	}
 
-	private updateDocument(json: string) {
-		const dtd = JSON.parse(json);
-		Object.assign(this.model,dtd);
+	private updateDocument(type: string, json: string) {
+
+		const dd = JSON.parse(json);
+
+		switch (type) {
+			case "full":
+				Object.assign(this.model,dd);
+				break;
+			case "descriptionTab":
+				Object.assign(this.model.descriptionTabData,dd);
+				break;
+			default:
+				break;
+		}
+		
 	}
 }

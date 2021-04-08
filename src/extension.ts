@@ -4,9 +4,9 @@ import * as vscode from "vscode";
 import { SidebarProvider } from "./SidebarProvider";
 import { TesterPanel } from "./TesterPanel";
 import { Alma } from "./alma";
-import {DescriptionTabData} from "./Models/descriptionTabData";
+import {Device} from "./Models/deviceData";
 
-const model = new DescriptionTabData();
+const model = new Device();
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -88,17 +88,21 @@ export function activate(context: vscode.ExtensionContext) {
   setTimeout(() => {
     TesterPanel.currentPanel?._panel.webview.onDidReceiveMessage(
       message => {
+        const dd = JSON.parse(message.value);
         switch (message.command) {
           case 'update':
-            const dtd = JSON.parse(message.value);
-            Object.assign(model,dtd);
+            Object.assign(model,dd);
+          case 'update-descriptionTab':
+            Object.assign(model.descriptionTabData,dd);
         }
       },
       null,
     );
   }, 1000);
-  
+
 }
+
+
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
