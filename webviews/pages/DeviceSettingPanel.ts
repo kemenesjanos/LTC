@@ -1,4 +1,4 @@
-import App from "../components/TesterPanel.svelte";
+import App from "../components/DeviceSettingPanel.svelte";
 
 const app = new App({
   target: document.body,

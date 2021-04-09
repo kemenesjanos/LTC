@@ -1,4 +1,6 @@
+import { Context } from 'mocha';
 import * as vscode from 'vscode';
+import { DataHandler } from './Data/DataHandler';
 import { getNonce } from './getNonce';
 import { Device } from './Models/deviceData';
 
@@ -15,11 +17,11 @@ function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 /**
  * Manages devices webview panels
  */
-export class TesterPanel {
+export class DeviceSettingPanel {
 	/**
 	 * Track the currently panel. Only allow a single panel to exist at a time.
 	 */
-	public static currentPanel: TesterPanel | undefined;
+	public static currentPanel: DeviceSettingPanel | undefined;
 
 	public static readonly viewType = 'devices';
 
@@ -30,6 +32,7 @@ export class TesterPanel {
 
 	//////////////////////////////////////////////////////////////////////////////
 	public model: Device = new Device();
+	
 	//////////////////////////////////////////////////////////////////////////////
 
 	public static createOrShow(extensionUri: vscode.Uri, model: Device) {
@@ -39,27 +42,27 @@ export class TesterPanel {
 			: undefined;
 
 		// If we already have a panel, show it.
-		if (TesterPanel.currentPanel) {
-			TesterPanel.currentPanel._panel.reveal(column);
+		if (DeviceSettingPanel.currentPanel) {
+			DeviceSettingPanel.currentPanel._panel.reveal(column);
 			return;
 		}
 
 		// Otherwise, create a new panel.
 		const panel = vscode.window.createWebviewPanel(
-			TesterPanel.viewType,
+			DeviceSettingPanel.viewType,
 			'Devices',
 			column || vscode.ViewColumn.One,
 			getWebviewOptions(extensionUri),
 		);
 
-		TesterPanel.currentPanel = new TesterPanel(panel, extensionUri);
+		DeviceSettingPanel.currentPanel = new DeviceSettingPanel(panel, extensionUri);
 
-		TesterPanel.currentPanel.model = model;
+		DeviceSettingPanel.currentPanel.model = model;
 
 	}
 
 	public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
-		TesterPanel.currentPanel = new TesterPanel(panel, extensionUri);
+		DeviceSettingPanel.currentPanel = new DeviceSettingPanel(panel, extensionUri);
 	}
 
 	private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -110,7 +113,7 @@ export class TesterPanel {
 	}
 
 	public dispose() {
-		TesterPanel.currentPanel = undefined;
+		DeviceSettingPanel.currentPanel = undefined;
 
 		// Clean up our resources
 		this._panel.dispose();
@@ -148,7 +151,6 @@ export class TesterPanel {
 
 		// Use a nonce to only allow specific scripts to be run
 		const nonce = getNonce();
-
 
         //a scriptben volt:
         //          const tsvscode = acquireVsCodeApi();

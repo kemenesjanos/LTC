@@ -2,13 +2,18 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import { SidebarProvider } from "./SidebarProvider";
-import { TesterPanel } from "./TesterPanel";
+import { DeviceSettingPanel } from "./DeviceSettingPanel";
 import { Alma } from "./alma";
 import {Device} from "./Models/deviceData";
+import { DataHandler } from "./Data/DataHandler";
 
-const model = new Device();
+var model = new Device();
 
 export function activate(context: vscode.ExtensionContext) {
+  if (context.globalState.get<Device>("DevicesModel")) {
+    model = context.globalState.get<Device>("DevicesModel") as Device;
+  }
+    
 
   vscode.commands.executeCommand('LTC.start');
   const sidebarProvider = new SidebarProvider(context.extensionUri);
@@ -16,12 +21,13 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.registerWebviewViewProvider("LTC-sidebar", sidebarProvider),
   );
 
-  //vscode.workspace.getConfiguration("editor.suggest.showConstants").update("editor.suggest.showConstants", true, false);
+  //vscode.workspace.getConfiguration("editor.suggest.showConstants").update("editor.suggest.showConstants", true, false);5
 
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.addMessage", () => {
       vscode.window.showInformationMessage('sikerult!');
-
+        
+/* 
       sidebarProvider._view?.webview.postMessage({
         command: "add-message",
         value: new Alma("jéjjj",33),
@@ -30,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
       TesterPanel.currentPanel?._panel.webview.postMessage({
         command: "test-message",
         value: "juhuhúú"
-      });
+      }); */
     })
   );
 
@@ -69,31 +75,35 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.start", () => {
-      TesterPanel.createOrShow(context.extensionUri, model);
+      DeviceSettingPanel.currentPanel?.dispose();
+      DeviceSettingPanel.createOrShow(context.extensionUri, model);
     }
   ));
 
+  //If there is already an opened panel it will show just that
   if (vscode.window.registerWebviewPanelSerializer) {
 		// Make sure we register a serializer in activation event
-		vscode.window.registerWebviewPanelSerializer(TesterPanel.viewType, {
+		vscode.window.registerWebviewPanelSerializer(DeviceSettingPanel.viewType, {
 			async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: any) {
 				console.log(`Got state: ${state}`);
 				// Reset the webview options so we use latest uri for `localResourceRoots`.
 				webviewPanel.webview.options = getWebviewOptions(context.extensionUri);
-				TesterPanel.revive(webviewPanel, context.extensionUri);
+				DeviceSettingPanel.revive(webviewPanel, context.extensionUri);
 			}
 		});
 	}
 
   setTimeout(() => {
-    TesterPanel.currentPanel?._panel.webview.onDidReceiveMessage(
+    DeviceSettingPanel.currentPanel?._panel.webview.onDidReceiveMessage(
       message => {
         const dd = JSON.parse(message.value);
         switch (message.command) {
           case 'update':
             Object.assign(model,dd);
+            context.globalState.update("DevicesModel",model);
           case 'update-descriptionTab':
             Object.assign(model.descriptionTabData,dd);
+            context.globalState.update("DevicesModel",model);
         }
       },
       null,
