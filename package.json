@@ -1,5 +1,5 @@
 {
-  "name": "LTC",
+  "name": "ltc",
   "displayName": "LTC",
   "description": "Keeping track of stuff",
   "version": "0.0.1",
@@ -13,9 +13,9 @@
     "onCommand:LTC.askQuestion",
     "onCommand:LTC.refresh",
     "onCommand:LTC.addMessage",
+    "onCommand:LTC.openDevicesPanel",
     "onView:LTC-sidebar",
-    "onWebviewPanel:devices",
-    "onCommand:LTC.openDevicesPanel"
+    "onWebviewPanel:devices"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -24,7 +24,7 @@
         {
           "id": "LTC-sidebar-view",
           "title": "LTC",
-          "icon": "media/checklist.svg"
+          "icon": "$(circuit-board)"
         }
       ]
     },
@@ -34,7 +34,7 @@
           "type": "webview",
           "id": "LTC-sidebar",
           "name": "LTC",
-          "icon": "media/checklist.svg",
+          "icon": "media/circuit-board.svg",
           "contextualTitle": "LTC"
         }
       ]

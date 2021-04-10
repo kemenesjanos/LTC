@@ -105,6 +105,8 @@ export class DeviceSettingPanel {
 						this.updateDocument("descriptionTab", message.value);
 					case 'update':	
 						this.updateDocument("full", message.value);
+					case 'test':
+						vscode.window.showErrorMessage(message.value);
 				}
 			},
 			null,

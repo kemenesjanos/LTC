@@ -33,6 +33,10 @@ import { onMount } from "svelte";
     tsvscode.postMessage({command: 'onError', value: 'error message'});
 }}>Clk for error</button>
 
+<button on:click={() => {
+    tsvscode.postMessage({command: 'test', value: 'dddddddddd'});
+}}>Test</button>
+
 <button
     on:dblclick={() => {
         count += 8;

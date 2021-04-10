@@ -10,7 +10,6 @@ import { DataHandler } from "./Data/DataHandler";
 var model = new Device();
 
 export function activate(context: vscode.ExtensionContext) {
-
   const item = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right
   );
@@ -56,12 +55,6 @@ export function activate(context: vscode.ExtensionContext) {
       await vscode.commands.executeCommand(
         "workbench.view.extension.LTC-sidebar-view"
       );
-      
-      setTimeout(() => {
-        vscode.commands.executeCommand(
-          "workbench.action.webview.openDeveloperTools"
-        );
-      }, 500);
     })
   );
 
@@ -101,9 +94,10 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	}
 
+  //Handle messages from device setting panel
   setTimeout(() => {
     DeviceSettingPanel.currentPanel?._panel.webview.onDidReceiveMessage(
-      message => {
+      async (message) => {
         const dd = JSON.parse(message.value);
         switch (message.command) {
           case 'update':
@@ -116,7 +110,24 @@ export function activate(context: vscode.ExtensionContext) {
       },
       null,
     );
-  }, 1000);
+  }, 500);
+
+  //Handle messages from Sidebarpanel
+    sidebarProvider._view?.webview.onDidReceiveMessage(
+      async (message) => {
+        const dd = JSON.parse(message.value);
+        switch (message.command) {
+          case 'test':
+            vscode.window.showInformationMessage("sikerült");
+          case 'update':
+            Object.assign(model,dd);
+            context.globalState.update("DevicesModel",model);
+          case 'update-descriptionTab':
+            Object.assign(model.descriptionTabData,dd);
+            context.globalState.update("DevicesModel",model);
+        }
+      }
+      );
 
 }
 
