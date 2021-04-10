@@ -15,7 +15,7 @@
     "onCommand:LTC.addMessage",
     "onView:LTC-sidebar",
     "onWebviewPanel:devices",
-    "onCommand:LTC.start"
+    "onCommand:LTC.openDevicesPanel"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -56,7 +56,7 @@
         "title": "Add message"
       },
       {
-        "command": "LTC.start",
+        "command": "LTC.openDevicesPanel",
         "title": "Start devicesPanel",
         "category": "LTC"
       }

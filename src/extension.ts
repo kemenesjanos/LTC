@@ -10,12 +10,20 @@ import { DataHandler } from "./Data/DataHandler";
 var model = new Device();
 
 export function activate(context: vscode.ExtensionContext) {
+
+  const item = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Right
+  );
+  item.text = "$(tools) Devices";
+  item.command = "LTC.openDevicesPanel";
+  item.show();
+
   if (context.globalState.get<Device>("DevicesModel")) {
     model = context.globalState.get<Device>("DevicesModel") as Device;
   }
     
 
-  vscode.commands.executeCommand('LTC.start');
+  vscode.commands.executeCommand('LTC.openDevicesPanel');
   const sidebarProvider = new SidebarProvider(context.extensionUri);
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider("LTC-sidebar", sidebarProvider),
@@ -74,7 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("LTC.start", () => {
+    vscode.commands.registerCommand("LTC.openDevicesPanel", () => {
       DeviceSettingPanel.currentPanel?.dispose();
       DeviceSettingPanel.createOrShow(context.extensionUri, model);
     }
@@ -119,8 +127,8 @@ function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 		// Enable javascript in the webview
 		enableScripts: true,
 
-		// And restrict the webview to only loading content from our extension's `media` directory.
-		//localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'media')]
+		//And restrict the webview to only loading content from our extension's `media` directory.
+		localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'media')]
 	};
 }
 
