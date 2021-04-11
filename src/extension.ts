@@ -6,10 +6,16 @@ import { DeviceSettingPanel } from "./DeviceSettingPanel";
 import { Alma } from "./alma";
 import {Device} from "./Models/deviceData";
 import { DataHandler } from "./Data/DataHandler";
+import { Console } from "node:console";
 
 var model = new Device();
 
 export function activate(context: vscode.ExtensionContext) {
+
+  setTimeout(() => {
+    //vscode.commands.executeCommand("LTC.openDevicesPanel");
+  }, 200); 
+
   const item = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right
   );
@@ -17,12 +23,10 @@ export function activate(context: vscode.ExtensionContext) {
   item.command = "LTC.openDevicesPanel";
   item.show();
 
-  if (context.globalState.get<Device>("DevicesModel")) {
-    model = context.globalState.get<Device>("DevicesModel") as Device;
+  if(context.globalState.get<Device>("DeviceModel") !== undefined){
+    model = context.globalState.get<Device>("DeviceModel") as Device;
   }
-    
 
-  vscode.commands.executeCommand('LTC.openDevicesPanel');
   const sidebarProvider = new SidebarProvider(context.extensionUri);
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider("LTC-sidebar", sidebarProvider),
@@ -74,12 +78,34 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
+  if(DeviceSettingPanel.currentPanel?._panel){
+    vscode.commands.executeCommand("LTC.openDevicesPanel");
+  }
+
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.openDevicesPanel", () => {
       DeviceSettingPanel.currentPanel?.dispose();
       DeviceSettingPanel.createOrShow(context.extensionUri, model);
+
+      //Handle messages from device setting panel
+      DeviceSettingPanel.currentPanel?._panel.webview.onDidReceiveMessage(
+        (message) => {
+          const dd = JSON.parse(message.value);
+          switch (message.command) {
+            case 'update':
+              Object.assign(model,dd);
+              context.globalState.update("DeviceModel",model);
+              break;
+            case 'update-descriptionTab':
+              Object.assign(model.descriptionTabData,dd);
+              context.globalState.update("DeviceModel",model);
+              break;
+          }
+        }
+      );
     }
   ));
+
 
   //If there is already an opened panel it will show just that
   if (vscode.window.registerWebviewPanelSerializer) {
@@ -94,41 +120,8 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	}
 
-  //Handle messages from device setting panel
-  setTimeout(() => {
-    DeviceSettingPanel.currentPanel?._panel.webview.onDidReceiveMessage(
-      async (message) => {
-        const dd = JSON.parse(message.value);
-        switch (message.command) {
-          case 'update':
-            Object.assign(model,dd);
-            context.globalState.update("DevicesModel",model);
-          case 'update-descriptionTab':
-            Object.assign(model.descriptionTabData,dd);
-            context.globalState.update("DevicesModel",model);
-        }
-      },
-      null,
-    );
-  }, 500);
-
-  //Handle messages from Sidebarpanel
-    sidebarProvider._view?.webview.onDidReceiveMessage(
-      async (message) => {
-        const dd = JSON.parse(message.value);
-        switch (message.command) {
-          case 'test':
-            vscode.window.showInformationMessage("sikerült");
-          case 'update':
-            Object.assign(model,dd);
-            context.globalState.update("DevicesModel",model);
-          case 'update-descriptionTab':
-            Object.assign(model.descriptionTabData,dd);
-            context.globalState.update("DevicesModel",model);
-        }
-      }
-      );
-
+  
+  
 }
 
 
@@ -144,4 +137,6 @@ function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+
+}

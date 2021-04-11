@@ -15,7 +15,8 @@
     "onCommand:LTC.addMessage",
     "onCommand:LTC.openDevicesPanel",
     "onView:LTC-sidebar",
-    "onWebviewPanel:devices"
+    "onWebviewPanel:devices",
+    "*"
   ],
   "main": "./dist/extension.js",
   "contributes": {

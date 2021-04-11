@@ -105,8 +105,6 @@ export class DeviceSettingPanel {
 						this.updateDocument("descriptionTab", message.value);
 					case 'update':	
 						this.updateDocument("full", message.value);
-					case 'test':
-						vscode.window.showErrorMessage(message.value);
 				}
 			},
 			null,
@@ -153,9 +151,6 @@ export class DeviceSettingPanel {
 
 		// Use a nonce to only allow specific scripts to be run
 		const nonce = getNonce();
-
-        //a scriptben volt:
-        //          const tsvscode = acquireVsCodeApi();
 
 		return `<!DOCTYPE html>
 			<html lang="en">

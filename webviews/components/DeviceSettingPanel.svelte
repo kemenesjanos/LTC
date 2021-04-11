@@ -1,6 +1,5 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import Sidebar from "./Sidebar.svelte";
     import DescriptionTab from "./tabs/DescriptionTab.svelte";
     let test = "w";
     let loaded = false;
