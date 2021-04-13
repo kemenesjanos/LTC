@@ -31,8 +31,7 @@ export class DeviceSettingPanel {
 
 
 	//////////////////////////////////////////////////////////////////////////////
-	public model: Device = new Device();
-	
+	public model?: Device;
 	//////////////////////////////////////////////////////////////////////////////
 
 	public static createOrShow(extensionUri: vscode.Uri, model: Device) {
@@ -93,18 +92,20 @@ export class DeviceSettingPanel {
 				switch (message.command) {
 					case 'alert':
 						vscode.window.showErrorMessage(message.value);
-						return;
+						break;
 					case 'init-view':
 						//always run if the panel is in focus
 						panel.webview.postMessage({
 							command: "init-message",
         					value: JSON.stringify(this.model),
 						});
-						return;
+						break;
 					case 'update-descriptionTab':
 						this.updateDocument("descriptionTab", message.value);
+						break;
 					case 'update':	
 						this.updateDocument("full", message.value);
+						break;
 				}
 			},
 			null,
@@ -183,7 +184,7 @@ export class DeviceSettingPanel {
 				Object.assign(this.model,dd);
 				break;
 			case "descriptionTab":
-				Object.assign(this.model.descriptionTabData,dd);
+				Object.assign(this.model?.descriptionTabData,dd);
 				break;
 			default:
 				break;

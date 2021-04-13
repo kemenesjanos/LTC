@@ -5,6 +5,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
 
+  //////////////////////////////////////////////////////////////////////////////
+	public model?: null;
+	//////////////////////////////////////////////////////////////////////////////
+
   constructor(private readonly _extensionUri: vscode.Uri) {}
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -35,10 +39,21 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           vscode.window.showErrorMessage(data.value);
           break;
         }
-        case 'test':{
-          vscode.commands.executeCommand('LTC.openDevicesPanel');
+        case 'newLTCProject':{
+          vscode.commands.executeCommand('LTC.newLTCProject');
           break;
         }
+        case 'openLTCProject':{
+          vscode.commands.executeCommand('LTC.openLTCProject');
+          break;
+        }
+        case 'init-view':
+						//always run if the panel is in focus
+						this._view?.webview.postMessage({
+							command: "init-message",
+        					value: JSON.stringify(this.model),
+						});
+						break;
       }
     });
   }

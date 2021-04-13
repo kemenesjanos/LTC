@@ -3,11 +3,11 @@
 import * as vscode from "vscode";
 import { SidebarProvider } from "./SidebarProvider";
 import { DeviceSettingPanel } from "./DeviceSettingPanel";
-import {Device} from "./Models/deviceData";
+import {DevicesData} from "./Models/devicesData";
 import { DataHandler } from "./Data/DataHandler";
 import { Console } from "node:console";
 
-var model = new Device();
+var model = new DevicesData;
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -18,8 +18,8 @@ export function activate(context: vscode.ExtensionContext) {
   item.command = "LTC.openDevicesPanel";
   item.show();
 
-  if(context.globalState.get<Device>("DeviceModel") !== undefined){
-    model = context.globalState.get<Device>("DeviceModel") as Device;
+  if(typeof context.globalState.get<DevicesData>("DevicesModel") !== typeof undefined){
+    model = context.globalState.get<DevicesData>("DevicesModel") as DevicesData;
   }
 
   const sidebarProvider = new SidebarProvider(context.extensionUri);
@@ -75,12 +75,12 @@ export function activate(context: vscode.ExtensionContext) {
   );
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.newLTCProject", () => {
-      vscode.window.showInformationMessage("ok");
+      vscode.window.showInformationMessage("newLTCProject");
     })
   );
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.openLTCProject", () => {
-      vscode.window.showInformationMessage("ok");
+      vscode.window.showInformationMessage("openLTCProject");
     })
   );
 
@@ -112,11 +112,11 @@ export function activate(context: vscode.ExtensionContext) {
           switch (message.command) {
             case 'update':
               Object.assign(model,dd);
-              context.globalState.update("DeviceModel",model);
+              context.globalState.update("DevicesModel",model);
               break;
             case 'update-descriptionTab':
               Object.assign(model.descriptionTabData,dd);
-              context.globalState.update("DeviceModel",model);
+              context.globalState.update("DevicesModel",model);
               break;
           }
         }
