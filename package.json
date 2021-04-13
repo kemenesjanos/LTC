@@ -14,9 +14,10 @@
     "onCommand:LTC.refresh",
     "onCommand:LTC.addMessage",
     "onCommand:LTC.openDevicesPanel",
+    "onCommand:LTC.newLTCProject",
+    "onCommand:LTC.openLTCProject",
     "onView:LTC-sidebar",
-    "onWebviewPanel:devices",
-    "*"
+    "onWebviewPanel:devices"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -59,6 +60,16 @@
       {
         "command": "LTC.openDevicesPanel",
         "title": "Start devicesPanel",
+        "category": "LTC"
+      },
+      {
+        "command": "LTC.newLTCProject",
+        "title": "Create new LTC Project",
+        "category": "LTC"
+      },
+      {
+        "command": "LTC.openLTCProject",
+        "title": "Open LTC Project",
         "category": "LTC"
       }
     ]

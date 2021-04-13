@@ -3,7 +3,6 @@
 import * as vscode from "vscode";
 import { SidebarProvider } from "./SidebarProvider";
 import { DeviceSettingPanel } from "./DeviceSettingPanel";
-import { Alma } from "./alma";
 import {Device} from "./Models/deviceData";
 import { DataHandler } from "./Data/DataHandler";
 import { Console } from "node:console";
@@ -11,10 +10,6 @@ import { Console } from "node:console";
 var model = new Device();
 
 export function activate(context: vscode.ExtensionContext) {
-
-  setTimeout(() => {
-    //vscode.commands.executeCommand("LTC.openDevicesPanel");
-  }, 200); 
 
   const item = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right
@@ -35,8 +30,25 @@ export function activate(context: vscode.ExtensionContext) {
   //vscode.workspace.getConfiguration("editor.suggest.showConstants").update("editor.suggest.showConstants", true, false);5
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("LTC.addMessage", () => {
+    vscode.commands.registerCommand("LTC.addMessage", async () => {
       vscode.window.showInformationMessage('sikerult!');
+
+      let doc = await vscode.workspace.openTextDocument(
+        vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'alma.txt')); // calls back into the provider
+
+      await vscode.window.showTextDocument(doc, { preview: false });
+
+      const wsedit = new vscode.WorkspaceEdit();
+      const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'korte.txt');
+
+      wsedit.createFile(filePath, { ignoreIfExists: true });
+      wsedit.set(filePath, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0,0),new vscode.Position(2,0)),"asldmsada")]);
+      vscode.workspace.applyEdit(wsedit);
+
+      let docc = await vscode.workspace.openTextDocument(
+        vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'korte.txt')); // calls back into the provider
+
+      await vscode.window.showTextDocument(docc, { preview: false });
         
 /* 
       sidebarProvider._view?.webview.postMessage({
@@ -61,6 +73,16 @@ export function activate(context: vscode.ExtensionContext) {
       );
     })
   );
+  context.subscriptions.push(
+    vscode.commands.registerCommand("LTC.newLTCProject", () => {
+      vscode.window.showInformationMessage("ok");
+    })
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand("LTC.openLTCProject", () => {
+      vscode.window.showInformationMessage("ok");
+    })
+  );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.askQuestion", async () => {
@@ -77,10 +99,6 @@ export function activate(context: vscode.ExtensionContext) {
       }
     })
   );
-
-  if(DeviceSettingPanel.currentPanel?._panel){
-    vscode.commands.executeCommand("LTC.openDevicesPanel");
-  }
 
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.openDevicesPanel", () => {
@@ -109,6 +127,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   //If there is already an opened panel it will show just that
   if (vscode.window.registerWebviewPanelSerializer) {
+
 		// Make sure we register a serializer in activation event
 		vscode.window.registerWebviewPanelSerializer(DeviceSettingPanel.viewType, {
 			async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: any) {
@@ -131,12 +150,10 @@ function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 		// Enable javascript in the webview
 		enableScripts: true,
 
-		//And restrict the webview to only loading content from our extension's `media` directory.
-		localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'media')]
+		localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'media'),vscode.Uri.joinPath(extensionUri, 'ltcLib')]
 	};
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-
 }

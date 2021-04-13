@@ -32,9 +32,4 @@
         <img class="data.picture" height="100" width="100" src="{data.picture}" alt="d" /> -->
 </div>
 
-<style>
-    textarea{
-        resize: none;
-    }
-</style>
     
