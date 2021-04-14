@@ -4,10 +4,11 @@ import * as vscode from "vscode";
 import { SidebarProvider } from "./SidebarProvider";
 import { DeviceSettingPanel } from "./DeviceSettingPanel";
 import {DevicesData} from "./Models/devicesData";
-import { DataHandler } from "./Data/DataHandler";
 import { Console } from "node:console";
+import { DevicesDataHandler } from "./Repository/devicesDataHandler";
 
-var model = new DevicesData;
+var model = new DevicesData();
+var repo: DevicesDataHandler;
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -18,9 +19,13 @@ export function activate(context: vscode.ExtensionContext) {
   item.command = "LTC.openDevicesPanel";
   item.show();
 
+  //context.globalState.update("DevicesModel",model);
   if(typeof context.globalState.get<DevicesData>("DevicesModel") !== typeof undefined){
     model = context.globalState.get<DevicesData>("DevicesModel") as DevicesData;
+    vscode.window.showInformationMessage(JSON.stringify(model));
   }
+  
+  repo= new DevicesDataHandler(model);
 
   const sidebarProvider = new SidebarProvider(context.extensionUri);
   context.subscriptions.push(
@@ -112,10 +117,6 @@ export function activate(context: vscode.ExtensionContext) {
           switch (message.command) {
             case 'update':
               Object.assign(model,dd);
-              context.globalState.update("DevicesModel",model);
-              break;
-            case 'update-descriptionTab':
-              Object.assign(model.descriptionTabData,dd);
               context.globalState.update("DevicesModel",model);
               break;
           }

@@ -1,8 +1,7 @@
 import { Context } from 'mocha';
 import * as vscode from 'vscode';
-import { DataHandler } from './Data/DataHandler';
 import { getNonce } from './getNonce';
-import { Device } from './Models/deviceData';
+import { DevicesData } from './Models/devicesData';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -31,10 +30,10 @@ export class DeviceSettingPanel {
 
 
 	//////////////////////////////////////////////////////////////////////////////
-	public model?: Device;
+	public model?: DevicesData;
 	//////////////////////////////////////////////////////////////////////////////
 
-	public static createOrShow(extensionUri: vscode.Uri, model: Device) {
+	public static createOrShow(extensionUri: vscode.Uri, model: DevicesData) {
 
 		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
@@ -139,7 +138,7 @@ export class DeviceSettingPanel {
 
 		// And the uri we use to load this script in the webview
 		const scriptUri = webview.asWebviewUri(
-            vscode.Uri.joinPath(this._extensionUri, "out/compiled", "TesterPanel.js")
+            vscode.Uri.joinPath(this._extensionUri, "out/compiled", "DeviceSettingPanel.js")
           );
 
 		// Local path to css styles
@@ -184,7 +183,7 @@ export class DeviceSettingPanel {
 				Object.assign(this.model,dd);
 				break;
 			case "descriptionTab":
-				Object.assign(this.model?.descriptionTabData,dd);
+				//Object.assign(this.model?.devicesData.devices..descriptionTabData,dd);
 				break;
 			default:
 				break;

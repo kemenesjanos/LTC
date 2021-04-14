@@ -17,8 +17,9 @@
     
     function dataUpdated() {
         dispatch('message', {
-		"type" : "update-descriptionTab"});
+		"type" : "update"});
     }
+    
 </script>
     <div>
         <div>Name: <input type="text" bind:value={data.name} on:input={dataUpdated}/></div>

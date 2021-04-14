@@ -1,11 +1,13 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import DescriptionTab from "./tabs/DescriptionTab.svelte";
 
     let loaded = false;
     let jsonData = {
-        "descriptionTabData":{}
-    }
+        "devices":
+        [
+            {"descriptionTabData":{}},
+        ]}
 
     //it is called when the svelte is ready
     onMount(() => {
@@ -17,6 +19,14 @@
             }
         );
     })
+
+    onDestroy(() =>{
+        tsvscode.postMessage({
+                    command: 'alert',
+                    value:  "teszt"
+                });
+    })
+
 
     
 
@@ -43,15 +53,22 @@
     function handleMessage(event: any) {
         switch (event.detail.type) {
             case "update-descriptionTab":
-                tsvscode.postMessage({
-                    command: 'update-descriptionTab',
-                    value:  JSON.stringify(jsonData.descriptionTabData)
-                });
+                // tsvscode.postMessage({
+                //     command: 'update-descriptionTab',
+                //     value:  JSON.stringify(jsonData.descriptionTabData)
+                // });
                 break;
             case "update":
                 tsvscode.postMessage({
                     command: 'update',
-                    value:  JSON.stringify(jsonData)
+                    value:  JSON.stringify(jsonData),
+                });
+                break;
+            //TODO: implement
+            case "removeDevice":
+                tsvscode.postMessage({
+                    command: 'removeDevice',
+                    value:  event.detail.removeId,
                 });
                 break;
             default:
@@ -63,7 +80,7 @@
 </script>
 
 {#if loaded}
-    <DescriptionTab bind:data={jsonData.descriptionTabData} on:message={handleMessage} />
+    <DescriptionTab bind:data={jsonData.devices[0].descriptionTabData} on:message={handleMessage} />
 {:else}
     Loading
 {/if}

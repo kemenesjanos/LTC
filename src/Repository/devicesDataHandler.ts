@@ -8,6 +8,8 @@ export class DevicesDataHandler {
         this.devicesData= devicesData;
     }
 
+
+
     /**
      * addDevice
      */
