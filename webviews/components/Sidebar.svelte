@@ -22,7 +22,7 @@
                 case "add-message":
                     break;
                 case "init-message":
-                    jsonData=JSON.parse(message.value);
+                    //TODO: jsonData=JSON.parse(message.value);
                     loaded = true;
                     break;
             }

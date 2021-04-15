@@ -44,7 +44,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         }
         case 'openLTCProject':{
-          vscode.commands.executeCommand('LTC.openLTCProject');
+          //vscode.commands.executeCommand('LTC.openLTCProject');
+          vscode.commands.executeCommand("workbench.action.files.openFile",);
           break;
         }
         case 'init-view':

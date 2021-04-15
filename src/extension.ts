@@ -76,8 +76,19 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
   context.subscriptions.push(
-    vscode.commands.registerCommand("LTC.newLTCProject", () => {
+    vscode.commands.registerCommand("LTC.newLTCProject", async () => {
       vscode.window.showInformationMessage("newLTCProject");
+      const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'korte.ino');
+
+      const wsedit = new vscode.WorkspaceEdit();
+      wsedit.createFile(filePath, { ignoreIfExists: true });
+      await vscode.workspace.applyEdit(wsedit);
+
+      let doc = await vscode.workspace.openTextDocument(
+        vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'korte.ino')); // calls back into the provider
+
+      await vscode.window.showTextDocument(doc, { preview: false });
+
     })
   );
   context.subscriptions.push(
@@ -118,6 +129,7 @@ export function activate(context: vscode.ExtensionContext) {
             //   break;
             case 'save':
               context.globalState.update("DevicesModel",model);
+              break;
           }
         }
       );
