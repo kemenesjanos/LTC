@@ -5,8 +5,8 @@ export class DescriptionTabData {
     description: string;
     example: string;
     constructor() {
-        this.name="descriptiontabDATA";
-        this.picture="alma.png";
+        this.name="";
+        this.picture="";
         this.shortDescription="";
         this.description="";
         this.example="";

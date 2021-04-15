@@ -8,7 +8,6 @@ import { Console } from "node:console";
 import { DevicesDataHandler } from "./Repository/devicesDataHandler";
 
 var model = new DevicesData();
-var repo: DevicesDataHandler;
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -24,8 +23,6 @@ export function activate(context: vscode.ExtensionContext) {
     model = context.globalState.get<DevicesData>("DevicesModel") as DevicesData;
     vscode.window.showInformationMessage(JSON.stringify(model));
   }
-  
-  repo= new DevicesDataHandler(model);
 
   const sidebarProvider = new SidebarProvider(context.extensionUri);
   context.subscriptions.push(
@@ -115,10 +112,12 @@ export function activate(context: vscode.ExtensionContext) {
         (message) => {
           const dd = JSON.parse(message.value);
           switch (message.command) {
-            case 'update':
-              Object.assign(model,dd);
+            // case 'update':
+            //   Object.assign(model,dd);
+              
+            //   break;
+            case 'save':
               context.globalState.update("DevicesModel",model);
-              break;
           }
         }
       );

@@ -1,7 +1,9 @@
 import { Context } from 'mocha';
 import * as vscode from 'vscode';
 import { getNonce } from './getNonce';
+import { Device } from './Models/deviceData';
 import { DevicesData } from './Models/devicesData';
+import { DevicesDataHandler } from './Repository/devicesDataHandler';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -30,7 +32,8 @@ export class DeviceSettingPanel {
 
 
 	//////////////////////////////////////////////////////////////////////////////
-	public model?: DevicesData;
+	//public model?: DevicesData;
+	public repo?: DevicesDataHandler;
 	//////////////////////////////////////////////////////////////////////////////
 
 	public static createOrShow(extensionUri: vscode.Uri, model: DevicesData) {
@@ -55,7 +58,8 @@ export class DeviceSettingPanel {
 
 		DeviceSettingPanel.currentPanel = new DeviceSettingPanel(panel, extensionUri);
 
-		DeviceSettingPanel.currentPanel.model = model;
+		//DeviceSettingPanel.currentPanel.model = model;
+		DeviceSettingPanel.currentPanel.repo = new DevicesDataHandler(model);
 
 	}
 
@@ -96,14 +100,20 @@ export class DeviceSettingPanel {
 						//always run if the panel is in focus
 						panel.webview.postMessage({
 							command: "init-message",
-        					value: JSON.stringify(this.model),
+        					value: JSON.stringify(this.repo?.devicesData),
 						});
 						break;
-					case 'update-descriptionTab':
-						this.updateDocument("descriptionTab", message.value);
-						break;
 					case 'update':	
-						this.updateDocument("full", message.value);
+						Object.assign(this.repo?.devicesData,JSON.parse(message.value));
+						break;
+					case 'updateDevice':
+						this.updateDevice(JSON.parse(message.value));
+						break;
+					case 'removeDevice':
+						this.removeDevice(JSON.parse(message.value));
+						break;
+					case 'addDevice':
+						this.addDevice();
 						break;
 				}
 			},
@@ -174,20 +184,28 @@ export class DeviceSettingPanel {
 			</html>`;
 	}
 
-	private updateDocument(type: string, json: string) {
+	//TODO: Testing methods
+	private updateDevice(value: string) {
+		try {
+			var tmp = new Device();
+			Object.assign(tmp, value);
+			this.repo?.updateDevice(tmp.id,tmp);
 
-		const dd = JSON.parse(json);
-
-		switch (type) {
-			case "full":
-				Object.assign(this.model,dd);
-				break;
-			case "descriptionTab":
-				//Object.assign(this.model?.devicesData.devices..descriptionTabData,dd);
-				break;
-			default:
-				break;
+		} catch (error) {
+			vscode.window.showErrorMessage('Cannot update device');
 		}
-		
+	}
+	private removeDevice(value: string) {
+		try {
+			var tmp = new Device();
+			Object.assign(tmp, value);
+			this.repo?.removeDevice(tmp.id);
+
+		} catch (error) {
+			vscode.window.showErrorMessage('Cannot remove device');
+		}
+	}
+	private addDevice() {
+		this.repo?.addDevice(new Device());
 	}
 }

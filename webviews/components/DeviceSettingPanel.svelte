@@ -6,7 +6,7 @@
     let jsonData = {
         "devices":
         [
-            {"descriptionTabData":{}},
+            {"descriptionTabData":{},"id":""},
         ]}
 
     //it is called when the svelte is ready
@@ -63,12 +63,29 @@
                     command: 'update',
                     value:  JSON.stringify(jsonData),
                 });
+                //TODO: place to somewhere else
+                tsvscode.postMessage({
+                    command: 'save',
+                    value:  JSON.stringify(jsonData),
+                });
+
                 break;
-            //TODO: implement
+            case "updateDevice":
+                tsvscode.postMessage({
+                    command: 'updateDevice',
+                    value:  jsonData.devices.filter(x => x.id===event.detail.updateID)
+                });
+                break;
             case "removeDevice":
                 tsvscode.postMessage({
                     command: 'removeDevice',
                     value:  event.detail.removeId,
+                });
+                break;
+            case "addDevice":
+                tsvscode.postMessage({
+                    command: 'addDevice',
+                    value:  null,
                 });
                 break;
             default:
