@@ -37,3 +37,7 @@
 <button on:click={() => {
     tsvscode.postMessage({command: 'openLTCProject', value: ''});
 }}>Open LTC Project</button>
+
+<button on:click={() => {
+    tsvscode.postMessage({command: 'reInit', value: ''});
+}}>Re Init Project</button>

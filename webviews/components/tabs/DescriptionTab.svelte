@@ -20,6 +20,12 @@
 		"type" : "update"});
     }
 
+    //TODO: implement this in the ts with command
+    function pickImage() {
+        dispatch('message', {
+		"type" : "pickImage"});
+    }
+
 </script>
     <div>
         <div>Name: <input type="text" bind:value={data.name} on:input={dataUpdated}/></div>
