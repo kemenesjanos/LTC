@@ -12,10 +12,12 @@ var model = new DevicesData();
 
 export function activate(context: vscode.ExtensionContext) {
 
-  if(context.globalState.get<boolean>("isNewFile")?.valueOf() === true){
+
+  if(context.globalState.get<boolean>("isNewFile") === true){
     const newFileName = context.globalState.get<string>("newFileName")?.valueOf();
 
-    context.globalState.update("newFileName",null);
+    vscode.window.showInformationMessage("bejutott");
+    context.globalState.update("isNewFile",false);
 
     const initString=
 `
@@ -144,7 +146,7 @@ void loop(){
     vscode.commands.registerCommand("LTC.newLTCProject", async () => {
       vscode.window.showInformationMessage("newLTCProject");
       const res = await vscode.window.showInputBox({prompt: "What should be the name of the new project?"});
-      if(res?.valueOf() !== undefined){
+      if(res !== undefined){
        const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', res + 'Project');
 
         if (!fs.existsSync(filePath.fsPath)) {
@@ -154,8 +156,8 @@ void loop(){
 
           await context.globalState.update("newFileName", res);
           await context.globalState.update("isNewFile", true);
-          await vscode.commands.executeCommand('vscode.openFolder',
-          vscode.Uri.joinPath(context.extensionUri, 'ltcLib', res + 'Project'),false);
+          // await vscode.commands.executeCommand('vscode.openFolder',
+          // vscode.Uri.joinPath(context.extensionUri, 'ltcLib', res + 'Project'),false);
           await vscode.commands.executeCommand('workbench.action.reloadWindow');
         }
         else{
@@ -188,14 +190,18 @@ void loop(){
       const newFileName = context.globalState.get<string>("newFileName")?.valueOf();
       const filePath=vscode.Uri.joinPath(context.extensionUri, 'ltcLib', newFileName + 'Project', newFileName + '.ino');
 
-      fs.unlinkSync(vscode.Uri.joinPath(context.extensionUri, 'ltcLib', newFileName + 'Project').fsPath);
+      if(fs.existsSync(vscode.Uri.joinPath(context.extensionUri, 'ltcLib', newFileName + 'Project', '.vscode').fsPath)){
+        var rimraf = require("rimraf");
+        rimraf.sync(vscode.Uri.joinPath(context.extensionUri, 'ltcLib', newFileName + 'Project', '.vscode').fsPath);
+      }
+      
 
-      vscode.workspace.openTextDocument(filePath).then(() =>{
+      setTimeout(() => {
         vscode.commands.executeCommand('arduino.initialize').then(() =>{
           vscode.commands.executeCommand('arduino.selectSerialPort');
           });
-        });
-    })
+      }, 1000);
+    })  
   );
 
   context.subscriptions.push(
