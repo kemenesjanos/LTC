@@ -9,6 +9,6 @@
 </script>
 
 
-<button class:selected="{$selectedTab === tab}" on:click="{() => selectTab(tab)}" style="width: 10%;">
+<button class:selected="{$selectedTab === tab}" on:click="{() => selectTab(tab)}" style="width: 15%;">
 	<slot></slot>
 </button>

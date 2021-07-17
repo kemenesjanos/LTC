@@ -2,11 +2,14 @@
     import { onDestroy, onMount } from "svelte";
     import { globals } from "svelte/internal";
     import DescriptionTab from "./tabs/DescriptionTab.svelte";
+    import PropertiesTab from "./tabs/PropertiesTab.svelte";
+    import MethodsTab from "./tabs/MethodsTab.svelte";
+    import ClassTab from "./tabs/ClassTab.svelte";
     import { Tabs, TabList, TabPanel, Tab } from './tabComponents/tabs.js';
 
     let loaded = false;
     let jsonData = {
-        devices: [{ descriptionTabData: {}, id: "" }],
+        devices: [{ descriptionTabData: {}, propertiesTabData: {}, methodsTabData: {}, classTabData: {}, id: "" }],
     };
 
     
@@ -97,21 +100,30 @@
 {#if loaded}
 <Tabs>
 	<TabList>
-		<Tab>one</Tab>
-		<Tab>two</Tab>
-		<Tab>three</Tab>
+		<Tab>Description</Tab>
+		<Tab>Properties</Tab>
+		<Tab>Methods</Tab>
+        <Tab>Class</Tab>
 	</TabList>
 
 	<TabPanel>
-		<h2>First panel</h2>
+		<h2>Description</h2>
+        <DescriptionTab bind:data={jsonData.devices[0].descriptionTabData} on:message={handleMessage} />
 	</TabPanel>
 
 	<TabPanel>
-		<h2>Second panel</h2>
+		<h2>Properties</h2>
+        <PropertiesTab bind:data={jsonData.devices[0].propertiesTabData} on:message={handleMessage} />
 	</TabPanel>
 
 	<TabPanel>
-		<h2>Third panel</h2>
+		<h2>Methods</h2>
+        <MethodsTab bind:data={jsonData.devices[0].methodsTabData} on:message={handleMessage} />
+	</TabPanel>
+
+    <TabPanel>
+		<h2>Class</h2>
+        <ClassTab bind:data={jsonData.devices[0].classTabData} on:message={handleMessage} />
 	</TabPanel>
 </Tabs>
 {:else}
