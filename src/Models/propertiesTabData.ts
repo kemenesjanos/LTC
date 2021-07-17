@@ -1,6 +1,8 @@
+import { Property } from "./property";
+
 export class PropertiesTabData {
-    name: string; 
+    properties: Property[];
     constructor() {
-        this.name="";
+        this.properties = [];
     }
 }
