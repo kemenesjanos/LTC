@@ -1,41 +1,37 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
+    import { globals } from "svelte/internal";
     import DescriptionTab from "./tabs/DescriptionTab.svelte";
+    import { Tabs, TabList, TabPanel, Tab } from './tabComponents/tabs.js';
 
     let loaded = false;
     let jsonData = {
-        "devices":
-        [
-            {"descriptionTabData":{},"id":""},
-        ]}
+        devices: [{ descriptionTabData: {}, id: "" }],
+    };
+
+    
 
     //it is called when the svelte is ready
     onMount(() => {
-
-        tsvscode.postMessage(
-            {
-                command: 'init-view',
-                value: null
-            }
-        );
-    })
-
-    onDestroy(() =>{
         tsvscode.postMessage({
-                    command: 'alert',
-                    value:  "teszt"
-                });
-    })
+            command: "init-view",
+            value: null,
+        });
+    });
 
-
-    
+    onDestroy(() => {
+        tsvscode.postMessage({
+            command: "alert",
+            value: "teszt",
+        });
+    });
 
     window.addEventListener("message", (event) => {
         const message = event.data;
         switch (message.command) {
             case "init-message":
-                jsonData=JSON.parse(message.value);
-                
+                jsonData = JSON.parse(message.value);
+
                 loaded = true;
                 break;
             /* case "update":
@@ -48,7 +44,7 @@
 
                 return; */
         }
-    })
+    });
 
     function handleMessage(event: any) {
         switch (event.detail.type) {
@@ -60,45 +56,64 @@
                 break;
             case "update":
                 tsvscode.postMessage({
-                    command: 'update',
-                    value:  JSON.stringify(jsonData),
+                    command: "update",
+                    value: JSON.stringify(jsonData),
                 });
                 //TODO: place to somewhere else
                 tsvscode.postMessage({
-                    command: 'save',
-                    value:  JSON.stringify(jsonData),
+                    command: "save",
+                    value: JSON.stringify(jsonData),
                 });
 
                 break;
             case "updateDevice":
                 tsvscode.postMessage({
-                    command: 'updateDevice',
-                    value:  jsonData.devices.filter(x => x.id===event.detail.updateID)
+                    command: "updateDevice",
+                    value: jsonData.devices.filter(
+                        (x) => x.id === event.detail.updateID
+                    ),
                 });
                 break;
             case "removeDevice":
                 tsvscode.postMessage({
-                    command: 'removeDevice',
-                    value:  event.detail.removeId,
+                    command: "removeDevice",
+                    value: event.detail.removeId,
                 });
                 break;
             case "addDevice":
                 tsvscode.postMessage({
-                    command: 'addDevice',
-                    value:  null,
+                    command: "addDevice",
+                    value: null,
                 });
                 break;
             default:
                 break;
         }
-
     }
 
+    
 </script>
 
 {#if loaded}
-    <DescriptionTab bind:data={jsonData.devices[0].descriptionTabData} on:message={handleMessage} />
+<Tabs>
+	<TabList>
+		<Tab>one</Tab>
+		<Tab>two</Tab>
+		<Tab>three</Tab>
+	</TabList>
+
+	<TabPanel>
+		<h2>First panel</h2>
+	</TabPanel>
+
+	<TabPanel>
+		<h2>Second panel</h2>
+	</TabPanel>
+
+	<TabPanel>
+		<h2>Third panel</h2>
+	</TabPanel>
+</Tabs>
 {:else}
     Loading
 {/if}
-

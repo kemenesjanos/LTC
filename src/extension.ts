@@ -14,6 +14,8 @@ import * as fs from 'fs';
 var model = new DevicesData();
 
 export function activate(context: vscode.ExtensionContext) {
+  //TODO: when an other project is open the new project will not be initialized
+  //TODO: so copy the .vscode folder from the other project to the new and maybe refresh
 
   if (context.globalState.get<boolean>("isNewFile") === true) {
 
@@ -151,10 +153,6 @@ void loop(){
   );
 
   context.subscriptions.push(
-
-    //TODO: when an other project is open the new project will not be initialized
-    //TODO: so copy the .vscode folder from the other project to the new and maybe refresh
-    //TODO: show massage when there are an other project
     vscode.commands.registerCommand("LTC.newLTCProject", async () => {
       vscode.window.showInformationMessage("newLTCProject");
      
