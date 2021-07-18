@@ -5,6 +5,8 @@
 import ClassTab from './ClassTab.svelte';
 
     export let data;
+    let columns = ["Name", "Description"]
+	let properties = data.properties;
 
     const dispatch = createEventDispatcher();
     
@@ -14,22 +16,14 @@ import ClassTab from './ClassTab.svelte';
     }
 	
     function addRow() {
-		ddata = [...ddata, [...newRow]]
+		properties = [...properties, [...newRow]]
 		newRow = columns
 	}
 	
 	function deleteRow(rowToBeDeleted) {
-		ddata = ddata.filter(row => row != rowToBeDeleted)
+		properties = properties.filter(row => row != rowToBeDeleted)
 	}
 
-	let columns = ["Name", "Email", "Phone Number"]
-	let ddata = [
-    ["John", "john@example.com", "(353) 01 222 3333"],
-    ["Mark", "mark@gmail.com", "(01) 22 888 4444"],
-    ["Eoin", "eoin@gmail.com", "0097 22 654 00033"],
-    ["Sarah", "sarahcdd@gmail.com", "+322 876 1233"],
-    ["Afshin", "afshin@mail.com", "(353) 22 87 8356"]
-  ]
 	let newRow = [...columns];
 
 </script>
@@ -44,7 +38,7 @@ import ClassTab from './ClassTab.svelte';
 		{/each}
 	</tr>
 	
-	{#each ddata as row}
+	{#each properties as row}
         <tr>
 			{#each row as cell}
 			<td contenteditable="true" bind:innerHTML={cell} />

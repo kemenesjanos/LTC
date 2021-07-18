@@ -68,7 +68,10 @@ void loop(){
 
   //context.globalState.update("DevicesModel",model);
   if (typeof context.globalState.get<DevicesData>("DevicesModel") !== typeof undefined) {
+    //TODO: vissza csinálni:
+    ////////////////////////////////////////////////////////////////////////
     model = context.globalState.get<DevicesData>("DevicesModel") as DevicesData;
+    ////////////////////////////////////////////////////////////////
   }
 
   const sidebarProvider = new SidebarProvider(context.extensionUri);

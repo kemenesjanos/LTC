@@ -102,6 +102,7 @@ export class DeviceSettingPanel {
 							command: "init-message",
         					value: JSON.stringify(this.repo?.devicesData),
 						});
+						vscode.window.showInformationMessage(JSON.stringify(this.repo?.devicesData));
 						break;
 					case 'update':	
 						Object.assign(this.repo?.devicesData,JSON.parse(message.value));
