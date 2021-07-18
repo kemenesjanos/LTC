@@ -1,4 +1,4 @@
-import { Property } from "./property";
+import { Property } from "../property";
 
 export class PropertiesTabData {
     properties: Property[];
