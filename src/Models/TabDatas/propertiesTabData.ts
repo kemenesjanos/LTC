@@ -3,6 +3,6 @@ import { Property } from "../property";
 export class PropertiesTabData {
     properties: Property[];
     constructor() {
-        this.properties = [];
+        this.properties = [new Property("ALMA", "Alma leírás")];
     }
 }
