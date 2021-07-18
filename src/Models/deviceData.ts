@@ -1,8 +1,8 @@
-import { DescriptionTabData } from "./descriptionTabData";
+import { DescriptionTabData } from "./TabDatas/descriptionTabData";
 import {getNonce} from "../getNonce";
-import { PropertiesTabData } from "./propertiesTabData";
-import { MethodsTabData } from "./methodsTabData";
-import { ClassTabData } from "./classTabData";
+import { PropertiesTabData } from "./TabDatas/propertiesTabData";
+import { MethodsTabData } from "./TabDatas/methodsTabData";
+import { ClassTabData } from "./TabDatas/classTabData";
 
 export class Device {
     id: string;

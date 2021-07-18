@@ -1,4 +1,4 @@
-import { Method } from "./method";
+import { Method } from "../method";
 
 export class MethodsTabData {
     methods: Method[];
