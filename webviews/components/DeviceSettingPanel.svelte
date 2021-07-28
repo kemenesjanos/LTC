@@ -1,16 +1,18 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
-    import { globals } from "svelte/internal";
     import DescriptionTab from "./tabs/DescriptionTab.svelte";
     import PropertiesTab from "./tabs/PropertiesTab.svelte";
     import MethodsTab from "./tabs/MethodsTab.svelte";
     import ClassTab from "./tabs/ClassTab.svelte";
     import { Tabs, TabList, TabPanel, Tab } from './tabComponents/tabs.js';
+    
 
     let loaded = false;
     let jsonData = {
         devices: [{ descriptionTabData: {}, propertiesTabData: {}, methodsTabData: {}, classTabData: {}, id: "" }],
     };
+
+    let actualDeviceID = 0;
 
     
 
@@ -51,12 +53,6 @@
 
     function handleMessage(event: any) {
         switch (event.detail.type) {
-            case "update-descriptionTab":
-                // tsvscode.postMessage({
-                //     command: 'update-descriptionTab',
-                //     value:  JSON.stringify(jsonData.descriptionTabData)
-                // });
-                break;
             case "update":
                 tsvscode.postMessage({
                     command: "update",
@@ -72,15 +68,15 @@
             case "updateDevice":
                 tsvscode.postMessage({
                     command: "updateDevice",
-                    value: jsonData.devices.filter(
+                    value: JSON.stringify(jsonData.devices.filter(
                         (x) => x.id === event.detail.updateID
-                    ),
+                    )),
                 });
                 break;
             case "removeDevice":
                 tsvscode.postMessage({
                     command: "removeDevice",
-                    value: event.detail.removeId,
+                    value: JSON.stringify(event.detail.removeId),
                 });
                 break;
             case "addDevice":
@@ -93,6 +89,7 @@
                 break;
         }
     }
+
 
     
 </script>
@@ -108,22 +105,22 @@
 
 	<TabPanel>
 		<h2>Description</h2>
-        <DescriptionTab bind:data={jsonData.devices[0].descriptionTabData} on:message={handleMessage} />
+        <DescriptionTab bind:data={jsonData.devices[actualDeviceID].descriptionTabData} on:message={handleMessage} />
 	</TabPanel>
 
 	<TabPanel>
 		<h2>Properties</h2>
-        <PropertiesTab bind:data={jsonData.devices[0].propertiesTabData} on:message={handleMessage} />
+        <PropertiesTab bind:data={jsonData.devices[actualDeviceID].propertiesTabData} on:message={handleMessage} />
 	</TabPanel>
 
 	<TabPanel>
 		<h2>Methods</h2>
-        <MethodsTab bind:data={jsonData.devices[0].methodsTabData} on:message={handleMessage} />
+        <MethodsTab bind:data={jsonData.devices[actualDeviceID].methodsTabData} on:message={handleMessage} />
 	</TabPanel>
 
     <TabPanel>
 		<h2>Class</h2>
-        <ClassTab bind:data={jsonData.devices[0].classTabData} on:message={handleMessage} />
+        <ClassTab bind:data={jsonData.devices[actualDeviceID].classTabData} on:message={handleMessage} />
 	</TabPanel>
 </Tabs>
 {:else}

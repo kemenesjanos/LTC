@@ -7,14 +7,7 @@
     import ClassTab from "./ClassTab.svelte";
 
     export let data;
-    let columns = ["Name", "Description"];
-    let properties = [];
-
-    onMount( () => {
-        data.properties.forEach((element) => {
-            properties = [...properties, [element.name, element.description, element.id]];
-        });
-    });
+    let columns = {name:"Name", description:"Description"};
 
     const dispatch = createEventDispatcher();
 
@@ -24,42 +17,41 @@
         });
     }
 
+    //TODO: add data in the ts file with a message
+
     function addRow() {
-        properties = [...properties, [...newRow]];
+        data.properties = [...data.properties, {name:newRow.name, description:newRow.description}];
         newRow = columns;
     }
 
     function deleteRow(rowToBeDeleted) {
-        properties = properties.filter((row) => row != rowToBeDeleted);
+        data.properties = data.properties.filter((row) => row != rowToBeDeleted);
     }
 
-    let newRow = [...columns];
+    let newRow = columns;
 </script>
 
 <div>
-    <div>Properties</div>
+    <div>data.properties</div>
 </div>
 
 <table>
     <tr>
-        {#each columns as column}
-            <th>{column}</th>
-        {/each}
+        <th>columns.name</th>
+        <th>columns.description</th>
     </tr>
 
-    {#each properties as row}
+    {#each data.properties as row}
         <tr>
-            {#each row as cell}
-                <td contenteditable="true" bind:innerHTML={cell} />
-            {/each}
+            <td contenteditable="true" bind:innerHTML={row.name} />
+            <td contenteditable="true" bind:innerHTML={row.description} />
             <button on:click={() => deleteRow(row)}> Delete </button>
         </tr>
     {/each}
 
     <tr class="new">
-        {#each newRow as column}
-            <td contenteditable="true" bind:innerHTML={column} />
-        {/each}
+        <td contenteditable="true" bind:innerHTML={newRow.name} />
+        <td contenteditable="true" bind:innerHTML={newRow.description} />
         <button on:click={addRow}> add </button>
     </tr>
 </table>
