@@ -70,7 +70,7 @@ void loop(){
   if (typeof context.globalState.get<DevicesData>("DevicesModel") !== typeof undefined) {
     //TODO: vissza csinálni:
     ////////////////////////////////////////////////////////////////////////
-    //model = context.globalState.get<DevicesData>("DevicesModel") as DevicesData;
+    model = context.globalState.get<DevicesData>("DevicesModel") as DevicesData;
     ////////////////////////////////////////////////////////////////
   }
 

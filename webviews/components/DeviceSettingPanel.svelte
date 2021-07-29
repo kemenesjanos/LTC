@@ -5,6 +5,7 @@
     import MethodsTab from "./tabs/MethodsTab.svelte";
     import ClassTab from "./tabs/ClassTab.svelte";
     import { Tabs, TabList, TabPanel, Tab } from './tabComponents/tabs.js';
+
     
 
     let loaded = false;
