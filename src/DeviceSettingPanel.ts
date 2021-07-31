@@ -97,12 +97,7 @@ export class DeviceSettingPanel {
 						vscode.window.showErrorMessage(message.value);
 						break;
 					case 'init-view':
-						//always run if the panel is in focus
-						panel.webview.postMessage({
-							command: "init-message",
-        					value: JSON.stringify(this.repo?.devicesData),
-						});
-						vscode.window.showInformationMessage(JSON.stringify(this.repo?.devicesData));
+						this.initView();
 						break;
 					case 'update':	
 						Object.assign(this.repo?.devicesData,JSON.parse(message.value));
@@ -116,12 +111,19 @@ export class DeviceSettingPanel {
 					case 'addDevice':
 						this.addDevice();
 						break;
+					case 'removeProperty':
+						this.removeProperty(message.value, message.deviceId);
+						break;
+					case 'addProperty':
+						this.addProperty(message.deviceId);
+						break;
 				}
 			},
 			null,
 			this._disposables
 		);
 	}
+	
 
 	public dispose() {
 		DeviceSettingPanel.currentPanel = undefined;
@@ -185,6 +187,14 @@ export class DeviceSettingPanel {
 			</html>`;
 	}
 
+	private initView(){
+		this._panel.webview.postMessage({
+			command: "init-message",
+			value: JSON.stringify(this.repo?.devicesData),
+		});
+		vscode.window.showInformationMessage(JSON.stringify(this.repo?.devicesData));
+	}
+
 	//TODO: Testing methods
 	private updateDevice(value: string) {
 		try {
@@ -208,5 +218,14 @@ export class DeviceSettingPanel {
 	}
 	private addDevice() {
 		this.repo?.addDevice(new Device());
+	}
+
+	private addProperty(deviceId: string) {
+		this.repo?.addProperty(deviceId);
+		this.initView();
+	}
+	private removeProperty(propertyId: string, deviceId: string) {
+		this.repo?.removeProperty(propertyId, deviceId);
+		this.initView();
 	}
 }

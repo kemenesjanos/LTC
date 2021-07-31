@@ -17,15 +17,17 @@
         });
     }
 
-    //TODO: add data in the ts file with a message
-
-    function addRow() {
-        data.properties = [...data.properties, {name:newRow.name, description:newRow.description}];
-        newRow = columns;
+    function addProperty() {
+        dispatch("message", {
+            type: "addProperty",
+        });
     }
 
-    function deleteRow(rowToBeDeleted) {
-        data.properties = data.properties.filter((row) => row != rowToBeDeleted);
+    function removeProperty(propId) {
+        dispatch("message", {
+            type: "removeProperty",
+            propertyId: propId,
+        });
     }
 
     let newRow = columns;
@@ -45,13 +47,13 @@
         <tr>
             <td contenteditable="true" bind:innerHTML={row.name} />
             <td contenteditable="true" bind:innerHTML={row.description} />
-            <button on:click={() => deleteRow(row)}> Delete </button>
+            <button on:click={() => removeProperty(row.id)}> Delete </button>
         </tr>
     {/each}
 
     <tr class="new">
         <td contenteditable="true" bind:innerHTML={newRow.name} />
         <td contenteditable="true" bind:innerHTML={newRow.description} />
-        <button on:click={addRow}> add </button>
+        <button on:click={() => addProperty()}> add </button>
     </tr>
 </table>

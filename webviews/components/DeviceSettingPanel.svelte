@@ -13,7 +13,7 @@
         devices: [{ descriptionTabData: {}, propertiesTabData: {}, methodsTabData: {}, classTabData: {}, id: "" }],
     };
 
-    let actualDeviceID = 0;
+    let actualDevice = 0;
 
     
 
@@ -59,11 +59,6 @@
                     command: "update",
                     value: JSON.stringify(jsonData),
                 });
-                //TODO: place to somewhere else
-                tsvscode.postMessage({
-                    command: "save",
-                    value: JSON.stringify(jsonData),
-                });
 
                 break;
             case "updateDevice":
@@ -86,6 +81,19 @@
                     value: null,
                 });
                 break;
+            case "removeProperty":
+                tsvscode.postMessage({
+                    command: "removeProperty",
+                    value: event.detail.propertyId,
+                    deviceId: jsonData.devices[actualDevice].id,
+                });
+                break;
+            case "addProperty":
+                tsvscode.postMessage({
+                    command: "addProperty",
+                    deviceId: jsonData.devices[actualDevice].id,
+                });
+                break;
             default:
                 break;
         }
@@ -106,22 +114,22 @@
 
 	<TabPanel>
 		<h2>Description</h2>
-        <DescriptionTab bind:data={jsonData.devices[actualDeviceID].descriptionTabData} on:message={handleMessage} />
+        <DescriptionTab bind:data={jsonData.devices[actualDevice].descriptionTabData} on:message={handleMessage} />
 	</TabPanel>
 
 	<TabPanel>
 		<h2>Properties</h2>
-        <PropertiesTab bind:data={jsonData.devices[actualDeviceID].propertiesTabData} on:message={handleMessage} />
+        <PropertiesTab bind:data={jsonData.devices[actualDevice].propertiesTabData} on:message={handleMessage} />
 	</TabPanel>
 
 	<TabPanel>
 		<h2>Methods</h2>
-        <MethodsTab bind:data={jsonData.devices[actualDeviceID].methodsTabData} on:message={handleMessage} />
+        <MethodsTab bind:data={jsonData.devices[actualDevice].methodsTabData} on:message={handleMessage} />
 	</TabPanel>
 
     <TabPanel>
 		<h2>Class</h2>
-        <ClassTab bind:data={jsonData.devices[actualDeviceID].classTabData} on:message={handleMessage} />
+        <ClassTab bind:data={jsonData.devices[actualDevice].classTabData} on:message={handleMessage} />
 	</TabPanel>
 </Tabs>
 {:else}

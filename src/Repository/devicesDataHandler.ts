@@ -1,6 +1,7 @@
 import { on } from "node:events";
 import { Device } from "../Models/deviceData";
 import { DevicesData } from "../Models/devicesData";
+import { Property } from "../Models/property";
 
 export class DevicesDataHandler {
     devicesData: DevicesData;
@@ -45,4 +46,31 @@ export class DevicesDataHandler {
             return false;
         }
     }
+
+    /**
+     * addProperty
+     */
+     public addProperty(deviceId: string) : boolean {
+         if(this.devicesData.devices.find(x => x.id === deviceId) !== undefined){
+            this.devicesData.devices.find(x => x.id === deviceId)?.propertiesTabData.properties.push(new Property("New Property", "New Property Description"));
+            return true;
+         }
+         return false;
+    }
+
+    /**
+     * removeProperty
+     */
+     public removeProperty(propertyId: string, deviceId: string) : boolean {
+
+        var dev = this.devicesData.devices.findIndex(x => x.id===deviceId);
+        if (dev !== -1) {
+            var prop = this.devicesData.devices[dev].propertiesTabData.properties.findIndex(x => x.id === propertyId);
+            if (prop !== -1) {
+                this.devicesData.devices[dev].propertiesTabData.properties.splice(prop,1);
+                return true;
+            }
+        }
+        return false;
+   }
 }

@@ -226,8 +226,8 @@ void loop(){
       //Handle messages from device setting panel
       DeviceSettingPanel.currentPanel?._panel.webview.onDidReceiveMessage(
         (message) => {
-          const dd = JSON.parse(message.value);
           switch (message.command) {
+            //const dd = JSON.parse(message.value);
             // case 'update':
             //   Object.assign(model,dd);
 
