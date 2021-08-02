@@ -59,6 +59,10 @@
                     command: "update",
                     value: JSON.stringify(jsonData),
                 });
+                tsvscode.postMessage({
+                    command: "save",
+                    value: JSON.stringify(jsonData),
+                });
 
                 break;
             case "updateDevice":
@@ -94,6 +98,7 @@
                     deviceId: jsonData.devices[actualDevice].id,
                 });
                 break;
+
             default:
                 break;
         }

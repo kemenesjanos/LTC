@@ -7,7 +7,6 @@
     import ClassTab from "./ClassTab.svelte";
 
     export let data;
-    let columns = {name:"Name", description:"Description"};
 
     const dispatch = createEventDispatcher();
 
@@ -30,7 +29,6 @@
         });
     }
 
-    let newRow = columns;
 </script>
 
 <div>
@@ -39,8 +37,8 @@
 
 <table>
     <tr>
-        <th>columns.name</th>
-        <th>columns.description</th>
+        <th>Name</th>
+        <th>Description</th>
     </tr>
 
     {#each data.properties as row}
