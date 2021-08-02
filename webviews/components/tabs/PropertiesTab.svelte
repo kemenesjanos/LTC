@@ -45,15 +45,13 @@
 
     {#each data.properties as row}
         <tr>
-            <td contenteditable="true" bind:innerHTML={row.name} />
-            <td contenteditable="true" bind:innerHTML={row.description} />
+            <td contenteditable="true" bind:innerHTML={row.name} on:input={dataUpdated} />
+            <td contenteditable="true" bind:innerHTML={row.description} on:input={dataUpdated}/>
             <button on:click={() => removeProperty(row.id)}> Delete </button>
         </tr>
     {/each}
 
-    <tr class="new">
-        <td contenteditable="true" bind:innerHTML={newRow.name} />
-        <td contenteditable="true" bind:innerHTML={newRow.description} />
+    <tr>
         <button on:click={() => addProperty()}> add </button>
     </tr>
 </table>
