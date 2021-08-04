@@ -121,6 +121,9 @@
     "webpack-cli": "^4.2.0"
   },
   "dependencies": {
+    "@smui/drawer": "^4.2.0",
+    "smelte": "^1.1.6",
+    "svelte-layouts": "^0.3.0",
     "svelte-tabs": "^1.1.0"
   },
   "extensionDependencies": [

@@ -7,6 +7,7 @@ import { DevicesData } from "./Models/devicesData";
 import { Console } from "node:console";
 import { DevicesDataHandler } from "./Repository/devicesDataHandler";
 import * as fs from 'fs';
+import { Device } from "./Models/deviceData";
 
 
 //TODO: in edit condiguration / include path. we can add a path where to get the includes. So we have to put the devices in a location
@@ -218,6 +219,7 @@ void loop(){
     })
   );
 
+
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.openDevicesPanel", () => {
       DeviceSettingPanel.currentPanel?.dispose();
@@ -240,6 +242,8 @@ void loop(){
       );
     }
     ));
+
+    
 
 
   //If there is already an opened panel it will show just that

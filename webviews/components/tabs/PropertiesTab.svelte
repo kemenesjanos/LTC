@@ -31,22 +31,21 @@
 
 </script>
 
-<div>
-    <div>data.properties</div>
-</div>
-
 <table>
     <tr>
         <th>Name</th>
         <th>Description</th>
     </tr>
 
+    <!-- TODO:Implement with cards -->
     {#each data.properties as row}
         <tr>
             <td contenteditable="true" bind:innerHTML={row.name} on:input={dataUpdated} />
             <td contenteditable="true" bind:innerHTML={row.description} on:input={dataUpdated}/>
             <button on:click={() => removeProperty(row.id)}> Delete </button>
         </tr>
+    {:else}
+        <tr>There are no properties yet.</tr>
     {/each}
 
     <tr>

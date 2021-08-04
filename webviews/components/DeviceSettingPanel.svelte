@@ -4,17 +4,31 @@
     import PropertiesTab from "./tabs/PropertiesTab.svelte";
     import MethodsTab from "./tabs/MethodsTab.svelte";
     import ClassTab from "./tabs/ClassTab.svelte";
-    import { Tabs, TabList, TabPanel, Tab } from './tabComponents/tabs.js';
-
+    // import { Tabs, TabList, TabPanel, Tab } from './tabComponents/tabs.js';
+    import Tabs from './sharedComponents/TabsTest.svelte';
     
 
     let loaded = false;
+
     let jsonData = {
         devices: [{ descriptionTabData: {}, propertiesTabData: {}, methodsTabData: {}, classTabData: {}, id: "" }],
     };
 
     let actualDevice = 0;
 
+    
+    $:{
+        if (loaded) {
+            tsvscode.postMessage({
+                    command: "update",
+                    value: JSON.stringify(jsonData),
+                });
+            tsvscode.postMessage({
+                command: "save",
+            });
+        }
+        
+    }
     
 
     //it is called when the svelte is ready
@@ -25,12 +39,7 @@
         });
     });
 
-    onDestroy(() => {
-        tsvscode.postMessage({
-            command: "alert",
-            value: "teszt",
-        });
-    });
+
 
     window.addEventListener("message", (event) => {
         const message = event.data;
@@ -55,16 +64,14 @@
     function handleMessage(event: any) {
         switch (event.detail.type) {
             case "update":
-                tsvscode.postMessage({
-                    command: "update",
-                    value: JSON.stringify(jsonData),
-                });
-                tsvscode.postMessage({
-                    command: "save",
-                    value: JSON.stringify(jsonData),
-                });
-
-                break;
+                // tsvscode.postMessage({
+                //     command: "update",
+                //     value: JSON.stringify(jsonData),
+                // });
+                // tsvscode.postMessage({
+                //     command: "save",
+                // });
+                // break;
             case "updateDevice":
                 tsvscode.postMessage({
                     command: "updateDevice",
@@ -104,11 +111,25 @@
         }
     }
 
-
+    let items = ['Description', 'Properties', 'Methods', 'Class'];
+    let activeItem = 'Description';
+    const tabChange = (e: { detail: string; }) => activeItem = e.detail;
     
 </script>
 
 {#if loaded}
+<Tabs {activeItem} {items} on:tabChange={tabChange} />
+    {#if activeItem === 'Description'}
+        <p><DescriptionTab bind:data={jsonData.devices[actualDevice].descriptionTabData} on:message={handleMessage} /> </p>
+    {:else if activeItem === 'Properties'}
+        <p><PropertiesTab bind:data={jsonData.devices[actualDevice].propertiesTabData} on:message={handleMessage} /></p>
+    {:else if activeItem === 'Methods'}
+        <p><MethodsTab bind:data={jsonData.devices[actualDevice].methodsTabData} on:message={handleMessage} /></p>
+    {:else if activeItem === 'Class'}
+        <p><ClassTab bind:data={jsonData.devices[actualDevice].classTabData} on:message={handleMessage} /></p>
+  {/if}
+
+<!-- 
 <Tabs>
 	<TabList>
 		<Tab>Description</Tab>
@@ -136,7 +157,7 @@
 		<h2>Class</h2>
         <ClassTab bind:data={jsonData.devices[actualDevice].classTabData} on:message={handleMessage} />
 	</TabPanel>
-</Tabs>
+</Tabs> -->
 {:else}
     Loading
 {/if}

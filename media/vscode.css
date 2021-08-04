@@ -95,3 +95,28 @@ textarea::placeholder {
 .selected {
   background-color:  var(--vscode-input-placeholderForeground);
 }
+
+
+
+
+.tabs{
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+ul{
+  display: flex;
+  justify-content: flex-start;
+  padding: 0;
+  list-style-type: none;
+}
+li{
+  margin: 0 8px;
+  font-size: 18px;
+  color: #555;
+  cursor: pointer;
+}
+.active{
+  color: white;
+  border-bottom: 2px solid var(--vscode-button-background);
+  padding-bottom: 8px;
+}
