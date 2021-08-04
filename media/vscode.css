@@ -114,9 +114,37 @@ li{
   font-size: 18px;
   color: #555;
   cursor: pointer;
+  user-select: none;
+  list-style-type: none;
+  text-align: center;
+  padding: 10px;
 }
 .active{
   color: white;
   border-bottom: 2px solid var(--vscode-button-background);
   padding-bottom: 8px;
+}
+
+select{
+  margin: 0 8px;
+  font-size: 24px;
+  padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+  width: 90%;
+  text-align: center;
+  color: white;
+  background-color: transparent;
+  border-color: transparent;
+  border-bottom: 2px solid var(--vscode-button-background);
+}
+
+.DeviceSettingPanelContainer{
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+}
+
+.vActive{
+  color: white;
+  background-color: var(--vscode-button-background);
+  text-align: center;
+  padding: 10px;
 }

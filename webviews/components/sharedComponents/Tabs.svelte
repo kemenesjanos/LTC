@@ -9,7 +9,7 @@
   <div class="tabs">
     <ul>
       {#each items as item}
-        <li on:click={() => dispatch('tabChange', item)}>
+        <li on:mouseup={() => dispatch('tabChange', item)}>
           <div class:active={item === activeItem}>{ item }</div>
         </li>
       {/each}

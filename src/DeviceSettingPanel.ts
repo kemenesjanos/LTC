@@ -30,6 +30,8 @@ export class DeviceSettingPanel {
 	private readonly _extensionUri: vscode.Uri;
 	private _disposables: vscode.Disposable[] = [];
 
+	
+
 
 	//////////////////////////////////////////////////////////////////////////////
 	//public model?: DevicesData;
@@ -44,7 +46,7 @@ export class DeviceSettingPanel {
 
 		// If we already have a panel, show it.
 		if (DeviceSettingPanel.currentPanel) {
-			DeviceSettingPanel.currentPanel._panel.reveal(column);
+			DeviceSettingPanel.currentPanel?._panel.reveal(column);
 			return;
 		}
 
@@ -68,6 +70,7 @@ export class DeviceSettingPanel {
 	}
 
 	private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
+		
 		this._panel = panel;
 		this._extensionUri = extensionUri;
 
