@@ -206,7 +206,7 @@ export class DeviceSettingPanel {
 			var tmp = new Device();
 			Object.assign(tmp, value);
 			this.repo?.updateDevice(tmp.id,tmp);
-
+			this.initView();
 		} catch (error) {
 			vscode.window.showErrorMessage('Cannot update device');
 		}
@@ -216,13 +216,14 @@ export class DeviceSettingPanel {
 			var tmp = new Device();
 			Object.assign(tmp, value);
 			this.repo?.removeDevice(tmp.id);
-
+			this.initView();
 		} catch (error) {
 			vscode.window.showErrorMessage('Cannot remove device');
 		}
 	}
 	private addDevice() {
 		this.repo?.addDevice(new Device());
+		this.initView();
 	}
 
 	private addProperty(deviceId: string) {

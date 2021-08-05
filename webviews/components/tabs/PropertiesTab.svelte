@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
 
     import { createEventDispatcher } from "svelte";
+import { object_without_properties } from "svelte/internal";
 
     import { fade } from "svelte/transition";
     import ClassTab from "./ClassTab.svelte";

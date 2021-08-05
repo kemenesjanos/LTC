@@ -7,7 +7,7 @@
     // import { Tabs, TabList, TabPanel, Tab } from './tabComponents/tabs.js';
     import Tabs from "./sharedComponents/Tabs.svelte";
     import { each, xlink_attr } from "svelte/internal";
-import VerticalTabs from "./sharedComponents/VerticalTabs.svelte";
+    import VerticalTabs from "./sharedComponents/VerticalTabs.svelte";
 
     let loaded = false;
 
@@ -23,17 +23,14 @@ import VerticalTabs from "./sharedComponents/VerticalTabs.svelte";
         ],
     };
 
-    let actualDevice = "";
-    let actualDeviceSN = 0;
+    // let actualDevice = "";
+    // let actualDeviceSN = 0;
 
-    $: {
-        if (loaded) {
-            actualDevice = jsonData.devices[actualDeviceSN].id;
-            actualDeviceSN = jsonData.devices.findIndex(
-                (x) => x.id === actualDevice
-            );
-        }
-    }
+    // $: {
+    //     if (loaded) {
+    //         actualDevice = jsonData.devices[actualDeviceSN].id;
+    //     }
+    // }
 
     $: {
         if (loaded) {
@@ -61,7 +58,17 @@ import VerticalTabs from "./sharedComponents/VerticalTabs.svelte";
             case "init-message":
                 jsonData = JSON.parse(message.value);
 
-                loaded = true;
+                if (loaded) {
+                    //vertActiveItem = jsonData.devices[0]
+                    vertActiveItem = jsonData.devices[jsonData.devices.findIndex(x=> x.id === vertActiveItem.id)];
+                }
+                else{
+                    vertActiveItem = jsonData.devices[0];
+                    loaded = true;
+                }
+                
+                
+                
                 break;
             /* case "update":
                 const value = message.value;
@@ -112,13 +119,13 @@ import VerticalTabs from "./sharedComponents/VerticalTabs.svelte";
                 tsvscode.postMessage({
                     command: "removeProperty",
                     value: event.detail.propertyId,
-                    deviceId: actualDevice,
+                    deviceId: vertActiveItem.id,
                 });
                 break;
             case "addProperty":
                 tsvscode.postMessage({
                     command: "addProperty",
-                    deviceId: actualDevice,
+                    deviceId: vertActiveItem.id,
                 });
                 break;
 
@@ -134,58 +141,77 @@ import VerticalTabs from "./sharedComponents/VerticalTabs.svelte";
     $: {
         vertItems = jsonData.devices;
     }
-    
+
     let vertActiveItem = jsonData.devices[0];
 
+    $:{
+        jsonData.devices[jsonData.devices.findIndex(x=> x.id === vertActiveItem.id)] = vertActiveItem; 
+    }
+
     const tabChange = (e: { detail: string }) => (activeItem = e.detail);
-    const vertTabChange = (e: { detail: any }) => (vertActiveItem = e.detail);
+
+    const vertTabChange = (e: { detail: any }) => {
+        vertActiveItem = jsonData.devices.find(x => x.id===e.detail.id)!;
+    };
+
+    function addDevice() {
+        tsvscode.postMessage({
+            command: "addDevice",
+            value: null,
+        });
+    }
 </script>
 
 {#if loaded}
-<div class="DeviceSettingPanelContainer">
+    <button on:click={() => addDevice()}>add</button>
+    <div class="DeviceSettingPanelContainer">
+        <VerticalTabs
+            {vertActiveItem}
+            {vertItems}
+            on:vertTabChange={vertTabChange}
+        />
 
-    <VerticalTabs {vertActiveItem} {vertItems} on:vertTabChange={vertTabChange}/>
-    
-    <!-- <select bind:value={actualDevice}>
+        <!-- <select bind:value={actualDevice}>
         {#each jsonData.devices as device}
             <option value={device.id}>{device.descriptionTabData.name}</option>
         {/each}
     </select> -->
-    <div>
-        <Tabs {activeItem} {items} on:tabChange={tabChange} />
-        {#if activeItem === "Description"}
-            <p>
-                <DescriptionTab
-                    bind:data={jsonData.devices[actualDeviceSN].descriptionTabData}
-                    on:message={handleMessage}
-                />
-            </p>
-        {:else if activeItem === "Properties"}
-            <p>
-                <PropertiesTab
-                    bind:data={jsonData.devices[actualDeviceSN].propertiesTabData}
-                    on:message={handleMessage}
-                />
-            </p>
-        {:else if activeItem === "Methods"}
-            <p>
-                <MethodsTab
-                    bind:data={jsonData.devices[actualDeviceSN].methodsTabData}
-                    on:message={handleMessage}
-                />
-            </p>
-        {:else if activeItem === "Class"}
-            <p>
-                <ClassTab
-                    bind:data={jsonData.devices[actualDeviceSN].classTabData}
-                    on:message={handleMessage}
-                />
-            </p>
-        {/if}
+        <div>
+            <Tabs {activeItem} {items} on:tabChange={tabChange} />
+            {#if activeItem === "Description"}
+                <p>
+                    <DescriptionTab
+                        bind:data={vertActiveItem
+                            .descriptionTabData}
+                        on:message={handleMessage}
+                    />
+                </p>
+            {:else if activeItem === "Properties"}
+                <p>
+                    <PropertiesTab
+                        bind:data={vertActiveItem.propertiesTabData}
+                        on:message={handleMessage}
+                    />
+                </p>
+            {:else if activeItem === "Methods"}
+                <p>
+                    <MethodsTab
+                        bind:data={vertActiveItem
+                            .methodsTabData}
+                        on:message={handleMessage}
+                    />
+                </p>
+            {:else if activeItem === "Class"}
+                <p>
+                    <ClassTab
+                        bind:data={vertActiveItem
+                            .classTabData}
+                        on:message={handleMessage}
+                    />
+                </p>
+            {/if}
+        </div>
     </div>
-    
-</div>
-    
 {:else}
     Loading
 {/if}
