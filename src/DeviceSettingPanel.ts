@@ -30,7 +30,7 @@ export class DeviceSettingPanel {
 	private readonly _extensionUri: vscode.Uri;
 	private _disposables: vscode.Disposable[] = [];
 
-	
+
 
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -70,7 +70,7 @@ export class DeviceSettingPanel {
 	}
 
 	private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
-		
+
 		this._panel = panel;
 		this._extensionUri = extensionUri;
 
@@ -102,8 +102,8 @@ export class DeviceSettingPanel {
 					case 'init-view':
 						this.initView();
 						break;
-					case 'update':	
-						Object.assign(this.repo?.devicesData,JSON.parse(message.value));
+					case 'update':
+						Object.assign(this.repo?.devicesData, JSON.parse(message.value));
 						break;
 					case 'updateDevice':
 						this.updateDevice(JSON.parse(message.value));
@@ -126,10 +126,10 @@ export class DeviceSettingPanel {
 			this._disposables
 		);
 	}
-	
+
 
 	public dispose() {
-		
+
 		DeviceSettingPanel.currentPanel = undefined;
 		// Clean up our resources
 		this._panel.dispose();
@@ -141,12 +141,12 @@ export class DeviceSettingPanel {
 			}
 		}
 
-		
+
 	}
 
 	private _update() {
 		const webview = this._panel.webview;
-        this._panel.webview.html = this._getHtmlForWebview(webview);
+		this._panel.webview.html = this._getHtmlForWebview(webview);
 
 	}
 
@@ -156,8 +156,8 @@ export class DeviceSettingPanel {
 
 		// And the uri we use to load this script in the webview
 		const scriptUri = webview.asWebviewUri(
-            vscode.Uri.joinPath(this._extensionUri, "out/compiled", "DeviceSettingPanel.js")
-          );
+			vscode.Uri.joinPath(this._extensionUri, "out/compiled", "DeviceSettingPanel.js")
+		);
 
 		// Local path to css styles
 		const styleResetPath = vscode.Uri.joinPath(this._extensionUri, 'media', 'reset.css');
@@ -192,7 +192,7 @@ export class DeviceSettingPanel {
 			</html>`;
 	}
 
-	private initView(){
+	private initView() {
 		this._panel.webview.postMessage({
 			command: "init-message",
 			value: JSON.stringify(this.repo?.devicesData),
@@ -205,21 +205,30 @@ export class DeviceSettingPanel {
 		try {
 			var tmp = new Device();
 			Object.assign(tmp, value);
-			this.repo?.updateDevice(tmp.id,tmp);
+			this.repo?.updateDevice(tmp.id, tmp);
 			this.initView();
 		} catch (error) {
 			vscode.window.showErrorMessage('Cannot update device');
 		}
 	}
-	private removeDevice(value: string) {
-		try {
-			var tmp = new Device();
-			Object.assign(tmp, value);
-			this.repo?.removeDevice(tmp.id);
-			this.initView();
-		} catch (error) {
-			vscode.window.showErrorMessage('Cannot remove device');
+	private async removeDevice(value: any) {
+		const answer = await vscode.window.showInformationMessage(
+			"Are you want to delete this device ("+ value.descriptionTabData.name +")?",
+			"Yes",
+			"No"
+		);
+
+		if (answer === "Yes") {
+			try {
+				var tmp = new Device();
+				Object.assign(tmp, value);
+				this.repo?.removeDevice(tmp.id);
+			} catch (error) {
+				vscode.window.showErrorMessage('Cannot remove device');
+			}
 		}
+
+		this.initView();
 	}
 	private addDevice() {
 		this.repo?.addDevice(new Device());

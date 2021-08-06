@@ -33,7 +33,7 @@
     // }
 
     $: {
-        if (loaded) {
+        if (loaded && jsonData.devices.length !== 0) {
             tsvscode.postMessage({
                 command: "update",
                 value: JSON.stringify(jsonData),
@@ -58,17 +58,27 @@
             case "init-message":
                 jsonData = JSON.parse(message.value);
 
-                if (loaded) {
-                    //vertActiveItem = jsonData.devices[0]
-                    vertActiveItem = jsonData.devices[jsonData.devices.findIndex(x=> x.id === vertActiveItem.id)];
+                if (jsonData.devices.length === 0) {
+                    vertActiveItem = null;
+                } else {
+                    if (loaded) {
+                        if (vertActiveItem === null) {
+                            vertActiveItem = jsonData.devices[0];
+                        } else {
+                            vertActiveItem =
+                                jsonData.devices[
+                                    jsonData.devices.findIndex(
+                                        (x) => x.id === vertActiveItem.id
+                                    )
+                                ];
+                        }
+                    } else {
+                        vertActiveItem = jsonData.devices[0];
+                    }
                 }
-                else{
-                    vertActiveItem = jsonData.devices[0];
-                    loaded = true;
-                }
-                
-                
-                
+
+                loaded = true;
+
                 break;
             /* case "update":
                 const value = message.value;
@@ -94,14 +104,16 @@
             // });
             // break;
             case "updateDevice":
-                tsvscode.postMessage({
-                    command: "updateDevice",
-                    value: JSON.stringify(
-                        jsonData.devices.filter(
-                            (x) => x.id === event.detail.updateID
-                        )
-                    ),
-                });
+                if (jsonData.devices.length !== 0) {
+                    tsvscode.postMessage({
+                        command: "updateDevice",
+                        value: JSON.stringify(
+                            jsonData.devices.filter(
+                                (x) => x.id === event.detail.updateID
+                            )
+                        ),
+                    });
+                }
                 break;
             case "removeDevice":
                 tsvscode.postMessage({
@@ -137,21 +149,20 @@
     let items = ["Description", "Properties", "Methods", "Class"];
     let activeItem = "Description";
 
-    let vertItems = jsonData.devices;
+    let vertActiveItem: any | null = null;
+
     $: {
-        vertItems = jsonData.devices;
-    }
-
-    let vertActiveItem = jsonData.devices[0];
-
-    $:{
-        jsonData.devices[jsonData.devices.findIndex(x=> x.id === vertActiveItem.id)] = vertActiveItem; 
+        if (jsonData.devices.length !== 0 && vertActiveItem) {
+            jsonData.devices[
+                jsonData.devices.findIndex((x) => x.id === vertActiveItem.id)
+            ] = vertActiveItem;
+        }
     }
 
     const tabChange = (e: { detail: string }) => (activeItem = e.detail);
 
     const vertTabChange = (e: { detail: any }) => {
-        vertActiveItem = jsonData.devices.find(x => x.id===e.detail.id)!;
+        vertActiveItem = jsonData?.devices.find((x) => x.id === e.detail.id)!;
     };
 
     function addDevice() {
@@ -160,58 +171,71 @@
             value: null,
         });
     }
+
+    function removeDevice() {
+        tsvscode.postMessage({
+            command: "removeDevice",
+            value: JSON.stringify(vertActiveItem),
+        });
+
+        vertActiveItem = null;
+    }
 </script>
 
 {#if loaded}
     <button on:click={() => addDevice()}>add</button>
-    <div class="DeviceSettingPanelContainer">
-        <VerticalTabs
-            {vertActiveItem}
-            {vertItems}
-            on:vertTabChange={vertTabChange}
-        />
+    <button disabled={jsonData === null} on:click={() => removeDevice()}
+        >remove</button
+    >
+    {#if jsonData.devices.length !== 0}
+        <div class="DeviceSettingPanelContainer">
+            <VerticalTabs
+                {vertActiveItem}
+                vertItems={jsonData.devices}
+                on:vertTabChange={vertTabChange}
+            />
 
-        <!-- <select bind:value={actualDevice}>
+            <!-- <select bind:value={actualDevice}>
         {#each jsonData.devices as device}
             <option value={device.id}>{device.descriptionTabData.name}</option>
         {/each}
     </select> -->
-        <div>
-            <Tabs {activeItem} {items} on:tabChange={tabChange} />
-            {#if activeItem === "Description"}
-                <p>
-                    <DescriptionTab
-                        bind:data={vertActiveItem
-                            .descriptionTabData}
-                        on:message={handleMessage}
-                    />
-                </p>
-            {:else if activeItem === "Properties"}
-                <p>
-                    <PropertiesTab
-                        bind:data={vertActiveItem.propertiesTabData}
-                        on:message={handleMessage}
-                    />
-                </p>
-            {:else if activeItem === "Methods"}
-                <p>
-                    <MethodsTab
-                        bind:data={vertActiveItem
-                            .methodsTabData}
-                        on:message={handleMessage}
-                    />
-                </p>
-            {:else if activeItem === "Class"}
-                <p>
-                    <ClassTab
-                        bind:data={vertActiveItem
-                            .classTabData}
-                        on:message={handleMessage}
-                    />
-                </p>
+            {#if vertActiveItem}
+                <div>
+                    <Tabs {activeItem} {items} on:tabChange={tabChange} />
+                    {#if activeItem === "Description"}
+                        <p>
+                            <DescriptionTab
+                                bind:data={vertActiveItem.descriptionTabData}
+                                on:message={handleMessage}
+                            />
+                        </p>
+                    {:else if activeItem === "Properties"}
+                        <p>
+                            <PropertiesTab
+                                bind:data={vertActiveItem.propertiesTabData}
+                                on:message={handleMessage}
+                            />
+                        </p>
+                    {:else if activeItem === "Methods"}
+                        <p>
+                            <MethodsTab
+                                bind:data={vertActiveItem.methodsTabData}
+                                on:message={handleMessage}
+                            />
+                        </p>
+                    {:else if activeItem === "Class"}
+                        <p>
+                            <ClassTab
+                                bind:data={vertActiveItem.classTabData}
+                                on:message={handleMessage}
+                            />
+                        </p>
+                    {/if}
+                </div>
             {/if}
         </div>
-    </div>
+    {/if}
 {:else}
     Loading
 {/if}
