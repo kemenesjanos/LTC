@@ -18,6 +18,10 @@ export function activate(context: vscode.ExtensionContext) {
   //TODO: when an other project is open the new project will not be initialized
   //TODO: so copy the .vscode folder from the other project to the new and maybe refresh
 
+  if(context.globalState.get<boolean>("isDeviceSettingPanelOpen") === true){
+    vscode.commands.executeCommand("LTC.openDevicesPanel");
+  }
+
   if (context.globalState.get<boolean>("isNewFile") === true) {
 
     if (vscode.workspace.workspaceFolders?.length === undefined ? 0 : vscode.workspace.workspaceFolders.length > 1){
@@ -225,6 +229,8 @@ void loop(){
       DeviceSettingPanel.currentPanel?.dispose();
       DeviceSettingPanel.createOrShow(context.extensionUri, model);
 
+      DeviceSettingPanel.currentPanel?._panel.onDidDispose( x => context.globalState.update("isDeviceSettingPanelOpen",DeviceSettingPanel.currentPanel?._panel.visible));
+
       //Handle messages from device setting panel
       DeviceSettingPanel.currentPanel?._panel.webview.onDidReceiveMessage(
         (message) => {
@@ -236,6 +242,13 @@ void loop(){
             //   break;
             case 'save':
               context.globalState.update("DevicesModel", model);
+              break;
+            case "init-view":
+              context.globalState.update("isDeviceSettingPanelOpen", true);
+              break;
+            case "dispose":
+              vscode.window.showInformationMessage("dispose");
+              context.globalState.update("isDeviceSettingPanelOpen", false);
               break;
           }
         }

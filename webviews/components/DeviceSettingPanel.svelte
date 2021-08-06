@@ -4,9 +4,7 @@
     import PropertiesTab from "./tabs/PropertiesTab.svelte";
     import MethodsTab from "./tabs/MethodsTab.svelte";
     import ClassTab from "./tabs/ClassTab.svelte";
-    // import { Tabs, TabList, TabPanel, Tab } from './tabComponents/tabs.js';
     import Tabs from "./sharedComponents/Tabs.svelte";
-    import { each, xlink_attr } from "svelte/internal";
     import VerticalTabs from "./sharedComponents/VerticalTabs.svelte";
 
     let loaded = false;
@@ -49,6 +47,12 @@
         tsvscode.postMessage({
             command: "init-view",
             value: null,
+        });
+    });
+
+    onDestroy(() => {
+        tsvscode.postMessage({
+            command: "dispose",
         });
     });
 
