@@ -8,6 +8,7 @@
     import ClassTab from "./ClassTab.svelte";
 
     import ExpansionPanel from '../sharedComponents/ExpansionPanel.svelte';
+    import Textfield from "../sharedComponents/Textfield.svelte";
 
 
     export let data;
@@ -38,13 +39,24 @@
     <!-- TODO:Implement with cards -->
     {#each data.properties as row}
             <div>
-                <ExpansionPanel bind:name={row.name} bind:id={row.id}>
-                    <td>
-                        <input type="text" bind:value={row.name}/>
-                    </td>
-                    <td>
-                        <input type="text" bind:value={row.description}/>
-                    </td>
+                <ExpansionPanel bind:name={row.name} bind:id={row.id} >
+                    <table>
+                        <tr>
+                            <td>Name:</td>
+                            <td><Textfield 
+                                autocomplete="off"
+                                label="Name"
+                                bind:value={row.name}
+                                message="message text" bind:name={row.name} bind:id={row.id}
+                                messagePersist/></td>
+                            
+                        </tr>
+                        <tr>
+                            <td>Description:</td>
+                            <td><input type="text" bind:value={row.description}/></td>
+                        </tr>
+                    </table>
+                    
                     <button on:click={() => removeProperty(row.id)}> Delete </button>
                 </ExpansionPanel>
             </div>

@@ -213,7 +213,7 @@ export class DeviceSettingPanel {
 	}
 	private async removeDevice(value: any) {
 		const answer = await vscode.window.showInformationMessage(
-			"Are you want to delete this device ("+ value.descriptionTabData.name +")?",
+			"Do you want to delete this device ("+ value.descriptionTabData.name +")?",
 			"Yes",
 			"No"
 		);

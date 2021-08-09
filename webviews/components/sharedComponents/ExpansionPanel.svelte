@@ -45,7 +45,7 @@
 		const { name, group, dense, rotate, expand, disabled, id, ...other } = $$props;
 		delete other.class;
 		attrs = other;
-	}
+}
 	$: if (expand) {
 		group = id;
 	}
