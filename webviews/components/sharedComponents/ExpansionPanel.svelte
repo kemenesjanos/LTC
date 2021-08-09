@@ -30,9 +30,10 @@
 	import { getEventsAction } from './events';
 	const events = getEventsAction(current_component);
 	const dispatch = createEventDispatcher();
-	export { className as class, name, group, dense, rotate, expand, disabled };
+	export { className as class, name, group, dense, rotate, expand, disabled, id };
 	let className = '';
 	let name = '?';
+	let id = '';
 	let group = '';
 	let dense = false;
 	let rotate = true;
@@ -41,17 +42,17 @@
 	let attrs = {};
 	$: {
 		/* eslint-disable no-unused-vars */
-		const { name, group, dense, rotate, expand, disabled, ...other } = $$props;
+		const { name, group, dense, rotate, expand, disabled, id, ...other } = $$props;
 		delete other.class;
 		attrs = other;
 	}
 	$: if (expand) {
-		group = name;
+		group = id;
 	}
-	$: active = group === name;
-	$: dispatch('change', { expanded: active, name });
+	$: active = group === id;
+	$: dispatch('change', { expanded: active, id });
 	function onclick(e) {
-		group = group === name ? '' : name;
+		group = group === id ? '' : id;
 		e.target.classList.remove('focus-visible');
 	}
 </script>

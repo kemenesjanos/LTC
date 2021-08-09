@@ -120,7 +120,7 @@ li{
   padding: 10px;
 }
 .active{
-  color: white;
+  color: var(--vscode-input-foreground);
   border-bottom: 2px solid var(--vscode-button-background);
   padding-bottom: 8px;
 }
@@ -146,7 +146,7 @@ select{
   color: white;
   background-color: var(--vscode-button-background);
   text-align: center;
-  padding: 10px;
+  padding-bottom: 10px;
 }
 
 
@@ -157,6 +157,11 @@ select{
 		box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
 			0px 1px 3px 0px var(--border, #dfdfdf);
 		transition: margin 0.25s;
+		margin-bottom: 15px;
+	}
+
+	.header:hover{
+		background-color: gray;
 	}
 	.panel::before {
 		position: absolute;

@@ -33,41 +33,22 @@
         });
     }
 
-    
-    let group = '';
-
 </script>
-
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Description</th>
-    </tr>
 
     <!-- TODO:Implement with cards -->
     {#each data.properties as row}
-        <tr>
-            <td>
-                <input type="text" bind:value={row.name}/>
-            </td>
-            <td>
-                <input type="text" bind:value={row.description}/>
-            </td>
-            <button on:click={() => removeProperty(row.id)}> Delete </button>
-        </tr>
+            <div>
+                <ExpansionPanel bind:name={row.name} bind:id={row.id}>
+                    <td>
+                        <input type="text" bind:value={row.name}/>
+                    </td>
+                    <td>
+                        <input type="text" bind:value={row.description}/>
+                    </td>
+                    <button on:click={() => removeProperty(row.id)}> Delete </button>
+                </ExpansionPanel>
+            </div>
     {:else}
-        <tr>There are no properties yet.</tr>
+        <div>There are no properties yet.</div>
     {/each}
-
-    <tr>
         <button on:click={() => addProperty()}> add </button>
-    </tr>
-</table>
-
-<ExpansionPanel name="Panel 1" bind:group>
-    <div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis quod culpa et,
-        dolores omnis, ipsum in perspiciatis porro ut nihil molestiae molestias tenetur delectus
-        velit! Inventore laborum rerum at id?
-    </div>
-</ExpansionPanel>
