@@ -122,8 +122,10 @@
   },
   "dependencies": {
     "@smui/drawer": "^4.2.0",
+    "nvm": "0.0.4",
     "smelte": "^1.1.6",
     "svelte-layouts": "^0.3.0",
+    "svelte-materialify": "^0.3.11",
     "svelte-tabs": "^1.1.0"
   },
   "extensionDependencies": [

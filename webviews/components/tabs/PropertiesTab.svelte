@@ -2,10 +2,13 @@
     import { onMount } from "svelte";
 
     import { createEventDispatcher } from "svelte";
-import { object_without_properties } from "svelte/internal";
+    import { object_without_properties } from "svelte/internal";
 
     import { fade } from "svelte/transition";
     import ClassTab from "./ClassTab.svelte";
+
+    import ExpansionPanel from '../sharedComponents/ExpansionPanel.svelte';
+
 
     export let data;
 
@@ -30,6 +33,9 @@ import { object_without_properties } from "svelte/internal";
         });
     }
 
+    
+    let group = '';
+
 </script>
 
 <table>
@@ -41,8 +47,12 @@ import { object_without_properties } from "svelte/internal";
     <!-- TODO:Implement with cards -->
     {#each data.properties as row}
         <tr>
-            <td contenteditable="true" bind:innerHTML={row.name} on:input={dataUpdated} />
-            <td contenteditable="true" bind:innerHTML={row.description} on:input={dataUpdated}/>
+            <td>
+                <input type="text" bind:value={row.name}/>
+            </td>
+            <td>
+                <input type="text" bind:value={row.description}/>
+            </td>
             <button on:click={() => removeProperty(row.id)}> Delete </button>
         </tr>
     {:else}
@@ -53,3 +63,11 @@ import { object_without_properties } from "svelte/internal";
         <button on:click={() => addProperty()}> add </button>
     </tr>
 </table>
+
+<ExpansionPanel name="Panel 1" bind:group>
+    <div>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis quod culpa et,
+        dolores omnis, ipsum in perspiciatis porro ut nihil molestiae molestias tenetur delectus
+        velit! Inventore laborum rerum at id?
+    </div>
+</ExpansionPanel>
