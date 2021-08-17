@@ -52,7 +52,7 @@ export class DevicesDataHandler {
      */
      public addProperty(deviceId: string) : boolean {
          if(this.devicesData.devices.find(x => x.id === deviceId) !== undefined){
-            this.devicesData.devices.find(x => x.id === deviceId)?.propertiesTabData.properties.push(new Property("New Property", "New Property Description"));
+            this.devicesData.devices.find(x => x.id === deviceId)?.propertiesTabData.properties.push(new Property("New Property"));
             return true;
          }
          return false;

@@ -192,6 +192,7 @@
         >remove</button
     >
     {#if jsonData.devices.length !== 0}
+    
         <div class="DeviceSettingPanelContainer">
             <VerticalTabs
                 {vertActiveItem}
@@ -205,7 +206,7 @@
         {/each}
     </select> -->
             {#if vertActiveItem}
-                <div>
+                <div style="overflow-x:auto;">
                     <Tabs {activeItem} {items} on:tabChange={tabChange} />
                     {#if activeItem === "Description"}
                         <p>

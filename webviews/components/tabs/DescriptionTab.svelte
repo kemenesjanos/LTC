@@ -24,7 +24,8 @@
 
 </script>
     <div>
-        <div>Name: <input type="text" bind:value={data.name} placeholder="Clock"/></div>
+        <div>Name: <TextArea bind:value={data.name} minRows={1}
+            maxRows={10} maxLength={50} placeholder="Clock"/></div>
         <!-- <div>Picture: <input type="file" accept="image/png, image/jpeg" bind:value={data.picture} on:input={dataUpdated} /></div> -->
         <div>ShortDescription: <TextArea bind:value={data.shortDescription} minRows={4}
             maxRows={40}/></div>

@@ -1,14 +1,13 @@
 import {getNonce} from "../getNonce";
 
-export class Property {
-    name: String;
-    description: String = "";
+export class Parameter {
     type: String = "";
+    name: String = "";
+    description: String = "";
     initialValue: any;
-
+    
     id: String;
-    constructor(name: String) {
-        this.name = name;
+    constructor() {
         this.id = getNonce();
     }
 }

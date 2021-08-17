@@ -33,11 +33,13 @@
 {#each data.properties as row}
     <div>
         <ExpansionPanel bind:name={row.name} bind:id={row.id}>
-            <TextArea
-                required="true"
-                bind:value={row.name}
-                minRows={4}
-            />
+            <table width="100%">
+                <tr>
+                    <td width="20%">Return type:</td>
+                    <td width="30%">Return type:</td>
+                    <td width="50%"><TextArea required="true" bind:value={row.name} minRows={4} /></td>
+                </tr>
+            </table>
 
             <button on:click={() => removeProperty(row.id)}> Delete </button>
         </ExpansionPanel>

@@ -6,7 +6,7 @@
     export let vertActiveItem;
   </script>
   
-  <div class="vertTabs">
+  <div class="vertTabs" style="overflow-x:auto;">
       {#each vertItems as item}
         <p on:click={() => dispatch('vertTabChange', item)}>
           <li class:vActive={item === vertActiveItem}>{item.descriptionTabData.name }</li>

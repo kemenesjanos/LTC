@@ -1,8 +1,13 @@
 import {getNonce} from "../getNonce";
+import { Parameter } from "./parameter";
 
 export class Method {
     name: String;
-    description: String;
+    description: String = "";
+    returnType: String = "";
+    returnDescription: String = "";
+    parameters: Parameter[] = [];
+
     id: String;
     constructor(name: String, description: String) {
         this.name = name;

@@ -73,7 +73,7 @@ button.secondary:hover {
   background: var(--vscode-button-secondaryHoverBackground);
 }
 
-input:not([type="checkbox"]),
+/* input:not([type="checkbox"]), */
 /* textarea {
   display: block;
   width: 100%;
@@ -86,6 +86,7 @@ input:not([type="checkbox"]),
   resize: vertical;
   
 } */
+
 
 input::placeholder,
 textarea::placeholder {
@@ -119,6 +120,7 @@ li{
   list-style-type: none;
   text-align: center;
   padding: 10px;
+  word-wrap: break-word;
 }
 .active{
   color: var(--vscode-input-foreground);
@@ -200,6 +202,7 @@ select{
 	display: none;
 }
 .header {
+  
 	display: flex;
 	align-items: flex-start;
 	width: 100%;
@@ -279,4 +282,14 @@ textarea {
   height: 100%;
   top: 0;
   resize: none;
+
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+/* Grid containers */
+.PropertyContainer{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
 }
