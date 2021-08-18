@@ -4,8 +4,12 @@
     import { createEventDispatcher } from "svelte";
     import ExpansionPanel from "../sharedComponents/ExpansionPanel.svelte";
     import TextArea from "../sharedComponents/TextAreaAutosize.svelte";
-
     export let data;
+
+    let isWrong = true;
+
+    //export const userTypes = { string : "string", void : "void", char : "char", int : "int", bool : "bool" };
+    const userTypes = ["void", "string", "char", "int", "bool"];
 
     const dispatch = createEventDispatcher();
 
@@ -27,6 +31,10 @@
             propertyId: propId,
         });
     }
+
+    function validate_name(name) {
+        return name.includes(" ");
+    }
 </script>
 
 <!-- TODO:Implement with cards -->
@@ -35,9 +43,70 @@
         <ExpansionPanel bind:name={row.name} bind:id={row.id}>
             <table width="100%">
                 <tr>
-                    <td width="20%">Return type:</td>
-                    <td width="30%">Return type:</td>
-                    <td width="50%"><TextArea required="true" bind:value={row.name} minRows={4} /></td>
+                    <td width="10%">Type</td>
+                    <td width="25%">Name</td>
+                    <td width="25%">Initial Value</td>
+                    <td width="40%">Description</td>
+                </tr>
+                <tr>
+                    <td>
+                        <!-- svelte-ignore a11y-no-onchange -->
+                        <select
+                            bind:value={row.type}
+                            on:change={() => (row.initialValue = "")}
+                        >
+                            {#each userTypes as type}
+                                <option value={type}>
+                                    {type}
+                                </option>
+                            {/each}
+                        </select>
+                    </td>
+                    <td>
+                            <TextArea
+                                bind:isWrong={isWrong}
+                                bind:value={row.name}
+                                minRows={1}
+                                maxRows={1}
+                                maxLength="30"
+                            />
+                    </td>
+
+                    <td>
+                        {#if row.type === "void"}
+                            Nothing
+                        {:else if row.type === "string"}
+                            <TextArea
+                                bind:value={row.initialValue}
+                                minRows={1}
+                                maxRows={1}
+                                maxLength="30"
+                            />
+                        {:else if row.type === "char"}
+                            <input
+                                maxlength="1"
+                                bind:value={row.initialValue}
+                            />
+                        {:else if row.type === "int"}
+                            <input
+                                type="number"
+                                bind:value={row.initialValue}
+                            />
+                        {:else if row.type === "bool"}
+                            <select bind:value={row.initialValue}>
+                                <option value={true}> true </option>
+                                <option value={false}> false </option>
+                            </select>
+                        {/if}
+                    </td>
+                    <td>
+                        <TextArea
+                            bind:value={row.description}
+                            minRows={1}
+                            maxRows={10}
+                            placeholder="Desc"
+                        />
+                    </td>
                 </tr>
             </table>
 

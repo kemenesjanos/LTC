@@ -1,17 +1,117 @@
 <script>
-    import { createEventDispatcher } from 'svelte';
+    import { onMount } from "svelte";
+
+    import { createEventDispatcher } from "svelte";
+    import ExpansionPanel from "../sharedComponents/ExpansionPanel.svelte";
+    import TextArea from "../sharedComponents/TextAreaAutosize.svelte";
     export let data;
 
+    let isWrong = true;
+    const userTypes = ["void", "string", "char", "int", "bool"];
+
     const dispatch = createEventDispatcher();
-    
+
     function dataUpdated() {
-        dispatch('message', {
-		"type" : "update"});
+        dispatch("message", {
+            type: "update",
+        });
     }
 
-</script>
-    <div>
-        <div>Methods</div>
-</div>
+    function addMethod() {
+        dispatch("message", {
+            type: "addMethod",
+        });
+    }
 
-    
+    function removeMethod(propId) {
+        dispatch("message", {
+            type: "removeMethod",
+            propertyId: propId,
+        });
+    }
+
+    function validate_name(name) {
+        return name.includes(" ");
+    }
+</script>
+
+<!-- TODO:Implement with cards -->
+{#each data.methods as row}
+    <div>
+        <ExpansionPanel bind:name={row.name} bind:id={row.id}>
+            <table width="100%">
+                <tr>
+                    <td width="10%">Type</td>
+                    <td width="25%">Name</td>
+                    <td width="25%">Initial Value</td>
+                    <td width="40%">Description</td>
+                </tr>
+                <tr>
+                    <td>
+                        <!-- svelte-ignore a11y-no-onchange -->
+                        <select
+                            bind:value={row.type}
+                            on:change={() => (row.initialValue = "")}
+                        >
+                            {#each userTypes as type}
+                                <option value={type}>
+                                    {type}
+                                </option>
+                            {/each}
+                        </select>
+                    </td>
+                    <td>
+                            <TextArea
+                                bind:isWrong={isWrong}
+                                bind:value={row.name}
+                                minRows={1}
+                                maxRows={1}
+                                maxLength="30"
+                            />
+                    </td>
+
+                    <td>
+                        {#if row.type === "void"}
+                            Nothing
+                        {:else if row.type === "string"}
+                            <TextArea
+                                bind:value={row.initialValue}
+                                minRows={1}
+                                maxRows={1}
+                                maxLength="30"
+                            />
+                        {:else if row.type === "char"}
+                            <input
+                                maxlength="1"
+                                bind:value={row.initialValue}
+                            />
+                        {:else if row.type === "int"}
+                            <input
+                                type="number"
+                                bind:value={row.initialValue}
+                            />
+                        {:else if row.type === "bool"}
+                            <select bind:value={row.initialValue}>
+                                <option value={true}> true </option>
+                                <option value={false}> false </option>
+                            </select>
+                        {/if}
+                    </td>
+                    <td>
+                        <TextArea
+                            bind:value={row.description}
+                            minRows={1}
+                            maxRows={10}
+                            placeholder="Desc"
+                        />
+                    </td>
+                </tr>
+            </table>
+
+            <button on:click={() => removeMethod(row.id)}> Delete </button>
+        </ExpansionPanel>
+    </div>
+{:else}
+    <div>There are no methods yet.</div>
+{/each}
+<button on:click={() => addMethod()}> add </button>
