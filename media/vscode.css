@@ -264,13 +264,11 @@ pre, textarea {
   font-family: inherit;
   padding: 0.5em;
   box-sizing: border-box;
-  border: 1px solid #eee;
   line-height: 1.2;
   overflow: hidden;
 }
 
 textarea {
-  border: none;
   font-family: var(--vscode-font-family);
   padding: var(--input-padding-vertical) var(--input-padding-horizontal);
   color: var(--vscode-input-foreground);
@@ -302,8 +300,13 @@ option{
   background-color: var(--vscode-input-background);
 }
 
-.wrongInput{
-  color: firebrick;
-  background-color: firebrick;
-  border-color: firebrick;
+/* validation */
+
+.validation-hint {
+  color: red;
+}
+
+.field-danger {
+  border: 1px solid #f00;
+  outline-color : 1px solid #f00;
 }

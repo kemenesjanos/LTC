@@ -4,9 +4,19 @@
     import { createEventDispatcher } from "svelte";
     import ExpansionPanel from "../sharedComponents/ExpansionPanel.svelte";
     import TextArea from "../sharedComponents/TextAreaAutosize.svelte";
-    export let data;
 
-    let isWrong = true;
+    import {
+        emailValidator,
+        requiredValidator,
+    } from "../sharedComponents/Validation/validators.js";
+    import { createFieldValidator } from "../sharedComponents/Validation/validation.js";
+
+    const [validity, validate] = createFieldValidator(
+        requiredValidator(),
+        emailValidator()
+    );
+
+    export let data;
 
     //export const userTypes = { string : "string", void : "void", char : "char", int : "int", bool : "bool" };
     const userTypes = ["void", "string", "char", "int", "bool"];
@@ -63,13 +73,26 @@
                         </select>
                     </td>
                     <td>
+                        <div use:validate={row.name} >
                             <TextArea
-                                bind:isWrong={isWrong}
+                                isValid={$validity.valid}
                                 bind:value={row.name}
                                 minRows={1}
                                 maxRows={1}
                                 maxLength="30"
                             />
+                        </div>
+
+                        {#if $validity.dirty && !$validity.valid}
+                            <div class="validation-hint">
+                                INVALID - {$validity.message}
+                                <!-- {$validity.dirty} -->
+                            </div>
+                            {:else}
+                            
+                            <div/>
+                        {/if}
+                        
                     </td>
 
                     <td>

@@ -3,17 +3,17 @@
 	export let minRows = 1;
 	export let maxRows = 0;
 	export let maxLength = 0;
-	export let isWrong = false;
+	export let isValid = true;
 	
 	$: minHeight = `${1 + minRows * 1.2}em`;
 	$: maxHeight = maxRows ? `${1 + maxRows * 1.2}em` : `auto`;
 </script>
 
-<div class="container { isWrong ? ", wrongInput" : ""}" >
+<div class="container" >
 	<pre
-		aria-hidden="true"
-		style="min-height: {minHeight}; max-height: {maxHeight};"
-	>{value + '\n'}</pre>
+	aria-hidden="true"
+	style="min-height: {minHeight}; max-height: {maxHeight};"
+>{value + '\n'}</pre>
 
-	<textarea maxLength={maxLength !== 0 ? maxLength : null} bind:value></textarea>	
-</div>
+<textarea class:field-danger={!isValid} maxLength={maxLength !== 0 ? maxLength : undefined} bind:value></textarea>	
+</div>	
