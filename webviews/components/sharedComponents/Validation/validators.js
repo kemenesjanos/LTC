@@ -3,6 +3,11 @@ function emailValidator () {
     return (value && !!value.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) || 'Please enter a valid email';
   };
 }
+function noSpaceValidator () {
+  return function noSpace (value) {
+    return (value && !value.match(" ")) || 'Do not use spaces';
+  };
+}
 
 function requiredValidator () {
   return function required (value) {
@@ -12,5 +17,6 @@ function requiredValidator () {
 
 export {
   emailValidator,
-  requiredValidator
+  requiredValidator,
+  noSpaceValidator
 };

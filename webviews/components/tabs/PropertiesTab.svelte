@@ -7,13 +7,15 @@
 
     import {
         emailValidator,
+        noSpaceValidator,
         requiredValidator,
     } from "../sharedComponents/Validation/validators.js";
     import { createFieldValidator } from "../sharedComponents/Validation/validation.js";
 
     const [validity, validate] = createFieldValidator(
         requiredValidator(),
-        emailValidator()
+        noSpaceValidator()
+        // emailValidator()
     );
 
     export let data;
