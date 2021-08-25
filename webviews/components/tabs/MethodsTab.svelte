@@ -46,7 +46,7 @@
     function addParameter(methodId) {
         dispatch("message", {
             type: "addParameter",
-            methodId: methodId
+            methodId: methodId,
         });
     }
 
@@ -128,18 +128,86 @@
                     </td>
                 </tr>
                 <tr>
-                    <td> Type </td>
-                    <td> Name </td>
-                    <td> Description </td>
-                    <td> Initial Value </td>
+                    <td width="10%">Type</td>
+                    <td width="25%">Name</td>
+                    <td width="25%">Initial Value</td>
+                    <td width="40%">Description</td>
                 </tr>
                 {#each row.parameters as param}
                     <tr>
                         <td>
-                            {param.name}
+                            <!-- svelte-ignore a11y-no-onchange -->
+                            <select
+                                bind:value={param.type}
+                                on:change={() => (param.initialValue = "")}
+                            >
+                                {#each userTypes as type}
+                                    <option value={type}>
+                                        {type}
+                                    </option>
+                                {/each}
+                            </select>
+                        </td>
+                        <td>
+                            <div use:validate={param.name}>
+                                <TextArea
+                                    isValid={$validity.valid}
+                                    bind:value={param.name}
+                                    minRows={1}
+                                    maxRows={1}
+                                    maxLength="30"
+                                />
+                            </div>
+
+                            {#if $validity.dirty && !$validity.valid}
+                                <div class="validation-hint">
+                                    INVALID - {$validity.message}
+                                    <!-- {$validity.dirty} -->
+                                </div>
+                            {:else}
+                                <div />
+                            {/if}
+                        </td>
+
+                        <td>
+                            {#if param.type === "void"}
+                                Nothing
+                            {:else if param.type === "string"}
+                                <TextArea
+                                    bind:value={param.initialValue}
+                                    minRows={1}
+                                    maxRows={1}
+                                    maxLength="30"
+                                />
+                            {:else if param.type === "char"}
+                                <input
+                                    maxlength="1"
+                                    bind:value={param.initialValue}
+                                />
+                            {:else if param.type === "int"}
+                                <input
+                                    type="number"
+                                    bind:value={param.initialValue}
+                                />
+                            {:else if param.type === "bool"}
+                                <select bind:value={param.initialValue}>
+                                    <option value={true}> true </option>
+                                    <option value={false}> false </option>
+                                </select>
+                            {/if}
+                        </td>
+                        <td>
+                            <TextArea
+                                bind:value={param.description}
+                                minRows={1}
+                                maxRows={10}
+                                placeholder="Desc"
+                            />
                         </td>
                     </tr>
-                    <button on:click={() => removeParameter(row.id, param.id)}> Delete </button>
+                    <button on:click={() => removeParameter(row.id, param.id)}>
+                        Delete
+                    </button>
                 {/each}
                 <tr>
                     <button on:click={() => addParameter(row.id)}> Add </button>
