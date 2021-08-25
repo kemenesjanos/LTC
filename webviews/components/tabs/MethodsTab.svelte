@@ -43,6 +43,21 @@
         });
     }
 
+    function addParameter(methodId) {
+        dispatch("message", {
+            type: "addParameter",
+            methodId: methodId
+        });
+    }
+
+    function removeParameter(methodId, parameterId) {
+        dispatch("message", {
+            type: "removeParameter",
+            methodId: methodId,
+            parameterId: parameterId,
+        });
+    }
+
     function validate_name(name) {
         return name.includes(" ");
     }
@@ -55,7 +70,7 @@
                 <tr>
                     <td width="10%">Method name:</td>
                     <td width="20%">
-                        <div use:validate={row.name} >
+                        <div use:validate={row.name}>
                             <TextArea
                                 isValid={$validity.valid}
                                 bind:value={row.name}
@@ -69,9 +84,8 @@
                                 INVALID - {$validity.message}
                                 <!-- {$validity.dirty} -->
                             </div>
-                            {:else}
-                            
-                            <div/>
+                        {:else}
+                            <div />
                         {/if}
                     </td>
                     <td width="10%">Description</td>
@@ -112,6 +126,23 @@
                             />
                         </div>
                     </td>
+                </tr>
+                <tr>
+                    <td> Type </td>
+                    <td> Name </td>
+                    <td> Description </td>
+                    <td> Initial Value </td>
+                </tr>
+                {#each row.parameters as param}
+                    <tr>
+                        <td>
+                            {param.name}
+                        </td>
+                    </tr>
+                    <button on:click={() => removeParameter(row.id, param.id)}> Delete </button>
+                {/each}
+                <tr>
+                    <button on:click={() => addParameter(row.id)}> Add </button>
                 </tr>
             </table>
 

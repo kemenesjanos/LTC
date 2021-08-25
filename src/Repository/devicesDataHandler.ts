@@ -125,9 +125,9 @@ export class DevicesDataHandler {
         if (dev !== -1) {
             var method = this.devicesData.devices[dev].methodsTabData.methods.findIndex(x => x.id === methodId);
             if (method !== -1) {
-                var param = this.devicesData.devices[dev].methodsTabData.methods.findIndex(x => x.id===paramId);
+                var param = this.devicesData.devices[dev].methodsTabData.methods[method].parameters.findIndex(x => x.id===paramId);
                 if(param !== -1){
-                    this.devicesData.devices[dev].methodsTabData.methods[param].parameters.splice(param, 1);
+                    this.devicesData.devices[dev].methodsTabData.methods[method].parameters.splice(param, 1);
                     return true;
                 }
             }

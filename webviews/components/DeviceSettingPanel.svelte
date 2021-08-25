@@ -157,6 +157,21 @@
                     deviceId: vertActiveItem.id,
                 });
                 break;
+            case "removeParameter":
+                tsvscode.postMessage({
+                    command: "removeParameter",
+                    value: event.detail.parameterId,
+                    methodId: event.detail.methodId,
+                    deviceId: vertActiveItem.id,
+                });
+                break;
+            case "addParameter":
+                tsvscode.postMessage({
+                    command: "addParameter",
+                    value: event.detail.methodId,
+                    deviceId: vertActiveItem.id,
+                });
+                break;
 
             default:
                 break;
