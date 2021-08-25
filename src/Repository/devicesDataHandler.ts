@@ -1,6 +1,7 @@
 import { on } from "node:events";
 import { Device } from "../Models/deviceData";
 import { DevicesData } from "../Models/devicesData";
+import { Method } from "../Models/method";
 import { Property } from "../Models/property";
 
 export class DevicesDataHandler {
@@ -73,4 +74,31 @@ export class DevicesDataHandler {
         }
         return false;
    }
+
+   /**
+     * addMethod
+     */
+    public addMethod(deviceId: string) : boolean {
+        if(this.devicesData.devices.find(x => x.id === deviceId) !== undefined){
+           this.devicesData.devices.find(x => x.id === deviceId)?.methodsTabData.methods.push(new Method("NewMethod", "Description"));
+           return true;
+        }
+        return false;
+   }
+
+   /**
+    * removeMethod
+    */
+    public removeMethod(methodId: string, deviceId: string) : boolean {
+
+       var dev = this.devicesData.devices.findIndex(x => x.id===deviceId);
+       if (dev !== -1) {
+           var prop = this.devicesData.devices[dev].methodsTabData.methods.findIndex(x => x.id === methodId);
+           if (prop !== -1) {
+               this.devicesData.devices[dev].methodsTabData.methods.splice(prop,1);
+               return true;
+           }
+       }
+       return false;
+  }
 }

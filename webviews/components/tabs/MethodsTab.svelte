@@ -4,9 +4,22 @@
     import { createEventDispatcher } from "svelte";
     import ExpansionPanel from "../sharedComponents/ExpansionPanel.svelte";
     import TextArea from "../sharedComponents/TextAreaAutosize.svelte";
+
+    import {
+        emailValidator,
+        noSpaceValidator,
+        requiredValidator,
+    } from "../sharedComponents/Validation/validators.js";
+    import { createFieldValidator } from "../sharedComponents/Validation/validation.js";
+
+    const [validity, validate] = createFieldValidator(
+        requiredValidator(),
+        noSpaceValidator()
+        // emailValidator()
+    );
+
     export let data;
 
-    let isWrong = true;
     const userTypes = ["void", "string", "char", "int", "bool"];
 
     const dispatch = createEventDispatcher();
@@ -23,10 +36,10 @@
         });
     }
 
-    function removeMethod(propId) {
+    function removeMethod(methodId) {
         dispatch("message", {
             type: "removeMethod",
-            propertyId: propId,
+            methodId: methodId,
         });
     }
 
@@ -35,19 +48,47 @@
     }
 </script>
 
-<!-- TODO:Implement with cards -->
 {#each data.methods as row}
     <div>
         <ExpansionPanel bind:name={row.name} bind:id={row.id}>
             <table width="100%">
                 <tr>
-                    <td width="10%">Type</td>
-                    <td width="25%">Name</td>
-                    <td width="25%">Initial Value</td>
-                    <td width="40%">Description</td>
+                    <td width="10%">Method name:</td>
+                    <td width="20%">
+                        <div use:validate={row.name} >
+                            <TextArea
+                                isValid={$validity.valid}
+                                bind:value={row.name}
+                                minRows={1}
+                                maxRows={1}
+                                maxLength="30"
+                            />
+                        </div>
+                        {#if $validity.dirty && !$validity.valid}
+                            <div class="validation-hint">
+                                INVALID - {$validity.message}
+                                <!-- {$validity.dirty} -->
+                            </div>
+                            {:else}
+                            
+                            <div/>
+                        {/if}
+                    </td>
+                    <td width="10%">Description</td>
+                    <td width="60%">
+                        <div>
+                            <TextArea
+                                bind:value={row.description}
+                                minRows={1}
+                                maxRows={10}
+                                placeholder="Desc"
+                            />
+                        </div>
+                    </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td width="10%">Return type:</td>
+                    <td width="20%">
                         <!-- svelte-ignore a11y-no-onchange -->
                         <select
                             bind:value={row.type}
@@ -60,50 +101,16 @@
                             {/each}
                         </select>
                     </td>
-                    <td>
+                    <td width="10%">Description:</td>
+                    <td width="60%">
+                        <div>
                             <TextArea
-                                bind:isWrong={isWrong}
-                                bind:value={row.name}
+                                bind:value={row.returnDescription}
                                 minRows={1}
-                                maxRows={1}
-                                maxLength="30"
+                                maxRows={10}
+                                placeholder="Desc"
                             />
-                    </td>
-
-                    <td>
-                        {#if row.type === "void"}
-                            Nothing
-                        {:else if row.type === "string"}
-                            <TextArea
-                                bind:value={row.initialValue}
-                                minRows={1}
-                                maxRows={1}
-                                maxLength="30"
-                            />
-                        {:else if row.type === "char"}
-                            <input
-                                maxlength="1"
-                                bind:value={row.initialValue}
-                            />
-                        {:else if row.type === "int"}
-                            <input
-                                type="number"
-                                bind:value={row.initialValue}
-                            />
-                        {:else if row.type === "bool"}
-                            <select bind:value={row.initialValue}>
-                                <option value={true}> true </option>
-                                <option value={false}> false </option>
-                            </select>
-                        {/if}
-                    </td>
-                    <td>
-                        <TextArea
-                            bind:value={row.description}
-                            minRows={1}
-                            maxRows={10}
-                            placeholder="Desc"
-                        />
+                        </div>
                     </td>
                 </tr>
             </table>

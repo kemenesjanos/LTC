@@ -98,6 +98,17 @@ textarea::placeholder {
   background-color:  var(--vscode-input-placeholderForeground);
 }
 
+/* validation */
+
+.validation-hint {
+  color: red;
+}
+
+.field-danger {
+  border: 1px solid #f00;
+  outline-color : 1px solid #f00;
+}
+
 
 /* Tabs */
 
@@ -300,13 +311,3 @@ option{
   background-color: var(--vscode-input-background);
 }
 
-/* validation */
-
-.validation-hint {
-  color: red;
-}
-
-.field-danger {
-  border: 1px solid #f00;
-  outline-color : 1px solid #f00;
-}

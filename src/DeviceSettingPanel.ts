@@ -120,6 +120,12 @@ export class DeviceSettingPanel {
 					case 'addProperty':
 						this.addProperty(message.deviceId);
 						break;
+					case 'removeMethod':
+						this.removeMethod(message.value, message.deviceId);
+						break;
+					case 'addMethod':
+						this.addMethod(message.deviceId);
+						break;
 				}
 			},
 			null,
@@ -236,11 +242,20 @@ export class DeviceSettingPanel {
 	}
 
 	private addProperty(deviceId: string) {
-		this.repo?.addProperty(deviceId);
+		this.repo?.addMethod(deviceId);
 		this.initView();
 	}
 	private removeProperty(propertyId: string, deviceId: string) {
 		this.repo?.removeProperty(propertyId, deviceId);
+		this.initView();
+	}
+
+	private addMethod(deviceId: string) {
+		this.repo?.addMethod(deviceId);
+		this.initView();
+	}
+	private removeMethod(methodId: string, deviceId: string) {
+		this.repo?.removeMethod(methodId, deviceId);
 		this.initView();
 	}
 }

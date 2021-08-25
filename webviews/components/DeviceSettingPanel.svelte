@@ -144,6 +144,19 @@
                     deviceId: vertActiveItem.id,
                 });
                 break;
+            case "removeMethod":
+                tsvscode.postMessage({
+                    command: "removeMethod",
+                    value: event.detail.methodId,
+                    deviceId: vertActiveItem.id,
+                });
+                break;
+            case "addMethod":
+                tsvscode.postMessage({
+                    command: "addMethod",
+                    deviceId: vertActiveItem.id,
+                });
+                break;
 
             default:
                 break;
