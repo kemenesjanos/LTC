@@ -5,19 +5,6 @@
     import ExpansionPanel from "../sharedComponents/ExpansionPanel.svelte";
     import TextArea from "../sharedComponents/TextAreaAutosize.svelte";
 
-    import {
-        emailValidator,
-        noSpaceValidator,
-        requiredValidator,
-    } from "../sharedComponents/Validation/validators.js";
-    import { createFieldValidator } from "../sharedComponents/Validation/validation.js";
-
-    const [validity, validate] = createFieldValidator(
-        requiredValidator(),
-        noSpaceValidator()
-        // emailValidator()
-    );
-
     export let data;
 
     const userTypes = ["void", "string", "char", "int", "bool"];
@@ -70,23 +57,14 @@
                 <tr>
                     <td width="10%">Method name:</td>
                     <td width="20%">
-                        <div use:validate={row.name}>
-                            <TextArea
-                                isValid={$validity.valid}
-                                bind:value={row.name}
-                                minRows={1}
-                                maxRows={1}
-                                maxLength="30"
-                            />
-                        </div>
-                        {#if $validity.dirty && !$validity.valid}
-                            <div class="validation-hint">
-                                INVALID - {$validity.message}
-                                <!-- {$validity.dirty} -->
-                            </div>
-                        {:else}
-                            <div />
-                        {/if}
+                        <TextArea
+                            bind:value={row.name}
+                            isRequired
+                            isNotContaineSpace
+                            minRows={1}
+                            maxRows={1}
+                            maxLength="30"
+                        />
                     </td>
                     <td width="10%">Description</td>
                     <td width="60%">
@@ -149,24 +127,14 @@
                             </select>
                         </td>
                         <td>
-                            <div use:validate={param.name}>
-                                <TextArea
-                                    isValid={$validity.valid}
-                                    bind:value={param.name}
-                                    minRows={1}
-                                    maxRows={1}
-                                    maxLength="30"
-                                />
-                            </div>
-
-                            {#if $validity.dirty && !$validity.valid}
-                                <div class="validation-hint">
-                                    INVALID - {$validity.message}
-                                    <!-- {$validity.dirty} -->
-                                </div>
-                            {:else}
-                                <div />
-                            {/if}
+                            <TextArea
+                                bind:value={param.name}
+                                isRequired
+                                isNotContaineSpace
+                                minRows={1}
+                                maxRows={1}
+                                maxLength="30"
+                            />
                         </td>
 
                         <td>
