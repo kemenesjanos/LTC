@@ -311,3 +311,9 @@ option{
   background-color: var(--vscode-input-background);
 }
 
+
+/* Table */
+
+td, th {
+  vertical-align: 10%;
+}
