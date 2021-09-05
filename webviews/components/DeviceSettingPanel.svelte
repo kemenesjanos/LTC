@@ -212,6 +212,14 @@
 
         vertActiveItem = null;
     }
+
+    function createClass(){
+        tsvscode.postMessage({
+            command: "createClass",
+            value: JSON.stringify(vertActiveItem),
+        });
+
+    }
 </script>
 
 {#if loaded}
@@ -236,6 +244,7 @@
             {#if vertActiveItem}
                 <div style="overflow-x:auto;">
                     <Tabs {activeItem} {items} on:tabChange={tabChange} />
+                    <button on:click={() => createClass()}>Create Class</button>
                     {#if activeItem === "Description"}
                         <p>
                             <DescriptionTab

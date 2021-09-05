@@ -1,4 +1,3 @@
-//Mivel ugyanabban a mappában van, ezért ", ha pl. a library mappába tesszük, akkor <>.
 #include "LedControllerLibrary.h"
 
 LedControllerLib::LedControllerLib(){

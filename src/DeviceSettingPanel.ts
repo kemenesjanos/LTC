@@ -132,6 +132,9 @@ export class DeviceSettingPanel {
 					case 'addParameter':
 						this.addParameter(message.value, message.deviceId);
 						break;
+					case 'createClass':
+						this.createClass(message.value);
+						break;
 				}
 			},
 			null,
@@ -271,6 +274,11 @@ export class DeviceSettingPanel {
 	}
 	private removeParameter(parameterId: string, methodId: string, deviceId: string) {
 		this.repo?.removeParameter(parameterId, methodId, deviceId);
+		this.initView();
+	}
+
+	private createClass(deviceId: string) {
+		
 		this.initView();
 	}
 }
