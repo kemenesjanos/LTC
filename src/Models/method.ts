@@ -4,7 +4,7 @@ import { Parameter } from "./parameter";
 export class Method {
     name: String;
     description: String = "";
-    returnType: String = "";
+    returnType: String = "void";
     returnDescription: String = "";
     parameters: Parameter[] = [];
 

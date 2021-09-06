@@ -253,7 +253,7 @@ export class DeviceSettingPanel {
 	}
 
 	private addProperty(deviceId: string) {
-		this.repo?.addMethod(deviceId);
+		this.repo?.addProperty(deviceId);
 		this.initView();
 	}
 	private removeProperty(propertyId: string, deviceId: string) {

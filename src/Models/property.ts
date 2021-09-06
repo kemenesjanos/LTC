@@ -3,7 +3,7 @@ import {getNonce} from "../getNonce";
 export class Property {
     name: String;
     description: String = "";
-    type: String = "";
+    type: String = "string";
     initialValue: any;
 
     id: String;

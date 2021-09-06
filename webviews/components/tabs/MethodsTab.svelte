@@ -7,7 +7,8 @@
 
     export let data;
 
-    const userTypes = ["void", "string", "char", "int", "bool"];
+    const returnTypes = ["void", "string", "char", "int", "bool"];
+    const paramTypes = ["string", "char", "int", "bool"];
 
     const dispatch = createEventDispatcher();
 
@@ -86,7 +87,7 @@
                             bind:value={row.type}
                             on:change={() => (row.initialValue = "")}
                         >
-                            {#each userTypes as type}
+                            {#each returnTypes as type}
                                 <option value={type}>
                                     {type}
                                 </option>
@@ -119,7 +120,7 @@
                                 bind:value={param.type}
                                 on:change={() => (param.initialValue = "")}
                             >
-                                {#each userTypes as type}
+                                {#each paramTypes as type}
                                     <option value={type}>
                                         {type}
                                     </option>
@@ -138,9 +139,7 @@
                         </td>
 
                         <td>
-                            {#if param.type === "void"}
-                                Nothing
-                            {:else if param.type === "string"}
+                            {#if param.type === "string"}
                                 <TextArea
                                     bind:value={param.initialValue}
                                     minRows={1}

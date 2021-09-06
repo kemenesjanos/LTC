@@ -23,9 +23,11 @@ export function createHeader(model: Device) : string {
 
     model.methodsTabData.methods.forEach(meth => {
       pre += createMethod(meth);
+      pre += `);
+      `;
     });
 
-    pre += `);
+    pre += `
   private:
   `+
   `
