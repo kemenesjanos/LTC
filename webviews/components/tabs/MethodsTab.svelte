@@ -4,6 +4,7 @@
     import { createEventDispatcher } from "svelte";
     import ExpansionPanel from "../sharedComponents/ExpansionPanel.svelte";
     import TextArea from "../sharedComponents/TextAreaAutosize.svelte";
+    import Switch from "../sharedComponents/Switch.svelte";
 
     export let data;
 
@@ -55,6 +56,15 @@
     <div>
         <ExpansionPanel bind:name={row.name} bind:id={row.id}>
             <table width="100%">
+                <tr>
+                    <td>
+                        Is public?
+                    </td>
+                    <td>
+                        <Switch bind:checked={row.isPublic}></Switch>
+                        {row.isPublic ? "Yes" : "No"}
+                    </td>
+                </tr>
                 <tr>
                     <td width="10%">Method name:</td>
                     <td width="20%">

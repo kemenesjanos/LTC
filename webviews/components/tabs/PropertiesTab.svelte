@@ -4,6 +4,7 @@
     import { createEventDispatcher } from "svelte";
     import ExpansionPanel from "../sharedComponents/ExpansionPanel.svelte";
     import TextArea from "../sharedComponents/TextAreaAutosize.svelte";
+    import Switch from "../sharedComponents/Switch.svelte"
 
     export let data;
 
@@ -39,12 +40,17 @@
         <ExpansionPanel bind:name={row.name} bind:id={row.id}>
             <table width="100%">
                 <tr>
+                    <td width="5%">Is public?</td>
                     <td width="10%">Type</td>
                     <td width="25%">Name</td>
                     <td width="25%">Initial Value</td>
-                    <td width="40%">Description</td>
+                    <td width="35%">Description</td>
                 </tr>
                 <tr>
+                    <td>
+                        <Switch bind:checked={row.isPublic}></Switch>
+                        {row.isPublic ? "Yes" : "No"}
+                    </td>
                     <td>
                         <!-- svelte-ignore a11y-no-onchange -->
                         <select

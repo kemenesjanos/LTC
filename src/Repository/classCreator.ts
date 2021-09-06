@@ -52,13 +52,13 @@ class `+ model.descriptionTabData.name + `{
 
   pre += `
   private:
-  `;
+    `;
 
   if (model.methodsTabData.methods.filter(x => x.isPublic === false) !== undefined) {
     model.methodsTabData.methods.filter(x => x.isPublic === false).forEach(meth => {
       pre += createMethod(meth);
       pre +=
-        `);
+          `);
         `;
     });
   }
@@ -66,18 +66,18 @@ class `+ model.descriptionTabData.name + `{
 
   pre +=
     `
-  `;
+    `;
 
   if (model.propertiesTabData.properties.filter(x => x.isPublic === false) !== undefined) {
     model.propertiesTabData.properties.filter(x => x.isPublic === false).forEach(pro => {
       pre += createProperty(pro);
       pre +=
         `;
-      `;
+    `;
     });
   }
-  +
-    `
+  
+  pre+=  `
   
 };
 
