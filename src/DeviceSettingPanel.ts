@@ -5,7 +5,7 @@ import { Device } from './Models/deviceData';
 import { DevicesData } from './Models/devicesData';
 import { DevicesDataHandler } from './Repository/devicesDataHandler';
 import './Repository/classCreator';
-import { createHeader } from './Repository/classCreator';
+
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -133,9 +133,6 @@ export class DeviceSettingPanel {
 						break;
 					case 'addParameter':
 						this.addParameter(message.value, message.deviceId);
-						break;
-					case 'createClass':
-						this.createClass(message.value);
 						break;
 				}
 			},
@@ -276,13 +273,6 @@ export class DeviceSettingPanel {
 	}
 	private removeParameter(parameterId: string, methodId: string, deviceId: string) {
 		this.repo?.removeParameter(parameterId, methodId, deviceId);
-		this.initView();
-	}
-
-	private createClass(dev: string) {
-		var tmp = new Device();
-			Object.assign(tmp, JSON.parse(dev));
-		vscode.window.showInformationMessage(createHeader(tmp));
 		this.initView();
 	}
 }

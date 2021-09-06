@@ -8,6 +8,7 @@ import { Console } from "node:console";
 import { DevicesDataHandler } from "./Repository/devicesDataHandler";
 import * as fs from 'fs';
 import { Device } from "./Models/deviceData";
+import { createHeader } from './Repository/classCreator';
 
 
 //TODO: in edit condiguration / include path. we can add a path where to get the includes. So we have to put the devices in a location
@@ -250,6 +251,19 @@ void loop(){
               vscode.window.showInformationMessage("dispose");
               context.globalState.update("isDeviceSettingPanelOpen", false);
               break;
+            case "createClass":
+              var tmp = new Device();
+              Object.assign(tmp, JSON.parse(message.value));;
+
+
+
+    const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.txt');
+
+    const wsedit = new vscode.WorkspaceEdit();
+    wsedit.createFile(filePath, { ignoreIfExists: true });
+    wsedit.set(filePath, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(10, 0)), createHeader(tmp))]);
+
+    vscode.workspace.applyEdit(wsedit);
           }
         }
       );
