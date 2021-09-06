@@ -1,7 +1,7 @@
 import { Device } from "../Models/deviceData";
 import { Method } from "../Models/method";
 
-export function createHeader(model: Device) : String {
+export function createHeader(model: Device) : string {
     var pre = `
     #ifndef `+
     model.id +
@@ -9,15 +9,12 @@ export function createHeader(model: Device) : String {
     #define`+
     model.id +
     `
-    
+
     #if (ARDUINO >= 100)
       #include "Arduino.h"
     #else
       #include "WProgram.h"
-    #endif`;
-
-    var classPart=`
-
+    #endif`+`
     class `+ model.descriptionTabData.name +`{
       public:
       ` + 
@@ -25,26 +22,27 @@ export function createHeader(model: Device) : String {
     `;
 
     model.methodsTabData.methods.forEach(meth => {
-      classPart.concat(createMethod(meth));
+      pre += createMethod(meth);
     });
-    
-    classPart.concat(`);
+
+    pre += `);
   private:
   `+
   `
   
 };
 
-#endif`);
+#endif`;
 
     
     return pre;
 }
 
 function createMethod(meth:Method) : string {
-  var res = meth.returnType + " " + meth.name + "(";
+  var res = meth.returnType + ` ` + meth.name + `(`;
   meth.parameters.forEach(param => {
-    res.concat(param.type.toString(), " ", param.name.toString());
+    res += param.type + " " + param.name;
+    res += ", ";
   });
 return res;
 }

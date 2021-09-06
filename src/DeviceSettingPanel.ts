@@ -4,6 +4,8 @@ import { getNonce } from './getNonce';
 import { Device } from './Models/deviceData';
 import { DevicesData } from './Models/devicesData';
 import { DevicesDataHandler } from './Repository/devicesDataHandler';
+import './Repository/classCreator';
+import { createHeader } from './Repository/classCreator';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -277,8 +279,10 @@ export class DeviceSettingPanel {
 		this.initView();
 	}
 
-	private createClass(deviceId: string) {
-		
+	private createClass(dev: string) {
+		var tmp = new Device();
+			Object.assign(tmp, JSON.parse(dev));
+		vscode.window.showInformationMessage(createHeader(tmp));
 		this.initView();
 	}
 }
