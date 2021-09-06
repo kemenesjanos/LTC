@@ -3,28 +3,30 @@ import { Method } from "../Models/method";
 
 export function createHeader(model: Device) : string {
     var pre = `
-    #ifndef `+
-    model.id +
-    `
-    #define`+
-    model.id +
+#ifndef `+
+model.id +
+`
+#define `+
+model.id +
     `
 
-    #if (ARDUINO >= 100)
-      #include "Arduino.h"
-    #else
-      #include "WProgram.h"
-    #endif`+`
-    class `+ model.descriptionTabData.name +`{
-      public:
-      ` + 
-    model.descriptionTabData.name + `();
-    `;
+#if (ARDUINO >= 100)
+  #include "Arduino.h"
+#else
+  #include "WProgram.h"
+#endif
+`+`
+class `+ model.descriptionTabData.name +`{
+  public:
+  ` + 
+model.descriptionTabData.name + `();
+  `;
 
     model.methodsTabData.methods.forEach(meth => {
       pre += createMethod(meth);
-      pre += `);
-      `;
+      pre +=
+`);
+  `;
     });
 
     pre += `
@@ -41,7 +43,7 @@ export function createHeader(model: Device) : string {
 }
 
 function createMethod(meth:Method) : string {
-  var res = meth.returnType + ` ` + meth.name + `(`;
+  var res = meth.returnType + " " + meth.name + "(";
   meth.parameters.forEach(param => {
     res += param.type + " " + param.name;
     res += ", ";
