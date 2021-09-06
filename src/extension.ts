@@ -257,13 +257,14 @@ void loop(){
 
 
 
-    const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.txt');
+    const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.h');
 
     const wsedit = new vscode.WorkspaceEdit();
     wsedit.createFile(filePath, { ignoreIfExists: true });
     wsedit.set(filePath, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(10, 0)), createHeader(tmp))]);
 
     vscode.workspace.applyEdit(wsedit);
+
           }
         }
       );

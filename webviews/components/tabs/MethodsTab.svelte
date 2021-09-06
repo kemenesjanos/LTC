@@ -160,6 +160,7 @@
                                 <select bind:value={param.initialValue}>
                                     <option value={true}> true </option>
                                     <option value={false}> false </option>
+                                    <option value={""}>nothing</option>
                                 </select>
                             {/if}
                         </td>

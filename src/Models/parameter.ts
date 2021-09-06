@@ -1,6 +1,6 @@
 import {getNonce} from "../getNonce";
 
-export class Parameter {
+export class Parameter{
     type: String = "";
     name: String = "";
     description: String = "";
@@ -11,4 +11,5 @@ export class Parameter {
         this.id = getNonce();
         this.type = "string";
     }
+    
 }

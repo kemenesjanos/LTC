@@ -1,0 +1,3 @@
+interface PublicOrPrivate{
+    isPublic : boolean;
+}
