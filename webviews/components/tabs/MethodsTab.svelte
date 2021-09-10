@@ -94,7 +94,7 @@
                     <td width="20%">
                         <!-- svelte-ignore a11y-no-onchange -->
                         <select
-                            bind:value={row.type}
+                            bind:value={row.returnType}
                             on:change={() => (row.initialValue = "")}
                         >
                             {#each returnTypes as type}

@@ -8,7 +8,7 @@ import { Console } from "node:console";
 import { DevicesDataHandler } from "./Repository/devicesDataHandler";
 import * as fs from 'fs';
 import { Device } from "./Models/deviceData";
-import { createHeader } from './Repository/classCreator';
+import { createCpp, createHeader } from './Repository/classCreator';
 
 
 //TODO: in edit condiguration / include path. we can add a path where to get the includes. So we have to put the devices in a location
@@ -261,7 +261,7 @@ void loop(){
 
     const wsedit = new vscode.WorkspaceEdit();
     wsedit.createFile(filePath, { ignoreIfExists: true });
-    wsedit.set(filePath, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(10, 0)), createHeader(tmp))]);
+    wsedit.set(filePath, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createCpp(tmp))]);
 
     vscode.workspace.applyEdit(wsedit);
 

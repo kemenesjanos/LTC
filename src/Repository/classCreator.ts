@@ -17,82 +17,37 @@ export function createHeader(model: Device): string {
 #else
   #include "WProgram.h"
 #endif
-`+ `
-class `+ model.descriptionTabData.name + `{
-  public:
-    ` +
-    model.descriptionTabData.name + `();
-    `;
+`+
+comment(model, "Device")
++
+ `
+class `+ model.descriptionTabData.name + `{`;
 
-  if (model.methodsTabData.methods.filter(x => x.isPublic === true) !== undefined) {
-    model.methodsTabData.methods.filter(x => x.isPublic === true).forEach(meth => {
-      pre += createMethod(meth);
-      pre +=
-        `);
-    `;
-    });
-  }
+pre += createBlock(true, model);
+pre += createBlock(false, model);
 
-
-  pre +=
-    `
-    `;
-
-  if (model.propertiesTabData.properties.filter(x => x.isPublic === true) !== undefined) {
-    model.propertiesTabData.properties.filter(x => x.isPublic === true).forEach(pro => {
-      pre += createProperty(pro);
-      pre +=
-        `;
-    `;
-    });
-  }
-
-
-
-
-  pre += `
-  private:
-    `;
-
-  if (model.methodsTabData.methods.filter(x => x.isPublic === false) !== undefined) {
-    model.methodsTabData.methods.filter(x => x.isPublic === false).forEach(meth => {
-      pre += createMethod(meth);
-      pre +=
-          `);
-        `;
-    });
-  }
-
-
-  pre +=
-    `
-    `;
-
-  if (model.propertiesTabData.properties.filter(x => x.isPublic === false) !== undefined) {
-    model.propertiesTabData.properties.filter(x => x.isPublic === false).forEach(pro => {
-      pre += createProperty(pro);
-      pre +=
-        `;
-    `;
-    });
-  }
-  
-  pre+=  `
-  
-};
-
-#endif`;
+  pre+=  `\n\n}; \n\n#endif`;
 
 
   return pre;
 }
 
-function createMethod(meth: Method): string {
-  var res = meth.returnType + " " + meth.name + "(";
+function createMethod(meth: Method, isCpp: Boolean, modelsName: string = ""): string {
+  var res = meth.returnType + " ";
+  if (isCpp) {
+    res+= modelsName + "::";
+  }
+  res += meth.name + "(";
   meth.parameters.forEach(param => {
     res += createProperty(param);
     res += ", ";
   });
+  res += ")";
+  if (!isCpp) {
+    res +=`;`;
+  }
+  
+  res += "\n";
   return res;
 }
 
@@ -114,6 +69,76 @@ function createProperty(param: Property | Parameter): string {
   return res;
 }
 
-export function createCpp(model: Device): String {
-  return "";
+function comment(obj: Device | Method | Property, type: string) : string {
+  
+  if (type === "Device") {
+    return "/**\n" + (obj as Device).descriptionTabData.shortDescription + "\n*/";
+  }
+  else if(type === "Method"){
+    var tmp = "/**\n";
+
+    tmp += "\t" + (obj as Method).description;
+    tmp += "\n";
+
+    (obj as Method).parameters.forEach(param => {
+      tmp += "\t*@param "+ param.name ;
+      tmp += " " + param.description + "\n";
+
+    });
+
+    if ((obj as Method).returnType !== "void") {
+      tmp += "\t*@return " + (obj as Method).returnDescription;
+    }
+
+    tmp += "\n*/";
+
+    return tmp;
+  }
+  else{
+    return "nem jó";
+  }    
+
 }
+
+
+function createBlock(isPublic: boolean, model: Device) : string {
+  var pre = `\n\t`;
+
+  pre+= isPublic ? "public:\n\n" : "private:\n\n";
+
+  if (model.methodsTabData.methods.filter(x => x.isPublic === isPublic) !== undefined) {
+    model.methodsTabData.methods.filter(x => x.isPublic === isPublic).forEach(meth => {
+      pre += comment(meth, "Method");
+
+      pre += "\n\t" + createMethod(meth, false);
+    });
+  }
+
+
+  pre +=`\n\t\t`;
+
+  if (model.propertiesTabData.properties.filter(x => x.isPublic === isPublic) !== undefined) {
+    model.propertiesTabData.properties.filter(x => x.isPublic === isPublic).forEach(pro => {
+      pre += "\n/**" + pro.description + "*/ \n\t";
+      pre += createProperty(pro);
+      pre +=`;\n\t`;
+    });
+  }
+
+  return pre;
+}
+
+export function createCpp(model: Device): string {
+
+  var res = "#include " + model.descriptionTabData.name + ".h\n\n";
+
+  res += model.descriptionTabData.name +"::" + model.descriptionTabData.name + "(){\n\n}\n\n";
+
+  model.methodsTabData.methods.forEach(meth => {
+    res += createMethod(meth,true,model.descriptionTabData.name);
+    res += "{\n\n}\n\n";
+  });
+
+  return res;
+}
+
