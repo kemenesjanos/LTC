@@ -33,7 +33,11 @@ pre += createBlock(false, model);
 }
 
 function createMethod(meth: Method, isCpp: Boolean, modelsName: string = ""): string {
-  var res = meth.returnType + " ";
+  var res = "";
+  if (meth.returnType !== "concructor") {
+    res += meth.returnType + " ";
+  }
+  
   if (isCpp) {
     res+= modelsName + "::";
   }
@@ -131,8 +135,6 @@ function createBlock(isPublic: boolean, model: Device) : string {
 export function createCpp(model: Device): string {
 
   var res = "#include " + model.descriptionTabData.name + ".h\n\n";
-
-  res += model.descriptionTabData.name +"::" + model.descriptionTabData.name + "(){\n\n}\n\n";
 
   model.methodsTabData.methods.forEach(meth => {
     res += createMethod(meth,true,model.descriptionTabData.name);

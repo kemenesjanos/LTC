@@ -257,7 +257,7 @@ void loop(){
 
 
 
-    const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.h');
+    const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.cpp');
 
     const wsedit = new vscode.WorkspaceEdit();
     wsedit.createFile(filePath, { ignoreIfExists: true });

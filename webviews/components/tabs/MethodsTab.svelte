@@ -8,7 +8,7 @@
 
     export let data;
 
-    const returnTypes = ["void", "string", "char", "int", "bool"];
+    const returnTypes = ["void", "string", "char", "int", "bool", "concructor"];
     const paramTypes = ["string", "char", "int", "bool"];
 
     const dispatch = createEventDispatcher();
