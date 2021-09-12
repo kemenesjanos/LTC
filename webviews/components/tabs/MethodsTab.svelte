@@ -71,7 +71,7 @@
                         <TextArea
                             bind:value={row.name}
                             isRequired
-                            isNotContaineSpace
+                            isNotContaineSpaceOrEnter
                             minRows={1}
                             maxRows={1}
                             maxLength="30"
@@ -141,7 +141,7 @@
                             <TextArea
                                 bind:value={param.name}
                                 isRequired
-                                isNotContaineSpace
+                                isNotContaineSpaceOrEnter
                                 minRows={1}
                                 maxRows={1}
                                 maxLength="30"

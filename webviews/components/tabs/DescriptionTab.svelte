@@ -28,7 +28,7 @@
 </script>
     <div>
         <div>Name: <TextArea bind:value={data.name} minRows={1}
-            maxRows={10} maxLength={50} isNotContaineSpace isRequired/></div>
+            maxRows={10} maxLength={50} isNotContaineSpaceOrEnter isRequired/></div>
         <div>Type:
             <!-- svelte-ignore a11y-no-onchange -->
             <select

@@ -9,6 +9,12 @@ function noSpaceValidator () {
   };
 }
 
+function noEnterValidator () {
+  return function noEnter (value) {
+    return (value && !value.match("\n")) || 'Do not use enters';
+  };
+}
+
 function requiredValidator () {
   return function required (value) {
     return (value !== undefined && value !== null && value !== '') || 'This field is required';
@@ -18,5 +24,6 @@ function requiredValidator () {
 export {
   emailValidator,
   requiredValidator,
-  noSpaceValidator
+  noSpaceValidator,
+  noEnterValidator
 };

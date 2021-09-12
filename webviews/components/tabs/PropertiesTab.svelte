@@ -67,7 +67,7 @@
                     <td>
                             <TextArea
                             isRequired
-                            isNotContaineSpace
+                            isNotContaineSpaceOrEnter
                                 bind:value={row.name}
                                 minRows={1}
                                 maxRows={1}
@@ -80,7 +80,7 @@
                             <TextArea
                                 bind:value={row.initialValue}
                                 isRequired
-                            isNotContaineSpace
+                                isNotContaineSpaceOrEnter
                                 minRows={1}
                                 maxRows={1}
                                 maxLength="30"

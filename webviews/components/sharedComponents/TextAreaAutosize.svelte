@@ -3,19 +3,21 @@
 	export let minRows = 1;
 	export let maxRows = 0;
 	export let maxLength = 0;
-	export let isNotContaineSpace = false;
+	export let isNotContaineSpaceOrEnter = false;
 	export let isRequired = false;
 
 	import {
 		emailValidator,
 		noSpaceValidator,
 		requiredValidator,
+		noEnterValidator,
 	} from "../sharedComponents/Validation/validators.js";
 	import { createFieldValidator } from "../sharedComponents/Validation/validation.js";
 
 	const [validity, validate] = createFieldValidator(
 		isRequired ? requiredValidator() : () => true,
-		isNotContaineSpace ? noSpaceValidator() : () => true
+		isNotContaineSpaceOrEnter ? noSpaceValidator() : () => true,
+		isNotContaineSpaceOrEnter ? noEnterValidator() : () => true
 		// emailValidator()
 	);
 
