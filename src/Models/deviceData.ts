@@ -10,6 +10,7 @@ export class Device {
     propertiesTabData: PropertiesTabData;
     methodsTabData: MethodsTabData;
     classTabData: ClassTabData;
+
     constructor() {
         this.descriptionTabData=new DescriptionTabData();
         this.propertiesTabData = new  PropertiesTabData();

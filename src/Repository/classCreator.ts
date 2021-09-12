@@ -16,17 +16,34 @@ export function createHeader(model: Device): string {
   #include "Arduino.h"
 #else
   #include "WProgram.h"
-#endif
-`+
-comment(model, "Device")
-+
- `
-class `+ model.descriptionTabData.name + `{`;
+#endif\n\n`;
 
-pre += createBlock(true, model);
-pre += createBlock(false, model);
+  if (model.descriptionTabData.type !== "Nothing") {
 
-  pre+=  `\n\n}; \n\n#endif`;
+    if (model.descriptionTabData.type === "I2C") {
+      pre += `\n#include "I2cController.h"\n\n`;;
+    }
+    else if (model.descriptionTabData.type === "Switch") {
+      pre += `\n#include "SwitchController.h"\n\n`;
+    }
+    else if (model.descriptionTabData.type === "Sensor") {
+      pre += `\n#include "SensorController.h"\n\n`;
+    }
+    else if (model.descriptionTabData.type === "Nothing") {
+
+    }
+  }
+
+
+
+  pre += comment(model, "Device")
+    +
+    `\nclass ` + model.descriptionTabData.name + `{`;
+
+  pre += createBlock(true, model);
+  pre += createBlock(false, model);
+
+  pre += `\n\n}; \n\n#endif`;
 
 
   return pre;
@@ -37,9 +54,9 @@ function createMethod(meth: Method, isCpp: Boolean, modelsName: string = ""): st
   if (meth.returnType !== "concructor") {
     res += meth.returnType + " ";
   }
-  
+
   if (isCpp) {
-    res+= modelsName + "::";
+    res += modelsName + "::";
   }
   res += meth.name + "(";
   meth.parameters.forEach(param => {
@@ -48,9 +65,9 @@ function createMethod(meth: Method, isCpp: Boolean, modelsName: string = ""): st
   });
   res += ")";
   if (!isCpp) {
-    res +=`;`;
+    res += `;`;
   }
-  
+
   res += "\n";
   return res;
 }
@@ -73,19 +90,19 @@ function createProperty(param: Property | Parameter): string {
   return res;
 }
 
-function comment(obj: Device | Method | Property, type: string) : string {
-  
+function comment(obj: Device | Method | Property, type: string): string {
+
   if (type === "Device") {
     return "/**\n" + (obj as Device).descriptionTabData.shortDescription + "\n*/";
   }
-  else if(type === "Method"){
+  else if (type === "Method") {
     var tmp = "/**\n";
 
     tmp += "\t" + (obj as Method).description;
     tmp += "\n";
 
     (obj as Method).parameters.forEach(param => {
-      tmp += "\t*@param "+ param.name ;
+      tmp += "\t*@param " + param.name;
       tmp += " " + param.description + "\n";
 
     });
@@ -98,17 +115,17 @@ function comment(obj: Device | Method | Property, type: string) : string {
 
     return tmp;
   }
-  else{
+  else {
     return "nem jó";
-  }    
+  }
 
 }
 
 
-function createBlock(isPublic: boolean, model: Device) : string {
+function createBlock(isPublic: boolean, model: Device): string {
   var pre = `\n\t`;
 
-  pre+= isPublic ? "public:\n\n" : "private:\n\n";
+  pre += isPublic ? "public:\n\n" : "private:\n\n";
 
   if (model.methodsTabData.methods.filter(x => x.isPublic === isPublic) !== undefined) {
     model.methodsTabData.methods.filter(x => x.isPublic === isPublic).forEach(meth => {
@@ -119,13 +136,13 @@ function createBlock(isPublic: boolean, model: Device) : string {
   }
 
 
-  pre +=`\n\t\t`;
+  pre += `\n\t\t`;
 
   if (model.propertiesTabData.properties.filter(x => x.isPublic === isPublic) !== undefined) {
     model.propertiesTabData.properties.filter(x => x.isPublic === isPublic).forEach(pro => {
       pre += "\n/**" + pro.description + "*/ \n\t";
       pre += createProperty(pro);
-      pre +=`;\n\t`;
+      pre += `;\n\t`;
     });
   }
 
@@ -137,7 +154,7 @@ export function createCpp(model: Device): string {
   var res = "#include " + model.descriptionTabData.name + ".h\n\n";
 
   model.methodsTabData.methods.forEach(meth => {
-    res += createMethod(meth,true,model.descriptionTabData.name);
+    res += createMethod(meth, true, model.descriptionTabData.name);
     res += "{\n\n}\n\n";
   });
 

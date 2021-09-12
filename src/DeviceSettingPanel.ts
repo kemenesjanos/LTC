@@ -141,7 +141,6 @@ export class DeviceSettingPanel {
 		);
 	}
 
-
 	public dispose() {
 
 		DeviceSettingPanel.currentPanel = undefined;
@@ -271,8 +270,10 @@ export class DeviceSettingPanel {
 		this.repo?.addParameter(deviceId, methodId);
 		this.initView();
 	}
+
 	private removeParameter(parameterId: string, methodId: string, deviceId: string) {
 		this.repo?.removeParameter(parameterId, methodId, deviceId);
 		this.initView();
 	}
+
 }

@@ -257,11 +257,11 @@ void loop(){
 
 
 
-    const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.cpp');
+    const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.h');
 
     const wsedit = new vscode.WorkspaceEdit();
     wsedit.createFile(filePath, { ignoreIfExists: true });
-    wsedit.set(filePath, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createCpp(tmp))]);
+    wsedit.set(filePath, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createHeader(tmp))]);
 
     vscode.workspace.applyEdit(wsedit);
 

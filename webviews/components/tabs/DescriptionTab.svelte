@@ -3,6 +3,8 @@
     import TextArea from "../sharedComponents/TextAreaAutosize.svelte";
     export let data;
 
+    const types = ["Switch", "I2C", "Sensor", "Nothing"];
+
     const onFileSelected =(e)=>{
   let image = e.target.files[0];
             let reader = new FileReader();
@@ -22,10 +24,23 @@
 		"type" : "pickImage"});
     }
 
+
 </script>
     <div>
         <div>Name: <TextArea bind:value={data.name} minRows={1}
             maxRows={10} maxLength={50} isNotContaineSpace isRequired/></div>
+        <div>Type:
+            <!-- svelte-ignore a11y-no-onchange -->
+            <select
+                            bind:value={data.type}
+                        >
+                            {#each types as type}
+                                <option value={type}>
+                                    {type}
+                                </option>
+                            {/each}
+                        </select>
+        </div>
         <!-- <div>Picture: <input type="file" accept="image/png, image/jpeg" bind:value={data.picture} on:input={dataUpdated} /></div> -->
         <div>ShortDescription: <TextArea bind:value={data.shortDescription} minRows={4}
             maxRows={40}/></div>
