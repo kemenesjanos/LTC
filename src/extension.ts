@@ -19,16 +19,22 @@ export function activate(context: vscode.ExtensionContext) {
   //TODO: when an other project is open the new project will not be initialized
   //TODO: so copy the .vscode folder from the other project to the new and maybe refresh
 
-  if(context.globalState.get<boolean>("isDeviceSettingPanelOpen") === true){
+  if (context.globalState.get<string>("arduinoLibrariesPath") === undefined) {
+
+
+
+  }
+
+  if (context.globalState.get<boolean>("isDeviceSettingPanelOpen") === true) {
     vscode.commands.executeCommand("LTC.openDevicesPanel");
   }
 
   if (context.globalState.get<boolean>("isNewFile") === true) {
 
-    if (vscode.workspace.workspaceFolders?.length === undefined ? 0 : vscode.workspace.workspaceFolders.length > 1){
+    if (vscode.workspace.workspaceFolders?.length === undefined ? 0 : vscode.workspace.workspaceFolders.length > 1) {
       vscode.window.showInformationMessage("Több folder van megnyitva");
     }
-    else{
+    else {
       vscode.window.showInformationMessage("Csak egy folder van megnyitva");
     }
 
@@ -129,7 +135,7 @@ void loop(){
       // await vscode.commands.executeCommand(
       //   "workbench.view.extension.LTC-sidebar-view"
       // );
-      
+
     })
   );
 
@@ -164,7 +170,7 @@ void loop(){
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.newLTCProject", async () => {
       vscode.window.showInformationMessage("newLTCProject");
-     
+
       const res = await vscode.window.showInputBox({ prompt: "What should be the name of the new project?" });
       if (res !== undefined) {
         const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', res + 'Project');
@@ -204,6 +210,27 @@ void loop(){
   );
 
   context.subscriptions.push(
+    vscode.commands.registerCommand("LTC.addArduinoLibrariesPath", async () => {
+      const answer = await vscode.window.showOpenDialog(
+        {
+          canSelectFolders: true,
+          canSelectFiles: false,
+          canSelectMany: false,
+          openLabel: "Select",
+          title: "Select your arduino libraries folder!\n(Default: C:\\Users\\YOUR_USER\\Documents\\Arduino\\libraries)"
+        });
+
+      if (answer === undefined) {
+        vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
+        vscode.window.showErrorMessage("You have to select your arduino libraries folder!");
+      } else {
+        context.globalState.update("arduinoLibrariesPath", answer);
+        vscode.window.showInformationMessage("We saved your arduino libraries path, you can change it anytime.");
+      }
+    })
+  );
+
+  context.subscriptions.push(
     vscode.commands.registerCommand("LTC.reInit", async () => {
 
       //TODO: get file name from somewhere else
@@ -230,7 +257,7 @@ void loop(){
       DeviceSettingPanel.currentPanel?.dispose();
       DeviceSettingPanel.createOrShow(context.extensionUri, model);
 
-      DeviceSettingPanel.currentPanel?._panel.onDidDispose( x => context.globalState.update("isDeviceSettingPanelOpen",DeviceSettingPanel.currentPanel?._panel.visible));
+      DeviceSettingPanel.currentPanel?._panel.onDidDispose(x => context.globalState.update("isDeviceSettingPanelOpen", DeviceSettingPanel.currentPanel?._panel.visible));
 
       //Handle messages from device setting panel
       DeviceSettingPanel.currentPanel?._panel.webview.onDidReceiveMessage(
@@ -256,22 +283,26 @@ void loop(){
               Object.assign(tmp, JSON.parse(message.value));;
 
 
+              const filePathHeader = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.h');
 
-    const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.h');
+              const wsedit = new vscode.WorkspaceEdit();
+              wsedit.createFile(filePathHeader, { ignoreIfExists: true });
+              wsedit.set(filePathHeader, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createHeader(tmp))]);
 
-    const wsedit = new vscode.WorkspaceEdit();
-    wsedit.createFile(filePath, { ignoreIfExists: true });
-    wsedit.set(filePath, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createHeader(tmp))]);
+              vscode.workspace.applyEdit(wsedit);
 
-    vscode.workspace.applyEdit(wsedit);
+              const filePathCpp = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.h');
+              wsedit.createFile(filePathCpp, { ignoreIfExists: true });
+              wsedit.set(filePathCpp, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createCpp(tmp))]);
 
+              vscode.workspace.applyEdit(wsedit);
           }
         }
       );
     }
     ));
 
-    
+
 
 
   //If there is already an opened panel it will show just that
