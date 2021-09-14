@@ -19,10 +19,9 @@ export function activate(context: vscode.ExtensionContext) {
   //TODO: when an other project is open the new project will not be initialized
   //TODO: so copy the .vscode folder from the other project to the new and maybe refresh
 
-  if (context.globalState.get<string>("arduinoLibrariesPath") === undefined) {
 
-
-
+  if (context.globalState.get<vscode.Uri>("arduinoLibrariesPath") === undefined) {
+    vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
   }
 
   if (context.globalState.get<boolean>("isDeviceSettingPanelOpen") === true) {
@@ -221,11 +220,17 @@ void loop(){
         });
 
       if (answer === undefined) {
-        vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
-        vscode.window.showErrorMessage("You have to select your arduino libraries folder!");
-      } else {
-        context.globalState.update("arduinoLibrariesPath", answer);
-        vscode.window.showInformationMessage("We saved your arduino libraries path, you can change it anytime.");
+        if (context.globalState.get<vscode.Uri>("arduinoLibrariesPath") === undefined) {
+          vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
+          vscode.window.showErrorMessage("You have to select your arduino libraries folder!");
+        }
+      }
+      else {
+        var tmp = answer.pop();
+        if (tmp !== undefined) {
+          context.globalState.update("arduinoLibrariesPath", tmp);
+          vscode.window.showInformationMessage("We saved your arduino libraries path, you can change it anytime.");
+        }
       }
     })
   );
@@ -282,16 +287,23 @@ void loop(){
               var tmp = new Device();
               Object.assign(tmp, JSON.parse(message.value));;
 
+              while (context.globalState.get<vscode.Uri>("arduinoLibrariesPath") === undefined) {
+                vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
+              }
+              var path = context.globalState.get<vscode.Uri>("arduinoLibrariesPath")!;
 
-              const filePathHeader = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.h');
+              vscode.window.showInformationMessage(path.path);
+
+              path = vscode.Uri.file(path.path);
+
+              const filePathHeader = vscode.Uri.joinPath(path, tmp.descriptionTabData.name, tmp.descriptionTabData.name + '.h');
+              const filePathCpp = vscode.Uri.joinPath(path, tmp.descriptionTabData.name, tmp.descriptionTabData.name + '.cpp');
 
               const wsedit = new vscode.WorkspaceEdit();
+
               wsedit.createFile(filePathHeader, { ignoreIfExists: true });
               wsedit.set(filePathHeader, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createHeader(tmp))]);
 
-              vscode.workspace.applyEdit(wsedit);
-
-              const filePathCpp = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'NewClass.h');
               wsedit.createFile(filePathCpp, { ignoreIfExists: true });
               wsedit.set(filePathCpp, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createCpp(tmp))]);
 
