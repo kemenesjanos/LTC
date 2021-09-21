@@ -1,24 +1,14 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import { SidebarProvider } from "./SidebarProvider";
 import { DeviceSettingPanel } from "./DeviceSettingPanel";
 import { DevicesData } from "./Models/devicesData";
-import { Console } from "node:console";
-import { DevicesDataHandler } from "./Repository/devicesDataHandler";
 import * as fs from 'fs';
 import { Device } from "./Models/deviceData";
 import { createCpp, createHeader } from './Repository/classCreator';
 
-
-//TODO: in edit condiguration / include path. we can add a path where to get the includes. So we have to put the devices in a location
-
 var model = new DevicesData();
 
 export function activate(context: vscode.ExtensionContext) {
-  //TODO: when an other project is open the new project will not be initialized
-  //TODO: so copy the .vscode folder from the other project to the new and maybe refresh
-
 
   if (context.globalState.get<vscode.Uri>("arduinoLibrariesPath") === undefined) {
     vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
@@ -79,10 +69,7 @@ void loop(){
 
   //context.globalState.update("DevicesModel",model);
   if (typeof context.globalState.get<DevicesData>("DevicesModel") !== typeof undefined) {
-    //TODO: vissza csinálni:
-    ////////////////////////////////////////////////////////////////////////
-    model = context.globalState.get<DevicesData>("DevicesModel") as DevicesData;
-    ////////////////////////////////////////////////////////////////
+    model = context.globalState.get<DevicesData>("DevicesModel")!;
   }
 
   const sidebarProvider = new SidebarProvider(context.extensionUri);
@@ -90,19 +77,16 @@ void loop(){
     vscode.window.registerWebviewViewProvider("LTC-sidebar", sidebarProvider),
   );
 
-  //vscode.workspace.getConfiguration("editor.suggest.showConstants").update("editor.suggest.showConstants", true, false);5
-
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.addMessage", async () => {
       vscode.window.showInformationMessage('sikerult!');
 
       let doc = await vscode.workspace.openTextDocument("D:/letöltések/Tesztelunk/korte.ino");
-      //vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'alma.txt')); // calls back into the provider
 
       await vscode.window.showTextDocument(doc, { preview: false });
 
       const wsedit = new vscode.WorkspaceEdit();
-      const filePath = vscode.Uri.parse("D:/letöltések/Tesztelunk/korte.ino");//vscode.Uri.joinPath(context.extensionUri, 'ltcLib', 'korte.txt');
+      const filePath = vscode.Uri.parse("D:/letöltések/Tesztelunk/korte.ino");
 
       wsedit.createFile(filePath, { ignoreIfExists: true });
       wsedit.set(filePath, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(2, 0)), "asldmsada")]);
@@ -112,29 +96,6 @@ void loop(){
         filePath); // calls back into the provider
 
       await vscode.window.showTextDocument(docc, { preview: false });
-
-      /* 
-            sidebarProvider._view?.webview.postMessage({
-              command: "add-message",
-              value: new Alma("jéjjj",33),
-            });
-      
-            TesterPanel.currentPanel?._panel.webview.postMessage({
-              command: "test-message",
-              value: "juhuhúú"
-            }); */
-    })
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("LTC.refresh", async () => {
-      // HelloWorldPanel.kill();
-      // HelloWorldPanel.createOrShow(context.extensionUri);
-      // await vscode.commands.executeCommand("workbench.action.closeSidebar");
-      // await vscode.commands.executeCommand(
-      //   "workbench.view.extension.LTC-sidebar-view"
-      // );
-
     })
   );
 
@@ -153,7 +114,6 @@ void loop(){
         defaultUri: vscode.Uri.joinPath(context.extensionUri, 'ltcLib')
       };
 
-      //TODO: implement to select ino file and open the containing folder
       vscode.window.showOpenDialog(options).then(fileUri => {
         if (fileUri && fileUri[0]) {
           vscode.window.showInformationMessage('Selected file: ' + fileUri[0].fsPath);
@@ -193,22 +153,6 @@ void loop(){
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("LTC.askQuestion", async () => {
-      const answer = await vscode.window.showInformationMessage(
-        "How was your day?",
-        "good",
-        "bad"
-      );
-
-      if (answer === "bad") {
-        vscode.window.showInformationMessage("Sorry to hear that");
-      } else {
-        console.log({ answer });
-      }
-    })
-  );
-
-  context.subscriptions.push(
     vscode.commands.registerCommand("LTC.addArduinoLibrariesPath", async () => {
       const answer = await vscode.window.showOpenDialog(
         {
@@ -228,6 +172,13 @@ void loop(){
       else {
         var tmp = answer.pop();
         if (tmp !== undefined) {
+          //TODO: Delete libraries and add them to the new 
+          //TODO: Delete vscode folder and run arduino init
+          const wsedit = new vscode.WorkspaceEdit();
+          if (vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri !== undefined) {
+            wsedit.deleteFile(vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri!);
+          }
+          
           context.globalState.update("arduinoLibrariesPath", tmp);
           vscode.window.showInformationMessage("We saved your arduino libraries path, you can change it anytime.");
         }
@@ -238,7 +189,6 @@ void loop(){
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.reInit", async () => {
 
-      //TODO: get file name from somewhere else
       const newFileName = context.globalState.get<string>("newFileName")?.valueOf();
       const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', newFileName + 'Project', newFileName + '.ino');
 
@@ -268,11 +218,6 @@ void loop(){
       DeviceSettingPanel.currentPanel?._panel.webview.onDidReceiveMessage(
         (message) => {
           switch (message.command) {
-            //const dd = JSON.parse(message.value);
-            // case 'update':
-            //   Object.assign(model,dd);
-
-            //   break;
             case 'save':
               context.globalState.update("DevicesModel", model);
               break;
