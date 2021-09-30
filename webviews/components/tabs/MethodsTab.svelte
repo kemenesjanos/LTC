@@ -8,8 +8,8 @@
 
     export let data;
 
-    const returnTypes = ["void", "string", "char", "int", "bool", "concructor"];
-    const paramTypes = ["string", "char", "int", "bool"];
+    const returnTypes = ["void", "String", "char", "int", "bool", "concructor"];
+    const paramTypes = ["String", "char", "int", "bool"];
 
     const dispatch = createEventDispatcher();
 
@@ -149,7 +149,7 @@
                         </td>
 
                         <td>
-                            {#if param.type === "string"}
+                            {#if param.type === "String"}
                                 <TextArea
                                     bind:value={param.initialValue}
                                     minRows={1}
