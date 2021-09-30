@@ -17,13 +17,8 @@ function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	};
 }
 
-/**
- * Manages devices webview panels
- */
+
 export class DeviceSettingPanel {
-	/**
-	 * Track the currently panel. Only allow a single panel to exist at a time.
-	 */
 	public static currentPanel: DeviceSettingPanel | undefined;
 
 	public static readonly viewType = 'devices';

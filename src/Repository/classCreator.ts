@@ -4,15 +4,10 @@ import { Parameter } from "../Models/parameter";
 import { Property } from "../Models/property";
 
 export function createHeader(model: Device): string {
-  var pre = `
-#ifndef `+
+  var pre = `#ifndef `+
     model.descriptionTabData.name.toUpperCase() + "_H" +
-    `
-#define `+
-    model.descriptionTabData.name.toUpperCase() + "_H" +  
-    `
-
-  #include <Arduino.h>\n\n`;
+    `\n#define `+
+    model.descriptionTabData.name.toUpperCase() + "_H\n\n";
 
   if (model.descriptionTabData.type !== "Nothing") {
 
@@ -39,7 +34,7 @@ export function createHeader(model: Device): string {
   pre += createBlock(true, model);
   pre += createBlock(false, model);
 
-  pre += `\n\n}; \n\n#endif`;
+  pre += `\n}; \n\n#include "` + model.descriptionTabData.name + `.cpp"\n\n#endif`;
 
 
   return pre;
@@ -72,7 +67,7 @@ function createProperty(param: Property | Parameter): string {
   var res = param.type + " " + param.name;
   if (param.initialValue !== "") {
     res += " = ";
-    if (param.type === "string") {
+    if (param.type === "String") {
       res += `"` + param.initialValue + `"`;
     }
     else if (param.type === "char") {
@@ -127,18 +122,18 @@ function createBlock(isPublic: boolean, model: Device): string {
     model.methodsTabData.methods.filter(x => x.isPublic === isPublic).forEach(meth => {
       pre += comment(meth, "Method");
 
-      pre += "\n\t" + createMethod(meth, false);
+      pre += "\n\t\t" + createMethod(meth, false);
     });
   }
 
 
-  pre += `\n\t\t`;
+  pre += `\n\t\t\t`;
 
   if (model.propertiesTabData.properties.filter(x => x.isPublic === isPublic) !== undefined) {
     model.propertiesTabData.properties.filter(x => x.isPublic === isPublic).forEach(pro => {
-      pre += "\n/**" + pro.description + "*/ \n\t";
+      pre += "\n/**" + pro.description + "*/ \n\t\t";
       pre += createProperty(pro);
-      pre += `;\n\t`;
+      pre += `;\n\t\t`;
     });
   }
 
@@ -147,7 +142,8 @@ function createBlock(isPublic: boolean, model: Device): string {
 
 export function createCpp(model: Device): string {
 
-  var res = "#include " + model.descriptionTabData.name + ".h\n\n";
+  var res = "#include <Arduino.h>\n";
+  res += `#include "` + model.descriptionTabData.name + `.h"\n\n`;
 
   model.methodsTabData.methods.forEach(meth => {
     res += createMethod(meth, true, model.descriptionTabData.name);
