@@ -6,17 +6,13 @@ import { Property } from "../Models/property";
 export function createHeader(model: Device): string {
   var pre = `
 #ifndef `+
-    model.id +
+    model.descriptionTabData.name.toUpperCase() + "_H" +
     `
 #define `+
-    model.id +
+    model.descriptionTabData.name.toUpperCase() + "_H" +  
     `
 
-#if (ARDUINO >= 100)
-  #include "Arduino.h"
-#else
-  #include "WProgram.h"
-#endif\n\n`;
+  #include <Arduino.h>\n\n`;
 
   if (model.descriptionTabData.type !== "Nothing") {
 
