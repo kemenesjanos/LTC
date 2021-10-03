@@ -3,6 +3,6 @@
 
 void NewdDevice::NewMethod()
 {
-    Serial.begin(9600);
+
 }
 
