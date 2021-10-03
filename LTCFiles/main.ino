@@ -1,12 +1,14 @@
 
 #include <Arduino.h>
-//#include "CommunicationController.h"
+#include "ButtonController/ButtonController.h"
+#include "LedController/LedController.h"
 
-//CommunicationController asd;
+LedController led;
+
+ButtonController asd;
 
 void setup(){
     Serial.begin(9600);
-    
 }
 
 void loop(){
