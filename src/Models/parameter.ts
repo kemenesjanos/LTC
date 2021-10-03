@@ -9,7 +9,7 @@ export class Parameter{
     id: String;
     constructor() {
         this.id = getNonce();
-        this.type = "string";
+        this.type = "String";
     }
     
 }

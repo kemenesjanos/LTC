@@ -235,11 +235,11 @@ void loop(){
               while (context.globalState.get<vscode.Uri>("arduinoLibrariesPath") === undefined) {
                 vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
               }
-              var path = context.globalState.get<vscode.Uri>("arduinoLibrariesPath")!;
+              var storedPath = context.globalState.get<vscode.Uri>("arduinoLibrariesPath")!;
 
-              vscode.window.showInformationMessage(path.path);
+              vscode.window.showInformationMessage(storedPath.path);
 
-              path = vscode.Uri.file(path.path);
+              var path = vscode.Uri.file(storedPath.path);
 
               const filePathHeader = vscode.Uri.joinPath(path, tmp.descriptionTabData.name, tmp.descriptionTabData.name + '.h');
               const filePathCpp = vscode.Uri.joinPath(path, tmp.descriptionTabData.name, tmp.descriptionTabData.name + '.cpp');
@@ -253,6 +253,16 @@ void loop(){
               wsedit.set(filePathCpp, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createCpp(tmp))]);
 
               vscode.workspace.applyEdit(wsedit);
+
+              var vsfolderPath = vscode.Uri.joinPath(path,".vscode");
+
+              if(fs.existsSync(vsfolderPath.fsPath))
+              {
+                vscode.window.showInformationMessage("létezik a vsfolder");
+              }
+              else{
+                vscode.window.showInformationMessage("nem létezik a vsfolder");
+              }
           }
         }
       );

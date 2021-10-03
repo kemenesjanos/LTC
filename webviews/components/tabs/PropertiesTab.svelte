@@ -9,7 +9,7 @@
     export let data;
 
     //export const userTypes = { string : "string", void : "void", char : "char", int : "int", bool : "bool" };
-    const userTypes = ["string", "char", "int", "bool"];
+    const userTypes = ["String", "char", "int", "bool"];
 
     const dispatch = createEventDispatcher();
 
@@ -76,7 +76,7 @@
                     </td>
 
                     <td>
-                        {#if row.type === "string"}
+                        {#if row.type === "String"}
                             <TextArea
                                 bind:value={row.initialValue}
                                 isRequired
