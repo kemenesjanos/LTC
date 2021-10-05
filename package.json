@@ -1,7 +1,7 @@
 {
   "name": "ltc",
   "displayName": "LTC",
-  "description": "Keeping track of stuff",
+  "description": "Learn to code!",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.52.0"
@@ -68,11 +68,6 @@
         "command": "LTC.openLTCProject",
         "title": "Open LTC Project",
         "category": "LTC"
-      },
-      {
-        "command": "LTC.addArduinoLibrariesPath",
-        "title": "Add Arduino libraries path",
-        "category": "LTC"
       }
     ]
   },
@@ -119,6 +114,7 @@
     "@smui/drawer": "^4.2.0",
     "nvm": "0.0.4",
     "smelte": "^1.1.6",
+    "svelte-collapsible": "^0.2.1",
     "svelte-layouts": "^0.3.0",
     "svelte-materialify": "^0.3.11",
     "svelte-tabs": "^1.1.0"

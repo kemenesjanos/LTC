@@ -153,3 +153,39 @@ export function createCpp(model: Device): string {
   return res;
 }
 
+//TODO: IMPLEMENT
+function getMethodBody(method: Method, text: String, modelsName: string) : string | undefined {
+  var tmpMethod = createMethod(method, true, modelsName);
+  var pos = text.indexOf(tmpMethod);
+  if (pos === undefined) {
+    return undefined;
+  }
+
+  //pos after the method and a {
+  pos += tmpMethod.length + 1;
+  var beginpos = pos;
+  var opCount = 0;
+  var isEnd = false;
+  while (isEnd) {
+    if(text[pos] === "}")
+    {
+      if(opCount > 0){
+        opCount--;
+        pos++;
+      }
+      else{
+        isEnd = true;
+      }
+    }
+    else if (text[pos] === "{") {
+      opCount++;
+      pos++;
+    }
+    else{
+      pos++;
+    }
+  }
+
+  return text.slice(beginpos,pos);
+}
+

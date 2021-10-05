@@ -1,14 +1,12 @@
 
 #include <Arduino.h>
 #include "ButtonController/ButtonController.h"
-#include "LedController/LedController.h"
-
-LedController led;
 
 ButtonController asd;
 
 void setup(){
     Serial.begin(9600);
+    asd.isButtonPushed(1);
 }
 
 void loop(){

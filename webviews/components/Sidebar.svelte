@@ -1,9 +1,21 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import DevicesSearch from "../components/DevicesSearch.svelte"
+    import type {DevicesData} from "../../src/Models/devicesData";
+    let devices: DevicesData;
 
     let loaded = false;
+
     let jsonData = {
-        "": {},
+        devices: [
+            {
+                descriptionTabData: { name: "" },
+                propertiesTabData: {},
+                methodsTabData: {},
+                classTabData: {},
+                id: "",
+            },
+        ],
     };
 
     onMount(() => {
@@ -19,7 +31,8 @@
             case "add-message":
                 break;
             case "init-message":
-                //TODO: jsonData=JSON.parse(message.value);
+                jsonData = JSON.parse(message.value);
+                devices = jsonData as DevicesData;
                 loaded = true;
                 break;
         }
@@ -43,3 +56,7 @@
         tsvscode.postMessage({ command: "reInit", value: "" });
     }}>Re Init Project</button
 >
+
+{#if loaded && jsonData.devices.length !== 0}
+    <DevicesSearch bind:devices = {devices} />
+{/if}

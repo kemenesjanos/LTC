@@ -75,6 +75,8 @@ void loop(){
   const sidebarProvider = new SidebarProvider(context.extensionUri);
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider("LTC-sidebar", sidebarProvider),
+
+
   );
 
   context.subscriptions.push(
@@ -209,6 +211,7 @@ void loop(){
 
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.openDevicesPanel", () => {
+      
       DeviceSettingPanel.currentPanel?.dispose();
       DeviceSettingPanel.createOrShow(context.extensionUri, model);
 
@@ -221,7 +224,12 @@ void loop(){
             case 'save':
               context.globalState.update("DevicesModel", model);
               break;
+            case 'update':
+              sidebarProvider.model= model;
+              sidebarProvider.initView();
+              break; 
             case "init-view":
+
               if(!vscode.workspace.workspaceFolders?.find(x => x.uri === vscode.Uri.joinPath(context.extensionUri,"LTCFiles")))
               {
                 vscode.workspace.updateWorkspaceFolders(0, null, {uri: vscode.Uri.joinPath(context.extensionUri,"LTCFiles"), name: "Libraries"});

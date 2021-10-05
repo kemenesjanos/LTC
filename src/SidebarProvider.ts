@@ -1,12 +1,14 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
+import { DevicesData } from "./Models/devicesData";
+import { DevicesDataHandler } from './Repository/devicesDataHandler';
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
 
   //////////////////////////////////////////////////////////////////////////////
-	public model?: null;
+	public model?: DevicesData;
 	//////////////////////////////////////////////////////////////////////////////
 
   constructor(private readonly _extensionUri: vscode.Uri) {}
@@ -63,6 +65,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     });
   }
 
+  public initView(){
+    this._view?.webview.postMessage({
+      command: "init-message",
+          value: JSON.stringify(this.model),
+    });
+  }
   public revive(panel: vscode.WebviewView) {
     this._view = panel;
   }
