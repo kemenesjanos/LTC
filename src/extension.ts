@@ -72,10 +72,9 @@ void loop(){
     model = context.globalState.get<DevicesData>("DevicesModel")!;
   }
 
-  const sidebarProvider = new SidebarProvider(context.extensionUri);
+  const sidebarProvider = new SidebarProvider(context.extensionUri,model);
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider("LTC-sidebar", sidebarProvider),
-
 
   );
 

@@ -33,5 +33,5 @@
 </script>
 
 <ul class='accordion'>
-    <slot />
+    <slot /> 
 </ul>

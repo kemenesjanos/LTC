@@ -38,8 +38,6 @@
         <slot name='accbody' />
     </div>
 
-    <slot/>
-
 </li>
 
 <style>

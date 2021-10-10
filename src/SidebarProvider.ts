@@ -11,7 +11,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 	public model?: DevicesData;
 	//////////////////////////////////////////////////////////////////////////////
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  constructor(private readonly _extensionUri: vscode.Uri, model: DevicesData) {
+
+    this.model=model;
+  }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
@@ -57,8 +60,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         case 'init-view':
 						//always run if the panel is in focus
 						this._view?.webview.postMessage({
-							command: "init-message",
-        					value: JSON.stringify(this.model),
+							  command: "init-message",
+                value: JSON.stringify(this.model!),
 						});
 						break;
       }

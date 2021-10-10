@@ -34,6 +34,7 @@
     <div class='card-body' use:collapse={{open, duration, easing}}>
         <slot name='accbody'/>
     </div>
+    
 
 </div>
 

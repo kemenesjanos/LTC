@@ -3,6 +3,6 @@ import { Method } from "../method";
 export class MethodsTabData {
     methods: Method[];
     constructor() {
-        this.methods = [];
+        this.methods = [new Method("name","desc")];
     }
 }
