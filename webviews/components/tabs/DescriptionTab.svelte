@@ -27,9 +27,16 @@
 
 </script>
     <div>
-        <div>Name: <TextArea bind:value={data.name} minRows={1}
+        <div>
+            <div class="DescriptionHeader">
+                Name: 
+            </div> 
+            <TextArea bind:value={data.name} minRows={1}
             maxRows={10} maxLength={50} isNotContaineSpaceOrEnter isRequired/></div>
-        <div>Type:
+        <div>
+            <div class="DescriptionHeader">
+                Type: 
+            </div>
             <!-- svelte-ignore a11y-no-onchange -->
             <select
                             bind:value={data.type}
@@ -42,14 +49,34 @@
                         </select>
         </div>
         <!-- <div>Picture: <input type="file" accept="image/png, image/jpeg" bind:value={data.picture} on:input={dataUpdated} /></div> -->
-        <div>ShortDescription: <TextArea bind:value={data.shortDescription} minRows={4}
-            maxRows={40}/></div>
-        <div>Description: <TextArea bind:value={data.description} minRows={4}
-            maxRows={40}/></div>
-        <div>Example: <TextArea bind:value={data.example} minRows={4}
-            maxRows={40}/></div>
-        <div>Teszt: <TextArea bind:value={data.example} minRows={4}
-            maxRows={40}/></div>
+        <div>
+            <div class="DescriptionHeader">
+                ShortDescription: 
+            </div> 
+            <TextArea bind:value={data.shortDescription} minRows={4}
+            maxRows={40}/>
+        </div>
+        <div>
+            <div class="DescriptionHeader">
+                Description: 
+            </div>
+            <TextArea bind:value={data.description} minRows={4}
+            maxRows={40}/>
+        </div>
+        <div>
+            <div class="DescriptionHeader">
+                Example: 
+            </div>
+            <TextArea bind:value={data.example} minRows={4}
+            maxRows={40}/>
+        </div>
+        <div>
+            <div class="DescriptionHeader">
+                Teszt: 
+            </div>
+            <TextArea bind:value={data.example} minRows={4}
+            maxRows={40}/>
+        </div>
 
         <!-- <input  type="file" accept=".jpg, .jpeg, .png" on:input={dataUpdated} on:change={(e)=>onFileSelected(e)} bind:this={data.picture} />
         <img class="data.picture" height="100" width="100" src="{data.picture}" alt="d" /> -->

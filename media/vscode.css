@@ -160,7 +160,8 @@ select{
   color: white;
   background-color: var(--vscode-button-background);
   text-align: center;
-  padding-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 
@@ -375,20 +376,12 @@ input:checked + .slider:before {
 
 /* Collapsible list */
 
-.accordion-item-header {
-  user-select: none;
-  cursor: pointer;
-}
 
 ul {
   list-style: none;
   padding-left: 0;
 }
 
-.card-header {
-  cursor: pointer;
-  user-select: none;
-}
 
 :global(.accordion) {
   width: 100%;
@@ -403,9 +396,11 @@ ul {
 .accheader {
   display: inline;
   align-items: center;
-  padding: 0.5em;
 }
 
+img{
+  width: 150px;
+}
 .accheader > img {
   margin-right: 1em;
   border-radius: 5px;
@@ -427,9 +422,44 @@ ul {
   font-size: 18px;
   background-color: rgba(0, 0, 0, 0.3);
   
+  overflow-x:auto;
 }
 
 /* side header underline */
 .SideHeader{
   text-decoration: underline;
+  margin-left: 5px;
+  margin-bottom: 10px;
+}
+
+
+div{
+  text-align: left;
+  overflow-x:auto;
+}
+
+.spaced{
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-bottom-style: solid;
+  overflow-x:auto;
+}
+
+/* roundButton */
+
+.roundButton{
+  display:block;
+  justify-content: space-between;
+  text-align: center;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 3px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.DescriptionHeader{
+  font-size: 20px;
+  margin-top: 15px;
+  margin-bottom: 10px;
 }

@@ -79,7 +79,6 @@
                         {#if row.type === "String"}
                             <TextArea
                                 bind:value={row.initialValue}
-                                isRequired
                                 isNotContaineSpaceOrEnter
                                 minRows={1}
                                 maxRows={1}
@@ -99,6 +98,7 @@
                             <select bind:value={row.initialValue}>
                                 <option value={true}> true </option>
                                 <option value={false}> false </option>
+                                <option value={null}> nothing </option>
                             </select>
                         {/if}
                     </td>
@@ -113,10 +113,10 @@
                 </tr>
             </table>
 
-            <button on:click={() => removeProperty(row.id)}> Delete </button>
+            <button class="roundButton" on:click={() => removeProperty(row.id)}> Delete </button>
         </ExpansionPanel>
     </div>
 {:else}
     <div>There are no properties yet.</div>
 {/each}
-<button on:click={() => addProperty()}> add </button>
+<button class="roundButton" on:click={() => addProperty()}> add </button>

@@ -2,8 +2,6 @@
     import Accordion from "../../node_modules/svelte-collapsible/src/components/Accordion.svelte"
     import AccordionItem from "../../node_modules/svelte-collapsible/src/components/AccordionItem.svelte"
     import type {DevicesData} from "../../src/Models/devicesData";
-import type { MethodsTabData } from "../../src/Models/TabDatas/methodsTabData";
-import MethodsTab from "./tabs/MethodsTab.svelte";
     export let devices: DevicesData;
 </script>
 
@@ -25,16 +23,21 @@ import MethodsTab from "./tabs/MethodsTab.svelte";
             </div>
             
             <div slot='body' class='accbody'>
-                <h3 class="SideHeader">{ item.descriptionTabData.description }</h3>
-                INIT
-                <h6>#include "{item.descriptionTabData.name}/{item.descriptionTabData.name}.h"</h6>
-                METHODS
-                {#each item.methodsTabData.methods as method}
-                    <h4>{method.name}</h4>
+                { item.descriptionTabData.description }
+                <div class="spaced">INIT</div>
+                <div><small>#include "{item.descriptionTabData.name}/{item.descriptionTabData.name}.h"</small></div>
+                <div class="spaced">PARAMETERS</div>
+                {#each item.propertiesTabData.properties as property}
+                    <div class="SideHeader">{property.name}</div>
+                    <div>{property.description}</div>
 
                 {/each}
-                <h6>#include "{item.descriptionTabData.name}/{item.descriptionTabData.name}.h"</h6>
-                PARAMETERS
+                <div class="spaced">METHODS</div>
+                {#each item.methodsTabData.methods as method}
+                    <div class="SideHeader">{method.name}</div>
+
+                {/each}
+                
 
 
             </div>

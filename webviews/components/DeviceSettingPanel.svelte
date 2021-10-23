@@ -223,18 +223,28 @@
 </script>
 
 {#if loaded}
-    <button on:click={() => addDevice()}>add</button>
-    <button disabled={jsonData === null} on:click={() => removeDevice()}
-        >remove</button
-    >
+    
     {#if jsonData.devices.length !== 0}
     
         <div class="DeviceSettingPanelContainer">
-            <VerticalTabs
-                {vertActiveItem}
-                vertItems={jsonData.devices}
-                on:vertTabChange={vertTabChange}
-            />
+            
+            <div>
+                <div style="display: flex;">
+                    <button class="roundButton" on:click={() => addDevice()}>Add</button>
+                    <button class="roundButton" disabled={jsonData === null} on:click={() => removeDevice()}>Remove</button>
+                </div>
+
+                <div style="margin-top: 5px;">
+                    <VerticalTabs
+                    {vertActiveItem}
+                    vertItems={jsonData.devices}
+                    on:vertTabChange={vertTabChange}
+                    />
+                </div>
+                
+                
+            </div>
+            
 
             <!-- <select bind:value={actualDevice}>
         {#each jsonData.devices as device}
@@ -244,7 +254,7 @@
             {#if vertActiveItem}
                 <div style="overflow-x:auto;">
                     <Tabs {activeItem} {items} on:tabChange={tabChange} />
-                    <button on:click={() => createClass()}>Create Class</button>
+                    
                     {#if activeItem === "Description"}
                         <p>
                             <DescriptionTab
@@ -268,6 +278,7 @@
                         </p>
                     {:else if activeItem === "Class"}
                         <p>
+                            <button on:click={() => createClass()}>Create Class</button>
                             <ClassTab
                                 bind:data={vertActiveItem.classTabData}
                                 on:message={handleMessage}

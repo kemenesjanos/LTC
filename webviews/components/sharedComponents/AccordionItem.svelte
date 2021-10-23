@@ -39,10 +39,3 @@
     </div>
 
 </li>
-
-<style>
-    .accordion-item-header {
-        user-select: none;
-        cursor: pointer;
-    }
-</style>

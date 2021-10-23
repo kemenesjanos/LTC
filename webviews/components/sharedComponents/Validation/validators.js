@@ -5,13 +5,13 @@ function emailValidator () {
 }
 function noSpaceValidator () {
   return function noSpace (value) {
-    return (value && !value.match(" ")) || 'Do not use spaces';
+    return ((value && !value.match(" ")) || !value) || 'Do not use spaces';
   };
 }
 
 function noEnterValidator () {
   return function noEnter (value) {
-    return (value && !value.match("\n")) || 'Do not use enters';
+    return ((value && !value.match("\n")) || !value) || 'Do not use enters';
   };
 }
 

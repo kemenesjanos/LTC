@@ -37,12 +37,3 @@
     
 
 </div>
-
-<style>
-
-    .card-header {
-        cursor: pointer;
-        user-select: none;
-    }
-
-</style>

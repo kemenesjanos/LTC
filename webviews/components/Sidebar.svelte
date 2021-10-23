@@ -39,19 +39,19 @@
     });
 </script>
 
-<button
+<button class="roundButton"
     on:click={() => {
         tsvscode.postMessage({ command: "newLTCProject", value: "" });
     }}>New LTC Project</button
 >
 
-<button
+<button class="roundButton"
     on:click={() => {
         tsvscode.postMessage({ command: "openLTCProject", value: "" });
     }}>Open LTC Project</button
 >
 
-<button
+<button class="roundButton"
     on:click={() => {
         tsvscode.postMessage({ command: "reInit", value: "" });
     }}>Re Init Project</button
