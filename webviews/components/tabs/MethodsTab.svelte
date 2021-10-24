@@ -8,7 +8,7 @@
 
     export let data;
 
-    const returnTypes = ["void", "String", "char", "int", "bool", "concructor"];
+    const returnTypes = ["void", "String", "char", "int", "bool", "constructor"];
     const paramTypes = ["String", "char", "int", "bool"];
 
     const dispatch = createEventDispatcher();
@@ -117,6 +117,9 @@
                     </td>
                 </tr>
                 <tr>
+                    <h2 class="spaced">Parameters</h2>
+                </tr>
+                <tr>
                     <td width="10%">Type</td>
                     <td width="25%">Name</td>
                     <td width="25%">Initial Value</td>
@@ -183,19 +186,19 @@
                             />
                         </td>
                     </tr>
-                    <button on:click={() => removeParameter(row.id, param.id)}>
-                        Delete
+                    <button class="roundButton" on:click={() => removeParameter(row.id, param.id)}>
+                        Delete Parameter
                     </button>
                 {/each}
                 <tr>
-                    <button on:click={() => addParameter(row.id)}> Add </button>
+                    <button class="roundButton" on:click={() => addParameter(row.id)}> Add Parameter </button>
                 </tr>
             </table>
 
-            <button on:click={() => removeMethod(row.id)}> Delete </button>
+            <button class="roundButton" style="width: 200px;" on:click={() => removeMethod(row.id)}> Delete Method</button>
         </ExpansionPanel>
     </div>
 {:else}
     <div>There are no methods yet.</div>
 {/each}
-<button on:click={() => addMethod()}> add </button>
+<button class="roundButton" style="width: 150px;" on:click={() => addMethod()}> Add Method</button>

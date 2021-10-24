@@ -113,10 +113,10 @@
                 </tr>
             </table>
 
-            <button class="roundButton" on:click={() => removeProperty(row.id)}> Delete </button>
+            <button class="roundButton" style="width: 200px;" on:click={() => removeProperty(row.id)}> Delete </button>
         </ExpansionPanel>
     </div>
 {:else}
     <div>There are no properties yet.</div>
 {/each}
-<button class="roundButton" on:click={() => addProperty()}> add </button>
+<button class="roundButton" style="width: 150px;" on:click={() => addProperty()}> add </button>

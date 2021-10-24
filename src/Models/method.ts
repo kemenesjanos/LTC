@@ -8,6 +8,7 @@ export class Method implements PublicOrPrivate{
     returnDescription: String = "";
     parameters: Parameter[] = [];
     isPublic: boolean = true;
+    body: String = "";
 
     id: String;
     constructor(name: String, description: String) {

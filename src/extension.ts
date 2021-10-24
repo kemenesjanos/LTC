@@ -257,23 +257,36 @@ void loop(){
 
               const wsedit = new vscode.WorkspaceEdit();
 
+              
+
               wsedit.createFile(filePathHeader, { ignoreIfExists: true });
               wsedit.set(filePathHeader, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createHeader(tmp))]);
 
-              wsedit.createFile(filePathCpp, { ignoreIfExists: true });
-              wsedit.set(filePathCpp, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createCpp(tmp))]);
+              var currentCppText = "";
 
-              vscode.workspace.applyEdit(wsedit);
+              vscode.workspace.openTextDocument(filePathCpp).then((document) => {
+                currentCppText = document.getText();
+                let tmpCpp = createCpp(model.devices.find(x => x.id===tmp.id)!, currentCppText);
+                wsedit.createFile(filePathCpp, { ignoreIfExists: true });
+                
+                wsedit.set(filePathCpp, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), tmpCpp)]);
+  
+                vscode.workspace.applyEdit(wsedit);
+  
+                var vsfolderPath = vscode.Uri.joinPath(path,".vscode");
+  
+                if(fs.existsSync(vsfolderPath.fsPath))
+                {
+                  vscode.window.showInformationMessage("létezik a vsfolder");
+                }
+                else{
+                  vscode.window.showInformationMessage("nem létezik a vsfolder");
+                }
+              });
 
-              var vsfolderPath = vscode.Uri.joinPath(path,".vscode");
+              
 
-              if(fs.existsSync(vsfolderPath.fsPath))
-              {
-                vscode.window.showInformationMessage("létezik a vsfolder");
-              }
-              else{
-                vscode.window.showInformationMessage("nem létezik a vsfolder");
-              }
+             
           }
         }
       );

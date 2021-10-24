@@ -2,6 +2,7 @@ import { Device } from "../Models/deviceData";
 import { Method } from "../Models/method";
 import { Parameter } from "../Models/parameter";
 import { Property } from "../Models/property";
+import { MethodsTabData } from "../Models/TabDatas/methodsTabData";
 
 export function createHeader(model: Device): string {
   var pre = `#ifndef `+
@@ -31,8 +32,8 @@ export function createHeader(model: Device): string {
     +
     `\nclass ` + model.descriptionTabData.name + `{`;
 
-  pre += createBlock(true, model);
-  pre += createBlock(false, model);
+  pre += createHeaderBlock(true, model);
+  pre += createHeaderBlock(false, model);
 
   pre += `\n}; \n\n#include "` + model.descriptionTabData.name + `.cpp"\n\n#endif`;
 
@@ -40,9 +41,9 @@ export function createHeader(model: Device): string {
   return pre;
 }
 
-function createMethod(meth: Method, isCpp: Boolean, modelsName: string = ""): string {
+function createMethod(meth: Method, isCpp: boolean, modelsName: string = ""): string {
   var res = "";
-  if (meth.returnType !== "concructor") {
+  if (meth.returnType !== "constructor") {
     res += meth.returnType + " ";
   }
 
@@ -50,10 +51,15 @@ function createMethod(meth: Method, isCpp: Boolean, modelsName: string = ""): st
     res += modelsName + "::";
   }
   res += meth.name + "(";
-  meth.parameters.forEach(param => {
-    res += createProperty(param);
-    res += ", ";
-  });
+  if(meth.parameters.length !== 0){
+    for (var i = 0; i < meth.parameters.length-1; i++) {
+      res += createProperty(meth.parameters[i], isCpp);
+      res += ", ";
+    }
+    res += createProperty(meth.parameters[meth.parameters.length-1], isCpp);
+  }
+  
+
   res += ")";
   if (!isCpp) {
     res += `;`;
@@ -63,9 +69,9 @@ function createMethod(meth: Method, isCpp: Boolean, modelsName: string = ""): st
   return res;
 }
 
-function createProperty(param: Property | Parameter): string {
+function createProperty(param: Property | Parameter, isCpp: boolean): string {
   var res = param.type + " " + param.name;
-  if (param.initialValue !== "") {
+  if (param.initialValue !== "" && isCpp) {
     res += " = ";
     if (param.type === "String") {
       res += `"` + param.initialValue + `"`;
@@ -113,7 +119,7 @@ function comment(obj: Device | Method | Property, type: string): string {
 }
 
 
-function createBlock(isPublic: boolean, model: Device): string {
+function createHeaderBlock(isPublic: boolean, model: Device): string {
   var pre = `\n\t`;
 
   pre += isPublic ? "public:\n\n" : "private:\n\n";
@@ -132,7 +138,7 @@ function createBlock(isPublic: boolean, model: Device): string {
   if (model.propertiesTabData.properties.filter(x => x.isPublic === isPublic) !== undefined) {
     model.propertiesTabData.properties.filter(x => x.isPublic === isPublic).forEach(pro => {
       pre += "\n/**" + pro.description + "*/ \n\t\t";
-      pre += createProperty(pro);
+      pre += createProperty(pro,false);
       pre += `;\n\t\t`;
     });
   }
@@ -140,36 +146,50 @@ function createBlock(isPublic: boolean, model: Device): string {
   return pre;
 }
 
-export function createCpp(model: Device): string {
+export function createCpp(model: Device, currentCppText: string): string {
+
+  setMethodsBody(model.methodsTabData, currentCppText,model.descriptionTabData.name);
 
   var res = "#include <Arduino.h>\n";
   res += `#include "` + model.descriptionTabData.name + `.h"\n\n`;
 
   model.methodsTabData.methods.forEach(meth => {
     res += createMethod(meth, true, model.descriptionTabData.name);
-    res += "{\n\n}\n\n";
+    res += "{\n"+meth.body+"\n}\n\n";
+    
   });
 
   return res;
 }
 
-//TODO: IMPLEMENT
-function getMethodBody(method: Method, text: String, modelsName: string) : string | undefined {
+
+//Save all methods body
+export function setMethodsBody(methodsTabData: MethodsTabData, text: string, modelsName: string) {
+  methodsTabData.methods.forEach(method => {
+    method.body = getMethodBody(method,text,modelsName);
+  });
+}
+
+function getMethodBody(method: Method, text: string, modelsName: string) : string {
   var tmpMethod = createMethod(method, true, modelsName);
-  var pos = text.indexOf(tmpMethod);
-  if (pos === undefined) {
-    return undefined;
+  tmpMethod = tmpMethod.substring(0,tmpMethod.length-1);
+
+
+
+  var pos = text.indexOf(tmpMethod, 1);
+  if (pos === -1) {
+    return "";
   }
 
   //pos after the method and a {
-  pos += tmpMethod.length + 1;
+  pos += tmpMethod.length;
   var beginpos = pos;
   var opCount = 0;
   var isEnd = false;
-  while (isEnd) {
+  while (!isEnd) {
     if(text[pos] === "}")
     {
-      if(opCount > 0){
+      if(opCount > 1){
         opCount--;
         pos++;
       }
@@ -178,6 +198,9 @@ function getMethodBody(method: Method, text: String, modelsName: string) : strin
       }
     }
     else if (text[pos] === "{") {
+      if(opCount === 0){
+        beginpos = pos +3 ;
+      }
       opCount++;
       pos++;
     }
@@ -185,7 +208,7 @@ function getMethodBody(method: Method, text: String, modelsName: string) : strin
       pos++;
     }
   }
-
-  return text.slice(beginpos,pos);
+  let res = text.slice(beginpos,pos - 1);
+  return res;
 }
 
