@@ -5,6 +5,7 @@
 	export let maxLength = 0;
 	export let isNotContaineSpaceOrEnter = false;
 	export let isRequired = false;
+	
 
 	import {
 		emailValidator,
@@ -20,7 +21,7 @@
 		isNotContaineSpaceOrEnter ? noEnterValidator() : () => true
 		// emailValidator()
 	);
-
+	
 	$: minHeight = `${1 + minRows * 1.2}em`;
 	$: maxHeight = maxRows ? `${1 + maxRows * 1.2}em` : `auto`;
 </script>

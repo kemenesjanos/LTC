@@ -16,13 +16,10 @@ export function createHeader(model: Device): string {
       pre += `\n#include "I2cController.h"\n\n`;;
     }
     else if (model.descriptionTabData.type === "Switch") {
-      pre += `\n#include "SwitchController.h"\n\n`;
+      pre += `\n#include "../SwichesController/SwichesController.h"\n\n`;
     }
     else if (model.descriptionTabData.type === "Sensor") {
-      pre += `\n#include "SensorController.h"\n\n`;
-    }
-    else if (model.descriptionTabData.type === "Nothing") {
-
+      pre += `\n#include "../SensorsController/SensorsController.h"\n\n`;
     }
   }
 

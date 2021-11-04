@@ -4,7 +4,7 @@
     import { createEventDispatcher } from "svelte";
     import ExpansionPanel from "../sharedComponents/ExpansionPanel.svelte";
     import TextArea from "../sharedComponents/TextAreaAutosize.svelte";
-    import Switch from "../sharedComponents/Switch.svelte"
+    import Switch from "../sharedComponents/Switch.svelte";
 
     export let data;
 
@@ -31,6 +31,7 @@
             propertyId: propId,
         });
     }
+
 
 </script>
 
@@ -120,3 +121,4 @@
     <div>There are no properties yet.</div>
 {/each}
 <button class="roundButton" style="width: 150px;" on:click={() => addProperty()}> add </button>
+

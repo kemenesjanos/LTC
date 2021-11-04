@@ -155,6 +155,7 @@
                             {#if param.type === "String"}
                                 <TextArea
                                     bind:value={param.initialValue}
+                                    isNotContaineSpaceOrEnter
                                     minRows={1}
                                     maxRows={1}
                                     maxLength="30"

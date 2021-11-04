@@ -135,5 +135,52 @@ export class DevicesDataHandler {
         return false;
     }
 
+    /**
+     * validateModel
+     */
+    public static validateModel(dev: Device) : string {
+        var res = "Invalid: \n";
+        if(this.validTitle(dev.descriptionTabData.name) || dev.descriptionTabData.name === "")
+        {
+            res += "Device name in DESCRIPTION.\n";
+        }
+
+        dev.methodsTabData.methods.forEach(method => {
+           if(this.validTitle(method.name.toString()) || method.name === ""){
+               res += "Method name in METHODS ("+method.name+").\n";
+           }
+           method.parameters.forEach(param => {
+               if(this.validTitle(param.name.toString()) || param.name === ""){
+                res += "Method's parameter name in METHODS ("+method.name+"/"+param.name+").\n";
+               }
+
+               if(this.validTitle(param.initialValue.toString())){
+                res += "Initial parameter initial value in METHODS ("+method.name+"/"+param.name+").\n";
+            }
+           });
+        });
+
+        dev.propertiesTabData.properties.forEach(prop => {
+            if(this.validTitle(prop.name.toString())){
+                res += "Property name in PROPERTIES ("+prop.name+").\n";
+            }
+
+            if(this.validTitle(prop.initialValue.toString())){
+                res += "initial value in PROPERTIES ("+prop.name+").\n";
+            }
+        });
+
+        if(res === "Invalid: \n"){
+            return "";
+        }
+
+        return res;
+            
+    }
+
+    private static validTitle(str: string) : boolean {
+        return str.includes(" ") || str.includes("\\n") || str.includes("\\t") || str.includes("\"");
+    }
+
 
 }
