@@ -53,7 +53,7 @@ export class DevicesDataHandler {
      * addProperty
      */
     public addProperty(deviceId: string): boolean {
-        if (this.devicesData.devices.find(x => x.id === deviceId) !== undefined) {
+        if (this.devicesData.devices.find(x => x.id === deviceId)) {
             this.devicesData.devices.find(x => x.id === deviceId)?.propertiesTabData.properties.push(new Property("New Property"));
             return true;
         }
@@ -80,7 +80,7 @@ export class DevicesDataHandler {
      * addMethod
      */
     public addMethod(deviceId: string): boolean {
-        if (this.devicesData.devices.find(x => x.id === deviceId) !== undefined) {
+        if (this.devicesData.devices.find(x => x.id === deviceId)) {
             this.devicesData.devices.find(x => x.id === deviceId)?.methodsTabData.methods.push(new Method("NewMethod", "Description"));
             return true;
         }
@@ -107,8 +107,8 @@ export class DevicesDataHandler {
      * addParameter
      */
     public addParameter(deviceId: string, methodId: string): boolean {
-        if (this.devicesData.devices.find(x => x.id === deviceId) !== undefined) {
-            if (this.devicesData.devices.find(x => x.id === deviceId)?.methodsTabData.methods.find(y=> y.id === methodId) !== undefined) {
+        if (this.devicesData.devices.find(x => x.id === deviceId)) {
+            if (this.devicesData.devices.find(x => x.id === deviceId)?.methodsTabData.methods.find(y=> y.id === methodId)) {
                 this.devicesData.devices.find(x => x.id === deviceId)?.methodsTabData.methods.find(y=> y.id === methodId)?.parameters.push(new Parameter());
             return true;
             }
@@ -146,26 +146,26 @@ export class DevicesDataHandler {
         }
 
         dev.methodsTabData.methods.forEach(method => {
-           if(this.validTitle(method.name.toString()) || method.name === ""){
+           if(!method.name  || this.validTitle(method.name.toString()) || method.name === ""){
                res += "Method name in METHODS ("+method.name+").\n";
            }
            method.parameters.forEach(param => {
-               if(this.validTitle(param.name.toString()) || param.name === ""){
+               if(!param.name  || this.validTitle(param.name.toString()) || param.name === ""){
                 res += "Method's parameter name in METHODS ("+method.name+"/"+param.name+").\n";
                }
 
-               if(this.validTitle(param.initialValue.toString())){
+               if(param.initialValue  && this.validTitle(param.initialValue.toString())){
                 res += "Initial parameter initial value in METHODS ("+method.name+"/"+param.name+").\n";
             }
            });
         });
 
         dev.propertiesTabData.properties.forEach(prop => {
-            if(this.validTitle(prop.name.toString())){
+            if( !prop.name || this.validTitle(prop.name.toString())){
                 res += "Property name in PROPERTIES ("+prop.name+").\n";
             }
 
-            if(this.validTitle(prop.initialValue.toString())){
+            if( prop.initialValue && this.validTitle(prop.initialValue.toString())){
                 res += "initial value in PROPERTIES ("+prop.name+").\n";
             }
         });

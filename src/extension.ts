@@ -69,7 +69,7 @@ void loop(){
   item.show();
 
   //context.globalState.update("DevicesModel",model);
-  if (typeof context.globalState.get<DevicesData>("DevicesModel") !== typeof undefined) {
+  if (context.globalState.get<DevicesData>("DevicesModel")) {
     model = context.globalState.get<DevicesData>("DevicesModel")!;
   }
 
@@ -133,7 +133,7 @@ void loop(){
       vscode.window.showInformationMessage("newLTCProject");
 
       const res = await vscode.window.showInputBox({ prompt: "What should be the name of the new project?" });
-      if (res !== undefined) {
+      if (res) {
         const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', res + 'Project');
 
         if (!fs.existsSync(filePath.fsPath)) {

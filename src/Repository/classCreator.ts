@@ -121,7 +121,7 @@ function createHeaderBlock(isPublic: boolean, model: Device): string {
 
   pre += isPublic ? "public:\n\n" : "private:\n\n";
 
-  if (model.methodsTabData.methods.filter(x => x.isPublic === isPublic) !== undefined) {
+  if (model.methodsTabData.methods.filter(x => x.isPublic === isPublic)) {
     model.methodsTabData.methods.filter(x => x.isPublic === isPublic).forEach(meth => {
       pre += comment(meth, "Method");
 
@@ -132,7 +132,7 @@ function createHeaderBlock(isPublic: boolean, model: Device): string {
 
   pre += `\n\t\t\t`;
 
-  if (model.propertiesTabData.properties.filter(x => x.isPublic === isPublic) !== undefined) {
+  if (model.propertiesTabData.properties.filter(x => x.isPublic === isPublic)) {
     model.propertiesTabData.properties.filter(x => x.isPublic === isPublic).forEach(pro => {
       pre += "\n/**" + pro.description + "*/ \n\t\t";
       pre += createProperty(pro,false);

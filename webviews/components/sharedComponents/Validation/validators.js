@@ -17,7 +17,7 @@ function noEnterValidator () {
 
 function requiredValidator () {
   return function required (value) {
-    return (value !== undefined && value !== null && value !== '') || 'This field is required';
+    return (typeof value !== 'undefined' && value !== null && value !== '') || 'This field is required';
   };
 }
 
