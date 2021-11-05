@@ -15,7 +15,7 @@
         <AccordionItem key={item.id}>
                 
             <div slot='header' class='accheader'>
-                <img src="https://media.wired.com/photos/598e35fb99d76447c4eb1f28/master/pass/phonepicutres-TA.jpg" alt="Cover"/>
+                <img src={item.descriptionTabData.picture} alt="Cover"/>
                 <div>
                     <h2>{ item.descriptionTabData.name }</h2>
                     <p>{ item.descriptionTabData.shortDescription }</p>
