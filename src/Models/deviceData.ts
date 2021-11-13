@@ -10,6 +10,7 @@ export class Device {
     propertiesTabData: PropertiesTabData;
     methodsTabData: MethodsTabData;
     classTabData: ClassTabData;
+    isProtected: Boolean;
 
     constructor() {
         this.descriptionTabData=new DescriptionTabData();
@@ -17,5 +18,6 @@ export class Device {
         this.methodsTabData = new MethodsTabData();
         this.classTabData = new ClassTabData();
         this.id = getNonce();
+        this.isProtected = false;
     }
 }

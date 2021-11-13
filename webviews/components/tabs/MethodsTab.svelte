@@ -68,14 +68,19 @@
                 <tr>
                     <td width="10%">Method name:</td>
                     <td width="20%">
-                        <TextArea
+                        {#if row.returnType === "constructor"}
+                            Constructor - {row.name}
+                        {:else}
+                            <TextArea
                             bind:value={row.name}
                             isRequired
                             isNotContaineSpaceOrEnter
                             minRows={1}
                             maxRows={1}
                             maxLength="30"
-                        />
+                            />
+                        {/if}
+                        
                     </td>
                     <td width="10%">Description</td>
                     <td width="60%">
@@ -95,8 +100,13 @@
                         <!-- svelte-ignore a11y-no-onchange -->
                         <select
                             bind:value={row.returnType}
-                            on:change={() => (row.initialValue = "")}
-                        >
+                            on:change={() => 
+                            {
+                                row.initialValue = "";
+                                if(row.returnType === 'constructor' || row.returnType === 'void'){
+                                    row.returnDescription = "";
+                                }
+                            }}>
                             {#each returnTypes as type}
                                 <option value={type}>
                                     {type}
@@ -104,15 +114,18 @@
                             {/each}
                         </select>
                     </td>
-                    <td width="10%">Description:</td>
+                    <td width="10%">Return description:</td>
                     <td width="60%">
                         <div>
+                            {#if row.returnType !== 'constructor' && row.returnType !== 'void' }
                             <TextArea
-                                bind:value={row.returnDescription}
-                                minRows={1}
-                                maxRows={10}
-                                placeholder="Desc"
+                            bind:value={row.returnDescription}
+                            minRows={1}
+                            maxRows={10}
+                            placeholder="Desc"
                             />
+                            {/if}
+                            
                         </div>
                     </td>
                 </tr>

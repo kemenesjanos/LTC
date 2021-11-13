@@ -38,7 +38,7 @@ export function createHeader(model: Device): string {
   return pre;
 }
 
-function createMethod(meth: Method, isCpp: boolean, modelsName: string = ""): string {
+function createMethod(meth: Method, isCpp: boolean, modelsName: string): string {
   var res = "";
   if (meth.returnType !== "constructor") {
     res += meth.returnType + " ";
@@ -47,7 +47,14 @@ function createMethod(meth: Method, isCpp: boolean, modelsName: string = ""): st
   if (isCpp) {
     res += modelsName + "::";
   }
-  res += meth.name + "(";
+
+  if(meth.returnType === "constructor"){
+    res += modelsName;
+  }
+  else{
+    res += meth.name;
+  }
+  res += "(";
   if(meth.parameters.length !== 0){
     for (var i = 0; i < meth.parameters.length-1; i++) {
       res += createProperty(meth.parameters[i], isCpp);
@@ -101,7 +108,7 @@ function comment(obj: Device | Method | Property, type: string): string {
 
     });
 
-    if ((obj as Method).returnType !== "void") {
+    if ((obj as Method).returnType !== "void" && (obj as Method).returnType !== "constructor") {
       tmp += "\t*@return " + (obj as Method).returnDescription;
     }
 
@@ -125,7 +132,7 @@ function createHeaderBlock(isPublic: boolean, model: Device): string {
     model.methodsTabData.methods.filter(x => x.isPublic === isPublic).forEach(meth => {
       pre += comment(meth, "Method");
 
-      pre += "\n\t\t" + createMethod(meth, false);
+      pre += "\n\t\t" + createMethod(meth, false, model.descriptionTabData.name);
     });
   }
 
@@ -143,9 +150,13 @@ function createHeaderBlock(isPublic: boolean, model: Device): string {
   return pre;
 }
 
-export function createCpp(model: Device, currentCppText: string): string {
+export function createCpp(model: Device, currentCppText?: string): string {
 
-  setMethodsBody(model.methodsTabData, currentCppText,model.descriptionTabData.name);
+  if(currentCppText){
+    setMethodsBody(model.methodsTabData, currentCppText,model.descriptionTabData.name);
+  }
+  
+  
 
   var res = "#include <Arduino.h>\n";
   res += `#include "` + model.descriptionTabData.name + `.h"\n\n`;

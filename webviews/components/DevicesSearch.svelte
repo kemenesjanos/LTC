@@ -35,7 +35,7 @@
                 <div class="spaced">METHODS</div>
                 {#each item.methodsTabData.methods as method}
                     <div class="SideHeader">{method.name}</div>
-
+                    <div>{method.description}</div>
                 {/each}
                 
 

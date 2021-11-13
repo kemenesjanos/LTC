@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import { Device } from "./Models/deviceData";
 import { createCpp, createHeader } from './Repository/classCreator';
 import { DevicesDataHandler } from "./Repository/devicesDataHandler";
+import { isThisTypeNode } from "typescript";
 
 var model = new DevicesData();
 
@@ -14,6 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
   // if (context.globalState.get<vscode.Uri>("arduinoLibrariesPath") === undefined) {
   //   vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
   // }
+
 
   if (context.globalState.get<boolean>("isDeviceSettingPanelOpen") === true) {
     vscode.commands.executeCommand("LTC.openDevicesPanel");
@@ -71,6 +73,25 @@ void loop(){
   //context.globalState.update("DevicesModel",model);
   if (context.globalState.get<DevicesData>("DevicesModel")) {
     model = context.globalState.get<DevicesData>("DevicesModel")!;
+    //Save to json
+    let data = JSON.stringify(model.devices);
+    const filePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'Data', 'baseDevices.json');
+
+
+    fs.writeFile(filePath.fsPath, data, (err: any) => {
+      if (err){
+        throw err;
+      } 
+      console.log('Data written to file');
+    });
+    
+  }
+  else{
+    //First initialization
+    //Get base devices from json
+    const filePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'Data', 'baseDevices.json');
+    let rawdata = fs.readFileSync(filePath.fsPath);
+    model.devices = JSON.parse(rawdata.toString());
   }
 
   const sidebarProvider = new SidebarProvider(context.extensionUri,model);
@@ -259,33 +280,38 @@ void loop(){
                 const filePathCpp = vscode.Uri.joinPath(path, tmp.descriptionTabData.name, tmp.descriptionTabData.name + '.cpp');
   
                 const wsedit = new vscode.WorkspaceEdit();
+                wsedit.createFile(filePathHeader, { ignoreIfExists: true });
+                  wsedit.set(filePathHeader, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createHeader(tmp))]);
+                
+
+                if (fs.existsSync(filePathCpp.fsPath)) {
+                  var currentCppText = "";
+                  vscode.workspace.openTextDocument(filePathCpp).then((document) => {
+                    currentCppText = document.getText();
+                    let tmpCpp = createCpp(model.devices.find(x => x.id===tmp.id)!, currentCppText);
+                    wsedit.createFile(filePathCpp, { ignoreIfExists: true });
+                    
+                    wsedit.set(filePathCpp, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), tmpCpp)]);
+      
+                    vscode.workspace.applyEdit(wsedit);
+      
+                    var vsfolderPath = vscode.Uri.joinPath(path,".vscode");
+      
+                    if(fs.existsSync(vsfolderPath.fsPath))
+                    {
+                      vscode.window.showInformationMessage("létezik a vsfolder");
+                    }
+                    else{
+                      vscode.window.showInformationMessage("nem létezik a vsfolder");
+                    }
+                  });
+                } else {
+                  wsedit.createFile(filePathCpp, { ignoreIfExists: true });
+                  wsedit.set(filePathCpp, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createCpp(model.devices.find(x => x.id===tmp.id)!))]);
+                  vscode.workspace.applyEdit(wsedit);
+                }
   
                 
-  
-                wsedit.createFile(filePathHeader, { ignoreIfExists: true });
-                wsedit.set(filePathHeader, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createHeader(tmp))]);
-  
-                var currentCppText = "";
-  
-                vscode.workspace.openTextDocument(filePathCpp).then((document) => {
-                  currentCppText = document.getText();
-                  let tmpCpp = createCpp(model.devices.find(x => x.id===tmp.id)!, currentCppText);
-                  wsedit.createFile(filePathCpp, { ignoreIfExists: true });
-                  
-                  wsedit.set(filePathCpp, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), tmpCpp)]);
-    
-                  vscode.workspace.applyEdit(wsedit);
-    
-                  var vsfolderPath = vscode.Uri.joinPath(path,".vscode");
-    
-                  if(fs.existsSync(vsfolderPath.fsPath))
-                  {
-                    vscode.window.showInformationMessage("létezik a vsfolder");
-                  }
-                  else{
-                    vscode.window.showInformationMessage("nem létezik a vsfolder");
-                  }
-                });
               }
               else{
                 vscode.window.showErrorMessage(errorMessage);
