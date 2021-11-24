@@ -8,7 +8,9 @@ export function createHeader(model: Device): string {
   var pre = `#ifndef `+
     model.descriptionTabData.name.toUpperCase() + "_H" +
     `\n#define `+
-    model.descriptionTabData.name.toUpperCase() + "_H\n\n";
+    model.descriptionTabData.name.toUpperCase() + "_H\n\n#include <Arduino.h>\n";
+
+
 
   if (model.descriptionTabData.type !== "Nothing") {
 
@@ -32,7 +34,7 @@ export function createHeader(model: Device): string {
   pre += createHeaderBlock(true, model);
   pre += createHeaderBlock(false, model);
 
-  pre += `\n}; \n\n#include "` + model.descriptionTabData.name + `.cpp"\n\n#endif`;
+  pre += `\n}; \n\n#endif`;
 
 
   return pre;
@@ -158,7 +160,7 @@ export function createCpp(model: Device, currentCppText?: string): string {
   
   
 
-  var res = "#include <Arduino.h>\n";
+  var res = "";
   res += `#include "` + model.descriptionTabData.name + `.h"\n\n`;
 
   model.methodsTabData.methods.forEach(meth => {
