@@ -12,14 +12,13 @@ var model = new DevicesData();
 
 export function activate(context: vscode.ExtensionContext) {
 
+  vscode.commands.executeCommand("workbench.action.closeEditorInAllGroups");
+  
   if (context.globalState.get<vscode.Uri>("arduinoLibrariesPath") === undefined) {
     vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
   }
 
 
-  if (context.globalState.get<boolean>("isDeviceSettingPanelOpen") === true) {
-    vscode.commands.executeCommand("LTC.openDevicesPanel");
-  }
 
   if (context.globalState.get<boolean>("isNewFile") === true) {
 
@@ -70,21 +69,22 @@ void loop(){
   item.command = "LTC.openDevicesPanel";
   item.show();
 
+
   //context.globalState.update("DevicesModel",model);
   if (context.globalState.get<DevicesData>("DevicesModel")) {
     model = context.globalState.get<DevicesData>("DevicesModel")!;
     //Save to json
-    let data = JSON.stringify(model.devices);
-    const filePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'Data', 'baseDevices.json');
+    // let data = JSON.stringify(model.devices);
+    // const filePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'Data', 'baseDevices.json');
 
-    fs.truncate(filePath.fsPath, 0, function(){console.log('done');});
+    // fs.truncate(filePath.fsPath, 0, function(){console.log('done');});
 
-    fs.writeFile(filePath.fsPath, data, function (err) {
-      if (err){
-        return console.log(err);
-      } 
-      console.log('Write model to json');
-    });
+    // fs.writeFile(filePath.fsPath, data, function (err) {
+    //   if (err){
+    //     return console.log(err);
+    //   } 
+    //   console.log('Write model to json');
+    // });
     
   }
   else{
@@ -234,13 +234,10 @@ void loop(){
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.openDevicesPanel", () => {
       
-      DeviceSettingPanel.currentPanel?.dispose();
       DeviceSettingPanel.createOrShow(context.extensionUri, model);
 
-      DeviceSettingPanel.currentPanel?._panel.onDidDispose(x => context.globalState.update("isDeviceSettingPanelOpen", DeviceSettingPanel.currentPanel?._panel.visible));
-
       //Handle messages from device setting panel
-      DeviceSettingPanel.currentPanel?._panel.webview.onDidReceiveMessage(
+      DeviceSettingPanel.currentPanel!._panel.webview.onDidReceiveMessage(
         (message) => {
           switch (message.command) {
             case 'save':
@@ -265,13 +262,7 @@ void loop(){
               }
               else{
                 vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
-                vscode.window.showInformationMessage("5");
               }
-              context.globalState.update("isDeviceSettingPanelOpen", true);
-              break;
-            case "dispose":
-              vscode.window.showInformationMessage("dispose");
-              context.globalState.update("isDeviceSettingPanelOpen", false);
               break;
             case "createClass":
               var tmp = new Device();
@@ -374,5 +365,7 @@ function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {
+export async function deactivate() {
+  console.log("Deactivate");
+  DeviceSettingPanel.kill();
 }
