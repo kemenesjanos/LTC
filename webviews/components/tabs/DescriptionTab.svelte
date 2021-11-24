@@ -64,14 +64,16 @@
                             {/each}
                         </select>
         </div>
-        <div>Picture:
+        <div>
+            <div class="DescriptionHeader">
+                Picture:
+            </div> 
             {#if avatar}
-            <img class="avatar" src="{avatar}" alt="d" />
+            <img class="avatar" style="padding: 5px;" src="{avatar}" alt="d" />
             {:else}
-            <img class="avatar" src="" alt="" /> 
+            <img class="avatar" style="padding: 5px;" src="" alt="" /> 
             {/if}
-                    <img class="upload" src="https://static.thenounproject.com/png/625182-200.png" alt="" on:click={()=>{fileinput.click();}} />
-            <div class="chan" on:click={()=>{fileinput.click();}}>Choose Image</div>
+            <button class="roundButton" style="width: 90%;" on:click={()=>{fileinput.click();}}>Choose Image</button>
             <input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)} bind:this={fileinput} >
         </div>
         <div>
