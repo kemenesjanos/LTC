@@ -68,6 +68,11 @@
         "command": "LTC.openLTCProject",
         "title": "Open LTC Project",
         "category": "LTC"
+      },
+      {
+        "command": "LTC.addArduinoLibrariesPath",
+        "title": "Add Arduino Libraries Path",
+        "category": "LTC"
       }
     ]
   },

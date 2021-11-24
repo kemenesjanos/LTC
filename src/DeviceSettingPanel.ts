@@ -43,7 +43,8 @@ export class DeviceSettingPanel {
 
 		// If we already have a panel, show it.
 		if (DeviceSettingPanel.currentPanel) {
-			DeviceSettingPanel.currentPanel?._panel.reveal(column);
+			DeviceSettingPanel.currentPanel._panel.reveal(column);
+			DeviceSettingPanel.currentPanel._update();
 			return;
 		}
 
@@ -60,6 +61,11 @@ export class DeviceSettingPanel {
 		//DeviceSettingPanel.currentPanel.model = model;
 		DeviceSettingPanel.currentPanel.repo = new DevicesDataHandler(model);
 
+	}
+
+	public static kill() {
+		DeviceSettingPanel.currentPanel?.dispose();
+		DeviceSettingPanel.currentPanel = undefined;
 	}
 
 	public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
