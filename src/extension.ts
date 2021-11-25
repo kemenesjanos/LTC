@@ -13,11 +13,53 @@ var model = new DevicesData();
 export function activate(context: vscode.ExtensionContext) {
 
   vscode.commands.executeCommand("workbench.action.closeEditorInAllGroups");
+
   
-  if (context.globalState.get<vscode.Uri>("arduinoLibrariesPath") === undefined) {
+
+  if (!context.globalState.get<vscode.Uri>("arduinoLibrariesPath")) {
     vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
   }
+  
 
+  if (!context.globalState.get<vscode.Uri>("arduinoProjectsPath")) {
+    vscode.commands.executeCommand("LTC.addArduinoProjectsPath");
+  }
+
+  vscode.window.onDidChangeActiveTextEditor(x => {
+    if(x && x.document.fileName.endsWith(".ino")){
+      //vscode.window.showInformationMessage("ino");
+
+      var projectPath = context.globalState.get<vscode.Uri>("arduinoProjectsPath");
+
+      if (projectPath) {
+        var path = vscode.Uri.joinPath( vscode.Uri.file(projectPath.path), '.vscode', 'arduino.json');
+        if (fs.existsSync(path.fsPath)) {
+          //.vscode/arduino.json exists
+          try {  
+            var data = fs.readFileSync(path.fsPath, 'utf8');
+            let text = JSON.parse(data.toString());
+            let name = x.document.fileName.substring(x.document.fileName.lastIndexOf("\\")+1, x.document.fileName.length - 4);
+            text.sketch = name + '\\' + name + ".ino";
+
+            fs.writeFile(path.fsPath, JSON.stringify(text), function (err) {
+              if (err){
+                return console.log(err);
+              } 
+              console.log('Updated arduino.json');
+            });
+          } catch(e) {
+              console.log('Error:', e);
+          }
+
+        }
+        else{
+          vscode.commands.executeCommand("arduino.initialize");
+        }
+      }
+      
+      
+    }
+  });
 
 
   if (context.globalState.get<boolean>("isNewFile") === true) {
@@ -195,16 +237,50 @@ void loop(){
       }
       else {
         var tmp = answer.pop();
-        if (tmp !== undefined) {
+        if (tmp) {
           //TODO: Delete libraries and add them to the new 
           //TODO: Delete vscode folder and run arduino init
-          const wsedit = new vscode.WorkspaceEdit();
-          if (vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri !== undefined) {
-            wsedit.deleteFile(vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri!);
-          }
+          // const wsedit = new vscode.WorkspaceEdit();
+          // if (vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri !== undefined) {
+          //   wsedit.deleteFile(vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri!);
+          // }
           
           context.globalState.update("arduinoLibrariesPath", tmp);
           vscode.window.showInformationMessage("We saved your arduino libraries path, you can change it anytime.");
+        }
+      }
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("LTC.addArduinoProjectsPath", async () => {
+      const answer = await vscode.window.showOpenDialog(
+        {
+          canSelectFolders: true,
+          canSelectFiles: false,
+          canSelectMany: false,
+          openLabel: "Select",
+          title: "Select your arduino projects folder!"
+        });
+
+      if (answer === undefined) {
+        if (context.globalState.get<vscode.Uri>("arduinoProjectsPath") === undefined) {
+          vscode.commands.executeCommand("LTC.addArduinoProjectsPath");
+          vscode.window.showErrorMessage("You have to select your arduino projects folder!");
+        }
+      }
+      else {
+        var tmp = answer.pop();
+        if (tmp !== undefined) {
+          //TODO: Delete libraries and add them to the new 
+          //TODO: Delete vscode folder and run arduino init
+          // const wsedit = new vscode.WorkspaceEdit();
+          // if (vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri !== undefined) {
+          //   wsedit.deleteFile(vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri!);
+          // }
+          
+          context.globalState.update("arduinoProjectsPath", tmp);
+          vscode.window.showInformationMessage("We saved your arduino projects path, you can change it anytime.");
         }
       }
     })
