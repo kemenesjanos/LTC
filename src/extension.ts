@@ -14,50 +14,50 @@ export function activate(context: vscode.ExtensionContext) {
 
   vscode.commands.executeCommand("workbench.action.closeEditorInAllGroups");
 
-  
+
 
   if (!context.globalState.get<vscode.Uri>("arduinoLibrariesPath")) {
     vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
   }
-  
+
 
   if (!context.globalState.get<vscode.Uri>("arduinoProjectsPath")) {
     vscode.commands.executeCommand("LTC.addArduinoProjectsPath");
   }
 
   vscode.window.onDidChangeActiveTextEditor(x => {
-    if(x && x.document.fileName.endsWith(".ino")){
+    if (x && x.document.fileName.endsWith(".ino")) {
       //vscode.window.showInformationMessage("ino");
 
       var projectPath = context.globalState.get<vscode.Uri>("arduinoProjectsPath");
 
       if (projectPath) {
-        var path = vscode.Uri.joinPath( vscode.Uri.file(projectPath.path), '.vscode', 'arduino.json');
+        var path = vscode.Uri.joinPath(vscode.Uri.file(projectPath.path), '.vscode', 'arduino.json');
         if (fs.existsSync(path.fsPath)) {
           //.vscode/arduino.json exists
-          try {  
+          try {
             var data = fs.readFileSync(path.fsPath, 'utf8');
             let text = JSON.parse(data.toString());
-            let name = x.document.fileName.substring(x.document.fileName.lastIndexOf("\\")+1, x.document.fileName.length - 4);
+            let name = x.document.fileName.substring(x.document.fileName.lastIndexOf("\\") + 1, x.document.fileName.length - 4);
             text.sketch = name + '\\' + name + ".ino";
 
             fs.writeFile(path.fsPath, JSON.stringify(text), function (err) {
-              if (err){
+              if (err) {
                 return console.log(err);
-              } 
+              }
               console.log('Updated arduino.json');
             });
-          } catch(e) {
-              console.log('Error:', e);
+          } catch (e) {
+            console.log('Error:', e);
           }
 
         }
-        else{
+        else {
           vscode.commands.executeCommand("arduino.initialize");
         }
       }
-      
-      
+
+
     }
   });
 
@@ -127,9 +127,9 @@ void loop(){
     //   } 
     //   console.log('Write model to json');
     // });
-    
+
   }
-  else{
+  else {
     //First initialization
     //Get base devices from json
     //TODO: TEST it
@@ -138,7 +138,7 @@ void loop(){
     model.devices = JSON.parse(rawdata.toString());
   }
 
-  const sidebarProvider = new SidebarProvider(context.extensionUri,model);
+  const sidebarProvider = new SidebarProvider(context.extensionUri, model);
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider("LTC-sidebar", sidebarProvider),
 
@@ -202,13 +202,11 @@ void loop(){
         var projectPath = context.globalState.get<vscode.Uri>("arduinoProjectsPath");
 
         if (projectPath) {
-          var filePath = vscode.Uri.joinPath( vscode.Uri.file(projectPath.path), res, res+'.ino');
+          var filePath = vscode.Uri.joinPath(vscode.Uri.file(projectPath.path), res, res + '.ino');
           if (!fs.existsSync(filePath.fsPath)) {
             vscode.window.showInformationMessage(filePath.path);
             let initString = `#include <Arduino.h>
-
-#include <LedController.h>
-#include <ButtonController.h>
+#include <LTCfiles.h>
 
 LedController led;
 
@@ -258,7 +256,7 @@ void loop(){
           // if (vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri !== undefined) {
           //   wsedit.deleteFile(vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri!);
           // }
-          
+
           context.globalState.update("arduinoLibrariesPath", tmp);
           vscode.window.showInformationMessage("We saved your arduino libraries path, you can change it anytime.");
         }
@@ -292,7 +290,7 @@ void loop(){
           // if (vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri !== undefined) {
           //   wsedit.deleteFile(vscode.workspace.workspaceFolders?.find(x => x.name === ".vscode")?.uri!);
           // }
-          
+
           context.globalState.update("arduinoProjectsPath", tmp);
           vscode.window.showInformationMessage("We saved your arduino projects path, you can change it anytime.");
         }
@@ -323,7 +321,7 @@ void loop(){
 
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.openDevicesPanel", () => {
-      
+
       DeviceSettingPanel.createOrShow(context.extensionUri, model);
 
       //Handle messages from device setting panel
@@ -334,23 +332,22 @@ void loop(){
               context.globalState.update("DevicesModel", model);
               break;
             case 'update':
-              sidebarProvider.model= model;
+              sidebarProvider.model = model;
               sidebarProvider.initView();
-              break; 
+              break;
             case "init-view":
 
               var tmpFilePath = context.globalState.get<vscode.Uri>("arduinoLibrariesPath");
 
-              if(tmpFilePath)
-              {
+              if (tmpFilePath) {
                 //TODO:: új valami
-                if(!vscode.workspace.workspaceFolders?.find(x => x.uri === tmpFilePath)){
+                if (!vscode.workspace.workspaceFolders?.find(x => x.uri === tmpFilePath)) {
                   vscode.window.showInformationMessage(tmpFilePath.fsPath);
-                  vscode.workspace.updateWorkspaceFolders(0, null, {uri: tmpFilePath, name: "Libraries"});
+                  vscode.workspace.updateWorkspaceFolders(0, null, { uri: tmpFilePath, name: "Libraries" });
                 }
-                
+
               }
-              else{
+              else {
                 vscode.commands.executeCommand("LTC.addArduinoLibrariesPath");
               }
               break;
@@ -366,61 +363,77 @@ void loop(){
               var path = vscode.Uri.file(storedPath.path);
 
               var errorMessage = DevicesDataHandler.validateModel(tmp);
-              if(errorMessage === ""){
+              if (errorMessage === "") {
                 //var path = vscode.Uri.joinPath(context.extensionUri,"LTCFiles");
 
                 const filePathHeader = vscode.Uri.joinPath(path, tmp.descriptionTabData.name, tmp.descriptionTabData.name + '.h');
                 const filePathCpp = vscode.Uri.joinPath(path, tmp.descriptionTabData.name, tmp.descriptionTabData.name + '.cpp');
-  
+
                 const wsedit = new vscode.WorkspaceEdit();
-                
+
                 wsedit.createFile(filePathHeader, { ignoreIfExists: true });
-                  wsedit.set(filePathHeader, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createHeader(tmp))]);
-                
+                wsedit.set(filePathHeader, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createHeader(tmp))]);
+
 
                 if (fs.existsSync(filePathCpp.fsPath)) {
                   var currentCppText = "";
                   vscode.workspace.openTextDocument(filePathCpp).then((document) => {
                     currentCppText = document.getText();
-                    let tmpCpp = createCpp(model.devices.find(x => x.id===tmp.id)!, currentCppText);
+                    let tmpCpp = createCpp(model.devices.find(x => x.id === tmp.id)!, currentCppText);
                     wsedit.createFile(filePathCpp, { ignoreIfExists: true });
-                    
+
                     wsedit.set(filePathCpp, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), tmpCpp)]);
-      
+
                     vscode.workspace.applyEdit(wsedit);
-      
-                    var vsfolderPath = vscode.Uri.joinPath(path,".vscode");
-      
-                    if(fs.existsSync(vsfolderPath.fsPath))
-                    {
+
+                    var vsfolderPath = vscode.Uri.joinPath(path, ".vscode");
+
+                    if (fs.existsSync(vsfolderPath.fsPath)) {
                       vscode.window.showInformationMessage("létezik a vsfolder");
                     }
-                    else{
+                    else {
                       vscode.window.showInformationMessage("nem létezik a vsfolder");
                     }
                   });
                 } else {
                   wsedit.createFile(filePathCpp, { ignoreIfExists: true });
-                  wsedit.set(filePathCpp, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createCpp(model.devices.find(x => x.id===tmp.id)!))]);
+                  wsedit.set(filePathCpp, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), createCpp(model.devices.find(x => x.id === tmp.id)!))]);
                   vscode.workspace.applyEdit(wsedit);
                 }
-  
-                
+
+                //create LTCfiles.h
+                var librariesPath = context.globalState.get<vscode.Uri>("arduinoLibrariesPath");
+
+                if (librariesPath) {
+                  var filePath = vscode.Uri.joinPath(vscode.Uri.file(librariesPath.path), "LTCfiles.h");
+                    vscode.window.showInformationMessage(filePath.path);
+
+
+
+                    let initString = "#include <Arduino.h>\n";
+
+                    model.devices.forEach(dev => {
+                      initString += "#include <" + dev.descriptionTabData.name + ".h>\n";
+                    });
+
+                    try {
+                      fs.writeFile(filePath.fsPath, initString, function (err) {
+                        if (err) {
+                          return console.log(err);
+                        }
+                        console.log('Updated LTCfiles.h');
+                      });
+                    } catch (e) {
+                      console.log('Error:', e);
+                    }
+                }
               }
-              else{
-                vscode.window.showErrorMessage(errorMessage);
-              }
-
-              
-
-              
-
-             
           }
         }
       );
     }
-    ));
+    )
+  );
 
 
 
