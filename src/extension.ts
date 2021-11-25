@@ -132,6 +132,7 @@ void loop(){
   else{
     //First initialization
     //Get base devices from json
+    //TODO: TEST it
     const filePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'Data', 'baseDevices.json');
     let rawdata = fs.readFileSync(filePath.fsPath);
     model.devices = JSON.parse(rawdata.toString());
@@ -165,32 +166,32 @@ void loop(){
     })
   );
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand("LTC.openLTCProject", async () => {
-      vscode.window.showInformationMessage("openLTCProject");
-      const options: vscode.OpenDialogOptions = {
-        canSelectFolders: true,
-        canSelectFiles: false,
-        canSelectMany: false,
-        openLabel: 'Open',
-        filters: {
-          'text files': ['txt'],
-          'all files': ['*']
-        },
-        defaultUri: vscode.Uri.joinPath(context.extensionUri, 'ltcLib')
-      };
+  // context.subscriptions.push(
+  //   vscode.commands.registerCommand("LTC.openLTCProject", async () => {
+  //     vscode.window.showInformationMessage("openLTCProject");
+  //     const options: vscode.OpenDialogOptions = {
+  //       canSelectFolders: true,
+  //       canSelectFiles: false,
+  //       canSelectMany: false,
+  //       openLabel: 'Open',
+  //       filters: {
+  //         'text files': ['txt'],
+  //         'all files': ['*']
+  //       },
+  //       defaultUri: vscode.Uri.joinPath(context.extensionUri, 'ltcLib')
+  //     };
 
-      vscode.window.showOpenDialog(options).then(fileUri => {
-        if (fileUri && fileUri[0]) {
-          vscode.window.showInformationMessage('Selected file: ' + fileUri[0].fsPath);
-          vscode.workspace.updateWorkspaceFolders(0,
-            undefined,
-            { uri: fileUri[0] });
-        }
+  //     vscode.window.showOpenDialog(options).then(fileUri => {
+  //       if (fileUri && fileUri[0]) {
+  //         vscode.window.showInformationMessage('Selected file: ' + fileUri[0].fsPath);
+  //         vscode.workspace.updateWorkspaceFolders(0,
+  //           undefined,
+  //           { uri: fileUri[0] });
+  //       }
 
-      });
-    })
-  );
+  //     });
+  //   })
+  // );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("LTC.newLTCProject", async () => {
@@ -198,21 +199,34 @@ void loop(){
 
       const res = await vscode.window.showInputBox({ prompt: "What should be the name of the new project?" });
       if (res) {
-        const filePath = vscode.Uri.joinPath(context.extensionUri, 'ltcLib', res + 'Project');
+        var projectPath = context.globalState.get<vscode.Uri>("arduinoProjectsPath");
 
-        if (!fs.existsSync(filePath.fsPath)) {
-          vscode.workspace.updateWorkspaceFolders(0,
-            undefined,
-            { uri: filePath, name: res + 'Project' });
+        if (projectPath) {
+          var filePath = vscode.Uri.joinPath( vscode.Uri.file(projectPath.path), res, res+'.ino');
+          if (!fs.existsSync(filePath.fsPath)) {
+            vscode.window.showInformationMessage(filePath.path);
+            let initString = `#include <Arduino.h>
 
-          await context.globalState.update("newFileName", res);
-          await context.globalState.update("isNewFile", true);
-          // await vscode.commands.executeCommand('vscode.openFolder',
-          // vscode.Uri.joinPath(context.extensionUri, 'ltcLib', res + 'Project'),false);
-          await vscode.commands.executeCommand('workbench.action.reloadWindow');
-        }
-        else {
-          vscode.window.showErrorMessage("File is already exist!");
+#include <LedController.h>
+#include <ButtonController.h>
+
+LedController led;
+
+void setup(){
+
+}
+
+void loop(){
+
+}`;
+            const wsedit = new vscode.WorkspaceEdit();
+            wsedit.createFile(filePath, { ignoreIfExists: true });
+            wsedit.set(filePath, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(100, 0)), initString)]);
+            vscode.workspace.applyEdit(wsedit);
+          }
+          else {
+            vscode.window.showErrorMessage("File is already exist!");
+          }
         }
       }
     })
