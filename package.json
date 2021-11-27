@@ -45,11 +45,6 @@
     },
     "commands": [
       {
-        "command": "LTC.addMessage",
-        "category": "LTC",
-        "title": "Add message"
-      },
-      {
         "command": "LTC.openDevicesPanel",
         "title": "Start devicesPanel",
         "category": "LTC"

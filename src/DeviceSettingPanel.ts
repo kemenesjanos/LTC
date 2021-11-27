@@ -27,13 +27,7 @@ export class DeviceSettingPanel {
 	private readonly _extensionUri: vscode.Uri;
 	private _disposables: vscode.Disposable[] = [];
 
-
-
-
-	//////////////////////////////////////////////////////////////////////////////
-	//public model?: DevicesData;
 	public repo?: DevicesDataHandler;
-	//////////////////////////////////////////////////////////////////////////////
 
 	public static createOrShow(extensionUri: vscode.Uri, model: DevicesData) {
 
@@ -63,10 +57,10 @@ export class DeviceSettingPanel {
 
 	}
 
-	public static kill() {
-		DeviceSettingPanel.currentPanel?.dispose();
-		DeviceSettingPanel.currentPanel = undefined;
-	}
+	// public static kill() {
+	// 	DeviceSettingPanel.currentPanel?.dispose();
+	// 	DeviceSettingPanel.currentPanel = undefined;
+	// }
 
 	public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
 		DeviceSettingPanel.currentPanel = new DeviceSettingPanel(panel, extensionUri);
@@ -206,23 +200,34 @@ export class DeviceSettingPanel {
 			</html>`;
 	}
 
+	private initViewDevice() {
+		this._panel.webview.postMessage({
+			command: "init-device",
+			value: JSON.stringify(this.repo?.devicesData),
+		});
+	}
+
 	private initView() {
 		this._panel.webview.postMessage({
 			command: "init-message",
 			value: JSON.stringify(this.repo?.devicesData),
 		});
-		vscode.window.showInformationMessage(JSON.stringify(this.repo?.devicesData));
 	}
 
-	//TODO: Testing methods
-	private updateDevice(value: string) {
+	private updateDevice(value: JSON) {
 		try {
 			var tmp = new Device();
 			Object.assign(tmp, value);
-			this.repo?.updateDevice(tmp.id, tmp);
-			this.initView();
+			if (this.repo?.updateDevice(tmp.id, tmp)) {
+				this.initViewDevice();
+			}
+			else{
+				vscode.window.showErrorMessage('Cannot update device');
+			}
+			
+			
 		} catch (error) {
-			vscode.window.showErrorMessage('Cannot update device');
+			vscode.window.showErrorMessage('Cannot update device: ' + error);
 		}
 	}
 	private async removeDevice(value: any) {
@@ -251,30 +256,30 @@ export class DeviceSettingPanel {
 
 	private addProperty(deviceId: string) {
 		this.repo?.addProperty(deviceId);
-		this.initView();
+		this.initViewDevice();
 	}
 	private removeProperty(propertyId: string, deviceId: string) {
 		this.repo?.removeProperty(propertyId, deviceId);
-		this.initView();
+		this.initViewDevice();
 	}
 
 	private addMethod(deviceId: string) {
 		this.repo?.addMethod(deviceId);
-		this.initView();
+		this.initViewDevice();
 	}
 	private removeMethod(methodId: string, deviceId: string) {
 		this.repo?.removeMethod(methodId, deviceId);
-		this.initView();
+		this.initViewDevice();
 	}
 
 	private addParameter(methodId: string ,deviceId: string) {
 		this.repo?.addParameter(deviceId, methodId);
-		this.initView();
+		this.initViewDevice();
 	}
 
 	private removeParameter(parameterId: string, methodId: string, deviceId: string) {
 		this.repo?.removeParameter(parameterId, methodId, deviceId);
-		this.initView();
+		this.initViewDevice();
 	}
 
 }

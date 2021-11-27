@@ -6,6 +6,7 @@
     import ClassTab from "./tabs/ClassTab.svelte";
     import Tabs from "./sharedComponents/Tabs.svelte";
     import VerticalTabs from "./sharedComponents/VerticalTabs.svelte";
+import type { Device } from "../../src/Models/deviceData";
 
     let loaded = false;
 
@@ -30,16 +31,25 @@
     //     }
     // }
 
-    $: {
-        if (loaded && jsonData.devices.length !== 0) {
-            tsvscode.postMessage({
-                command: "update",
-                value: JSON.stringify(jsonData),
+    // $: {
+    //     if (loaded && activeDevice && activeDevice.id !== "") {
+    //                 tsvscode.postMessage({
+    //                     command: "updateDevice",
+    //                     value: JSON.stringify(activeDevice),
+    //                 });
+    //         // tsvscode.postMessage({
+    //         //     command: "save",
+    //         // });
+    //         //tsvscode.setState({ state: {activeDevice: JSON.stringify(jsonData)} });
+    //     }
+    // }
+
+    function ModifyActiveDevice() {
+        tsvscode.postMessage({
+                command: "updateDevice",
+                value: JSON.stringify(activeDevice),
             });
-            tsvscode.postMessage({
-                command: "save",
-            });
-        }
+            
     }
 
     //it is called when the svelte is ready
@@ -59,6 +69,11 @@
     window.addEventListener("message", (event) => {
         const message = event.data;
         switch (message.command) {
+            case "init-device":
+                let newDev = JSON.parse(message.value) as Device;
+                let idx = jsonData.devices.findIndex(x => x.id === newDev.id);
+                jsonData.devices[idx] = newDev;
+                break;
             case "init-message":
                 jsonData = JSON.parse(message.value);
 
@@ -68,14 +83,15 @@
                     if (loaded) {
                         if (activeDevice === null) {
                             activeDevice = jsonData.devices[0];
-                        } else {
-                            activeDevice =
-                                jsonData.devices[
-                                    jsonData.devices.findIndex(
-                                        (x) => x.id === activeDevice.id
-                                    )
-                                ];
                         }
+                        // else {
+                        //     activeDevice =
+                        //         jsonData.devices[
+                        //             jsonData.devices.findIndex(
+                        //                 (x) => x.id === activeDevice.id
+                        //             )
+                        //         ];
+                        // }
                     } else {
                         
                         activeDevice = jsonData.devices[0];
@@ -184,23 +200,22 @@
     let items = ["Description", "Properties", "Methods", "Class"];
     let activeItem = "Description";
 
-    let activeDevice: any = tsvscode.getState()?.activeDevice || jsonData.devices[0];
+    let activeDevice: any = jsonData.devices[0];
+    // if (tsvscode.getState()?.value.activeDevice) {
+    //     console.log(JSON.parse(tsvscode.getState()?.value.activeDevice))
+    // }
 
-    $:{
-        tsvscode.setState({activeDevice});
-    }
+    // $: {
+    //     if (jsonData.devices.length !== 0 && activeDevice) {
+    //         jsonData.devices[
+    //             jsonData.devices.findIndex((x) => x.id === activeDevice.id)
+    //         ] = activeDevice;
+    //     }
+    // }
 
-    $: {
-        if (jsonData.devices.length !== 0 && activeDevice) {
-            jsonData.devices[
-                jsonData.devices.findIndex((x) => x.id === activeDevice.id)
-            ] = activeDevice;
-        }
-    }
+    const tabChange = (e: { detail: string }) => {ModifyActiveDevice(); activeItem = e.detail; };
 
-    const tabChange = (e: { detail: string }) => (activeItem = e.detail);
-
-    const vertTabChange = (e: { detail: any }) => {
+    const vertTabChange = (e: { detail: any }) => {ModifyActiveDevice();
         activeDevice = jsonData?.devices.find((x) => x.id === e.detail.id)!;
     };
 
@@ -252,12 +267,6 @@
                 
             </div>
             
-
-            <!-- <select bind:value={actualDevice}>
-        {#each jsonData.devices as device}
-            <option value={device.id}>{device.descriptionTabData.name}</option>
-        {/each}
-    </select> -->
             {#if activeDevice}
                 <div style="overflow-x:auto;">
                     <Tabs {activeItem} {items} on:tabChange={tabChange} />

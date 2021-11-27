@@ -5,15 +5,6 @@
 
     const types = ["Switch", "I2C", "Sensor", "Nothing"];
 
-    const dispatch = createEventDispatcher();
-
-    //TODO: implement this in the ts with command
-    function pickImage() {
-        dispatch('message', {
-		"type" : "pickImage"});
-    }
-
-
     let  avatar, fileinput;
 
     avatar = data.picture;
@@ -26,7 +17,6 @@
         reader.onload = e => {
             avatar = e.target.result;
             data.picture = avatar;
-            console.log(avatar);
         };
                 
     }

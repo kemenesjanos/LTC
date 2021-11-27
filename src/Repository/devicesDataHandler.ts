@@ -23,11 +23,21 @@ export class DevicesDataHandler {
     }
 
     /**
+     * addDevice
+     */
+     public addDeviceAtIndex(newDevice: Device, index: number): boolean {
+        var l = this.devicesData.devices.length;
+        this.devicesData.devices.splice(index,0,newDevice);
+        return (this.devicesData.devices.length === l + 1);
+    }
+
+    /**
      * removeDevice
      */
     public removeDevice(removeDeviceId: string): boolean {
-        var r = this.devicesData.devices = this.devicesData.devices.filter(dev => dev.id !== removeDeviceId);
-        return typeof r === typeof Device;
+        let r = this.devicesData.devices.length;
+        this.devicesData.devices = this.devicesData.devices.filter(dev => dev.id !== removeDeviceId);
+        return r === this.devicesData.devices.length +1;
     }
 
     /**
@@ -41,8 +51,9 @@ export class DevicesDataHandler {
      * updateDevice
      */
     public updateDevice(oldId: string, newDevice: Device): boolean {
+        var i = this.devicesData.devices.indexOf(this.devicesData.devices.filter( x => x.id === oldId)[0]);
         if (this.removeDevice(oldId)) {
-            return this.addDevice(newDevice);
+            return this.addDeviceAtIndex(newDevice, i);
         }
         else {
             return false;

@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import DevicesSearch from "../components/DevicesSearch.svelte"
     import type {DevicesData} from "../../src/Models/devicesData";
+import type { Device } from "../../src/Models/deviceData";
     let devices: DevicesData;
 
     let loaded = false;
@@ -28,12 +29,15 @@
     window.addEventListener("message", (event) => {
         const message = event.data;
         switch (message.command) {
-            case "add-message":
-                break;
             case "init-message":
                 jsonData = JSON.parse(message.value);
                 devices = jsonData as DevicesData;
                 loaded = true;
+                break;
+            case "init-device":
+                let newDev = JSON.parse(message.value) as Device;
+                let idx = jsonData.devices.findIndex(x => x.id === newDev.id);
+                jsonData.devices[idx] = newDev;
                 break;
         }
     });
