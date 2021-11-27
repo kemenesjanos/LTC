@@ -1,5 +1,0 @@
-{
-    "sketch": "sbvfr.ino",
-    "board": "arduino:avr:uno",
-    "port": "COM8"
-}
