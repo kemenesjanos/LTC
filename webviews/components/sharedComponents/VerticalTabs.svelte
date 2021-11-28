@@ -1,9 +1,10 @@
-<script>
+<script lang="ts">
     import { createEventDispatcher } from 'svelte';
+import type { Device } from '../../../src/Models/deviceData';
     let dispatch = createEventDispatcher();
     
-    export let vertItems;
-    export let vertActiveItem;
+    export let vertItems: Device[];
+    export let vertActiveItem: Device | null;
   </script>
   
   <div class="vertTabs" style="overflow-x:auto;">

@@ -15,6 +15,10 @@ body {
   background-color: var(--vscode-editor-background);
 }
 
+.sidebarPanel{
+  background-color: var(--vscode-sideBar-background);
+}
+
 ol,
 ul {
   padding-left: var(--container-paddding);
@@ -167,6 +171,18 @@ select{
 
 /* Expansion Panel */
 
+.accordion-item-header {
+  user-select: text;
+  cursor: auto;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.accordion-item-body {
+  user-select: text;
+  cursor: auto;
+}
+
 .panel {
 	position: relative;
 	box-sizing: border-box;
@@ -273,6 +289,7 @@ select{
 }
 
 pre, textarea {
+  white-space: pre-wrap;
   font-family: inherit;
   padding: 0.5em;
   box-sizing: border-box;
@@ -288,8 +305,8 @@ textarea {
   background-color: var(--vscode-input-background);
 
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   top: 0;
   resize: none;
 
@@ -386,7 +403,7 @@ ul {
 :global(.accordion) {
   width: 100%;
   max-width: 450px;
-  margin: 0 auto;
+  margin: 0 0;
 }
 
 :global(.accordion-item) {
@@ -396,6 +413,7 @@ ul {
 .accheader {
   display: inline;
   align-items: center;
+  width: 100%;
 }
 
 img{
@@ -421,15 +439,19 @@ img{
   margin: 0;
   font-size: 18px;
   background-color: rgba(0, 0, 0, 0.3);
-  
+  width: 100%;
   overflow-x:auto;
+}
+
+AccordionItem{
+  width: 100%;
 }
 
 /* side header underline */
 .SideHeader{
   text-decoration: underline;
-  margin-left: 5px;
-  margin-bottom: 10px;
+  margin-left: 2px;
+  margin-bottom: 5px;
 }
 
 
@@ -462,4 +484,12 @@ div{
   font-size: 20px;
   margin-top: 15px;
   margin-bottom: 10px;
+}
+
+div{
+  white-space: pre-wrap;
+}
+
+hr{
+  border-color: var(--vscode-input-background);
 }

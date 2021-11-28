@@ -40,7 +40,7 @@ export function createHeader(model: Device): string {
   return pre;
 }
 
-function createMethod(meth: Method, isCpp: boolean, modelsName: string): string {
+export function createMethod(meth: Method, isCpp: boolean, modelsName: string): string {
   var res = "";
   if (meth.returnType !== "constructor") {
     res += meth.returnType + " ";

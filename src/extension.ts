@@ -58,24 +58,24 @@ export function activate(context: vscode.ExtensionContext) {
   //context.globalState.update("DevicesModel",model);
   if (context.globalState.get<DevicesData>("DevicesModel")) {
     model = context.globalState.get<DevicesData>("DevicesModel")!;
+
     //Save to json
-    let data = JSON.stringify(model.devices);
-    const filePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'Data', 'baseDevices.json');
+    // let data = JSON.stringify(model.devices);
+    // const filePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'Data', 'baseDevices.json');
 
-    fs.truncate(filePath.fsPath, 0, function(){console.log('done');});
+    // fs.truncate(filePath.fsPath, 0, function(){console.log('done');});
 
-    fs.writeFile(filePath.fsPath, data, function (err) {
-      if (err){
-        return console.log(err);
-      } 
-      console.log('Write model to json');
-    });
+    // fs.writeFile(filePath.fsPath, data, function (err) {
+    //   if (err){
+    //     return console.log(err);
+    //   } 
+    //   console.log('Write model to json');
+    // });
 
   }
   else {
     //First initialization
     //Get base devices from json
-    //TODO: TEST it
     const filePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'Data', 'baseDevices.json');
     let rawdata = fs.readFileSync(filePath.fsPath);
     model.devices = JSON.parse(rawdata.toString());
@@ -103,6 +103,11 @@ export function activate(context: vscode.ExtensionContext) {
         var projectPath = context.globalState.get<vscode.Uri>("arduinoProjectsPath");
 
         if (projectPath) {
+          // if (!vscode.workspace.workspaceFolders?.find(x => x.uri.path === projectPath?.path)) {
+          //   vscode.workspace.updateWorkspaceFolders(0, 0, { uri: projectPath, name: "Projects" });
+          //   vscode.workspace.onDidChangeWorkspaceFolders(e => vscode.window.showInformationMessage("elvileg sikerült!"));
+          // }
+
           var filePath = vscode.Uri.joinPath(vscode.Uri.file(projectPath.path), res, res + '.ino');
           if (!fs.existsSync(filePath.fsPath)) {
             let initString = `#include <Arduino.h>
@@ -125,6 +130,7 @@ void loop(){
           else {
             vscode.window.showErrorMessage("File is already exist!");
           }
+
         }
       }
     })
@@ -199,8 +205,7 @@ void loop(){
               break;
             case 'updateDevice':
               if(sidebarProvider._view?.visible){
-                sidebarProvider.model = model;
-                sidebarProvider.initView();
+                sidebarProvider.initViewDevice(message.value);
               }
               
               context.globalState.update("DevicesModel", model);
@@ -212,7 +217,7 @@ void loop(){
               if (tmpFilePath) {
                 //Add Libraries folder to vscode
                 //TODO: test it
-                if (!vscode.workspace.workspaceFolders?.find(x => x.uri === tmpFilePath)) {
+                if (!vscode.workspace.workspaceFolders?.find(x => x.uri.path === tmpFilePath?.path)) {
                   vscode.workspace.updateWorkspaceFolders(0, null, { uri: tmpFilePath, name: "Libraries" });
                 }
 

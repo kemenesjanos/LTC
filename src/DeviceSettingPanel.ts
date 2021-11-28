@@ -100,7 +100,7 @@ export class DeviceSettingPanel {
 						this.initView();
 						break;
 					case 'update':
-						Object.assign(this.repo?.devicesData, JSON.parse(message.value));
+						Object.assign(this.repo?.devicesData.devices, JSON.parse(message.value));
 						break;
 					case 'updateDevice':
 						this.updateDevice(JSON.parse(message.value));
@@ -200,17 +200,24 @@ export class DeviceSettingPanel {
 			</html>`;
 	}
 
-	private initViewDevice() {
-		this._panel.webview.postMessage({
-			command: "init-device",
-			value: JSON.stringify(this.repo?.devicesData),
-		});
+	private initViewDevice(deviceId: string) {
+		let tmpDev = this.repo?.getDevices().find(x => x.id === deviceId);
+		if(tmpDev){
+			this._panel.webview.postMessage({
+				command: "init-device",
+				value: JSON.stringify(tmpDev),
+			});
+		}
+		else{
+			console.log("init view error");
+		}
+		
 	}
 
 	private initView() {
 		this._panel.webview.postMessage({
 			command: "init-message",
-			value: JSON.stringify(this.repo?.devicesData),
+			value: JSON.stringify(this.repo?.devicesData.devices),
 		});
 	}
 
@@ -219,7 +226,7 @@ export class DeviceSettingPanel {
 			var tmp = new Device();
 			Object.assign(tmp, value);
 			if (this.repo?.updateDevice(tmp.id, tmp)) {
-				this.initViewDevice();
+				this.initViewDevice(tmp.id);
 			}
 			else{
 				vscode.window.showErrorMessage('Cannot update device');
@@ -256,30 +263,30 @@ export class DeviceSettingPanel {
 
 	private addProperty(deviceId: string) {
 		this.repo?.addProperty(deviceId);
-		this.initViewDevice();
+		this.initViewDevice(deviceId);
 	}
 	private removeProperty(propertyId: string, deviceId: string) {
 		this.repo?.removeProperty(propertyId, deviceId);
-		this.initViewDevice();
+		this.initViewDevice(deviceId);
 	}
 
 	private addMethod(deviceId: string) {
 		this.repo?.addMethod(deviceId);
-		this.initViewDevice();
+		this.initViewDevice(deviceId);
 	}
 	private removeMethod(methodId: string, deviceId: string) {
 		this.repo?.removeMethod(methodId, deviceId);
-		this.initViewDevice();
+		this.initViewDevice(deviceId);
 	}
 
 	private addParameter(methodId: string ,deviceId: string) {
 		this.repo?.addParameter(deviceId, methodId);
-		this.initViewDevice();
+		this.initViewDevice(deviceId);
 	}
 
 	private removeParameter(parameterId: string, methodId: string, deviceId: string) {
 		this.repo?.removeParameter(parameterId, methodId, deviceId);
-		this.initViewDevice();
+		this.initViewDevice(deviceId);
 	}
 
 }

@@ -10,24 +10,30 @@ import type { Device } from "../../src/Models/deviceData";
 
     let loaded = false;
 
-    let jsonData = {
-        devices: [
-            {
-                descriptionTabData: { name: "" },
-                propertiesTabData: {},
-                methodsTabData: {},
-                classTabData: {},
-                id: "",
-            },
-        ],
-    };
+    // let jsonData = {
+    //     devices: [
+    //         {
+    //             descriptionTabData: { name: "" },
+    //             propertiesTabData: {},
+    //             methodsTabData: {},
+    //             classTabData: {},
+    //             id: "",
+    //         },
+    //     ],
+    // };
+    let devices: Device[];
+
+    let items = ["Description", "Properties", "Methods", "Class"];
+    let activeItem = "Description";
+
+    let activeDevice: Device | null = null;
 
     // let actualDevice = "";
     // let actualDeviceSN = 0;
 
     // $: {
     //     if (loaded) {
-    //         actualDevice = jsonData.devices[actualDeviceSN].id;
+    //         actualDevice = devices[actualDeviceSN].id;
     //     }
     // }
 
@@ -71,32 +77,30 @@ import type { Device } from "../../src/Models/deviceData";
         switch (message.command) {
             case "init-device":
                 let newDev = JSON.parse(message.value) as Device;
-                let idx = jsonData.devices.findIndex(x => x.id === newDev.id);
-                jsonData.devices[idx] = newDev;
+                let idx = devices.findIndex(x => x.id === newDev.id);
+                devices[idx] = newDev;
                 break;
             case "init-message":
-                jsonData = JSON.parse(message.value);
+                devices = JSON.parse(message.value) as Device[];
 
-                if (jsonData.devices.length === 0) {
+                if (devices.length === 0) {
                     activeDevice = null;
                 } else {
-                    if (loaded) {
-                        if (activeDevice === null) {
-                            activeDevice = jsonData.devices[0];
-                        }
-                        // else {
-                        //     activeDevice =
-                        //         jsonData.devices[
-                        //             jsonData.devices.findIndex(
-                        //                 (x) => x.id === activeDevice.id
-                        //             )
-                        //         ];
-                        // }
-                    } else {
-                        
-                        activeDevice = jsonData.devices[0];
+                    if (activeDevice === null) {
+                        activeDevice = devices[0];
+                    }
+                    else {
+                        activeDevice =
+                            devices[
+                                devices.findIndex(
+                                    (x) => x.id === activeDevice?.id
+                                )
+                            ];
                     }
                 }
+                    
+
+                
 
                 loaded = true;
 
@@ -127,13 +131,14 @@ import type { Device } from "../../src/Models/deviceData";
             // });
             // break;
             case "updateDevice":
-                if (jsonData.devices.length !== 0) {
+                let tmp : Device[] = devices.filter(
+                                (x) => x.id === event.detail.updateID
+                            );
+                if (devices.length !== 0 && tmp.length !== 0) {
                     tsvscode.postMessage({
                         command: "updateDevice",
                         value: JSON.stringify(
-                            jsonData.devices.filter(
-                                (x) => x.id === event.detail.updateID
-                            )
+                            tmp[0]
                         ),
                     });
                 }
@@ -154,26 +159,26 @@ import type { Device } from "../../src/Models/deviceData";
                 tsvscode.postMessage({
                     command: "removeProperty",
                     value: event.detail.propertyId,
-                    deviceId: activeDevice.id,
+                    deviceId: activeDevice?.id,
                 });
                 break;
             case "addProperty":
                 tsvscode.postMessage({
                     command: "addProperty",
-                    deviceId: activeDevice.id,
+                    deviceId: activeDevice?.id,
                 });
                 break;
             case "removeMethod":
                 tsvscode.postMessage({
                     command: "removeMethod",
                     value: event.detail.methodId,
-                    deviceId: activeDevice.id,
+                    deviceId: activeDevice?.id,
                 });
                 break;
             case "addMethod":
                 tsvscode.postMessage({
                     command: "addMethod",
-                    deviceId: activeDevice.id,
+                    deviceId: activeDevice?.id,
                 });
                 break;
             case "removeParameter":
@@ -181,14 +186,14 @@ import type { Device } from "../../src/Models/deviceData";
                     command: "removeParameter",
                     value: event.detail.parameterId,
                     methodId: event.detail.methodId,
-                    deviceId: activeDevice.id,
+                    deviceId: activeDevice?.id,
                 });
                 break;
             case "addParameter":
                 tsvscode.postMessage({
                     command: "addParameter",
                     value: event.detail.methodId,
-                    deviceId: activeDevice.id,
+                    deviceId: activeDevice?.id,
                 });
                 break;
 
@@ -197,18 +202,15 @@ import type { Device } from "../../src/Models/deviceData";
         }
     }
 
-    let items = ["Description", "Properties", "Methods", "Class"];
-    let activeItem = "Description";
-
-    let activeDevice: any = jsonData.devices[0];
+    
     // if (tsvscode.getState()?.value.activeDevice) {
     //     console.log(JSON.parse(tsvscode.getState()?.value.activeDevice))
     // }
 
     // $: {
-    //     if (jsonData.devices.length !== 0 && activeDevice) {
-    //         jsonData.devices[
-    //             jsonData.devices.findIndex((x) => x.id === activeDevice.id)
+    //     if (devices.length !== 0 && activeDevice) {
+    //         devices[
+    //             devices.findIndex((x) => x.id === activeDevice.id)
     //         ] = activeDevice;
     //     }
     // }
@@ -216,7 +218,7 @@ import type { Device } from "../../src/Models/deviceData";
     const tabChange = (e: { detail: string }) => {ModifyActiveDevice(); activeItem = e.detail; };
 
     const vertTabChange = (e: { detail: any }) => {ModifyActiveDevice();
-        activeDevice = jsonData?.devices.find((x) => x.id === e.detail.id)!;
+        activeDevice = devices.find((x) => x.id === e.detail.id)!;
     };
 
     function addDevice() {
@@ -227,12 +229,13 @@ import type { Device } from "../../src/Models/deviceData";
     }
 
     function removeDevice() {
-        tsvscode.postMessage({
-            command: "removeDevice",
-            value: JSON.stringify(activeDevice),
-        });
-
-        activeDevice = null;
+        if(activeDevice){
+            tsvscode.postMessage({
+                command: "removeDevice",
+                value: JSON.stringify(activeDevice),
+            });
+            activeDevice = null;
+        }
     }
 
     function createClass(){
@@ -245,21 +248,19 @@ import type { Device } from "../../src/Models/deviceData";
 </script>
 
 {#if loaded}
-    
-    {#if jsonData.devices.length !== 0}
-    
+        <button class="roundButton" on:click={() => addDevice()}>Add</button>
+        {#if devices.length !== 0}
         <div class="DeviceSettingPanelContainer">
             
             <div>
                 <div style="display: flex;">
-                    <button class="roundButton" on:click={() => addDevice()}>Add</button>
-                    <button class="roundButton" disabled={jsonData === null} on:click={() => removeDevice()}>Remove</button>
+                    <button class="roundButton" disabled={devices.length !== 0} on:click={() => removeDevice()}>Remove</button>
                 </div>
 
                 <div style="margin-top: 5px;">
                     <VerticalTabs
                     vertActiveItem={activeDevice}
-                    vertItems={jsonData.devices}
+                    vertItems={devices}
                     on:vertTabChange={vertTabChange}
                     />
                 </div>
@@ -304,7 +305,8 @@ import type { Device } from "../../src/Models/deviceData";
                 </div>
             {/if}
         </div>
-    {/if}
+        {/if}
+        
 {:else}
     Loading
 {/if}

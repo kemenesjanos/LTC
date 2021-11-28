@@ -120,5 +120,5 @@
 {:else}
     <div>There are no properties yet.</div>
 {/each}
-<button class="roundButton" style="width: 150px;" on:click={() => addProperty()}> add </button>
+<button class="roundButton" style="width: 150px;" on:click={() => addProperty()}> Add </button>
 

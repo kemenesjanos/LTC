@@ -74,6 +74,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           value: JSON.stringify(this.model),
     });
   }
+
+  public initViewDevice(device: string){
+    this._view?.webview.postMessage({
+      command: "init-device",
+          value: device,
+    });
+  }
+
   public revive(panel: vscode.WebviewView) {
     this._view = panel;
   }
@@ -113,7 +121,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           const tsvscode = acquireVsCodeApi();
         </script>
 			</head>
-      <body>
+      <body class="sidebarPanel">
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`;

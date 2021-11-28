@@ -2,22 +2,22 @@
     import { onMount } from "svelte";
     import DevicesSearch from "../components/DevicesSearch.svelte"
     import type {DevicesData} from "../../src/Models/devicesData";
-import type { Device } from "../../src/Models/deviceData";
+    import type { Device } from "../../src/Models/deviceData";
     let devices: DevicesData;
 
     let loaded = false;
 
-    let jsonData = {
-        devices: [
-            {
-                descriptionTabData: { name: "" },
-                propertiesTabData: {},
-                methodsTabData: {},
-                classTabData: {},
-                id: "",
-            },
-        ],
-    };
+    // let jsonData = {
+    //     devices: [
+    //         {
+    //             descriptionTabData: { name: "" },
+    //             propertiesTabData: {},
+    //             methodsTabData: {},
+    //             classTabData: {},
+    //             id: "",
+    //         },
+    //     ],
+    // };
 
     onMount(() => {
         tsvscode.postMessage({
@@ -30,14 +30,13 @@ import type { Device } from "../../src/Models/deviceData";
         const message = event.data;
         switch (message.command) {
             case "init-message":
-                jsonData = JSON.parse(message.value);
-                devices = jsonData as DevicesData;
+                devices = JSON.parse(message.value) as DevicesData;
                 loaded = true;
                 break;
             case "init-device":
                 let newDev = JSON.parse(message.value) as Device;
-                let idx = jsonData.devices.findIndex(x => x.id === newDev.id);
-                jsonData.devices[idx] = newDev;
+                let idx = devices.devices.findIndex(x => x.id === newDev.id);
+                devices.devices[idx] = newDev;
                 break;
         }
     });
@@ -49,18 +48,7 @@ import type { Device } from "../../src/Models/deviceData";
     }}>New LTC Project</button
 >
 
-<button class="roundButton"
-    on:click={() => {
-        tsvscode.postMessage({ command: "openLTCProject", value: "" });
-    }}>Open LTC Project</button
->
-
-<button class="roundButton"
-    on:click={() => {
-        tsvscode.postMessage({ command: "reInit", value: "" });
-    }}>Re Init Project</button
->
-
-{#if loaded && jsonData.devices.length !== 0}
-    <DevicesSearch bind:devices = {devices} />
+{#if loaded && devices.devices.length !== 0}
+    <DevicesSearch bind:devices = {devices}/>
 {/if}
+
