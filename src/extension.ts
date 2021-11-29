@@ -102,13 +102,9 @@ export function activate(context: vscode.ExtensionContext) {
       const res = await vscode.window.showInputBox({ prompt: "What should be the name of the new project?" });
       if (res) {
         var projectPath = context.globalState.get<vscode.Uri>("arduinoProjectsPath");
+        projectPath = vscode.Uri.file(projectPath?.path!);
 
         if (projectPath) {
-          // if (!vscode.workspace.workspaceFolders?.find(x => x.uri.path === projectPath?.path)) {
-          //   vscode.workspace.updateWorkspaceFolders(0, 0, { uri: projectPath, name: "Projects" });
-          //   vscode.workspace.onDidChangeWorkspaceFolders(e => vscode.window.showInformationMessage("elvileg sikerült!"));
-          // }
-
           var filePath = vscode.Uri.joinPath(vscode.Uri.file(projectPath.path), res, res + '.ino');
           if (!fs.existsSync(filePath.fsPath)) {
             let initString = `#include <Arduino.h>
@@ -127,6 +123,11 @@ void loop(){
             wsedit.createFile(filePath, { ignoreIfExists: true });
             wsedit.set(filePath, [new vscode.TextEdit(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(1000, 0)), initString)]);
             vscode.workspace.applyEdit(wsedit);
+
+            //Open projects folder
+            if (!vscode.workspace.getWorkspaceFolder(projectPath)) {
+              vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.length : 0, null, { uri: projectPath!, name: "Projects" });
+            }
           }
           else {
             vscode.window.showErrorMessage("File is already exist!");
@@ -214,16 +215,11 @@ void loop(){
             case "init-view":
 
               var tmpFilePath = context.globalState.get<vscode.Uri>("arduinoLibrariesPath");
-
+              tmpFilePath = vscode.Uri.file(tmpFilePath?.path!);
               if (tmpFilePath) {
                 //Add Libraries folder to vscode
-                //TODO: test it
-                if (!vscode.workspace.workspaceFolders?.find(x => x.uri.path === tmpFilePath?.path)) {
-                  console.log("Nincs");
-                  vscode.workspace.updateWorkspaceFolders(0, null, { uri: tmpFilePath, name: "Libraries" });
-                }
-                else{
-                  console.log("Van libraries folder");
+                if (!vscode.workspace.getWorkspaceFolder(tmpFilePath)) {
+                  vscode.workspace.updateWorkspaceFolders(vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.length : 0, null, { uri: tmpFilePath!, name: "Libraries" });
                 }
 
               }
