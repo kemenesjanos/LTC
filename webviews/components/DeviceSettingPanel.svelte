@@ -65,13 +65,7 @@ import type { Device } from "../../src/Models/deviceData";
             value: null,
         });
     });
-
-    onDestroy(() => {
-        tsvscode.postMessage({
-            command: "dispose",
-        });
-    });
-
+    
     window.addEventListener("message", (event) => {
         const message = event.data;
         switch (message.command) {
@@ -79,6 +73,23 @@ import type { Device } from "../../src/Models/deviceData";
                 let newDev = JSON.parse(message.value) as Device;
                 let idx = devices.findIndex(x => x.id === newDev.id);
                 devices[idx] = newDev;
+
+                if (devices.length === 0) {
+                    activeDevice = null;
+                } else {
+                    if (activeDevice === null) {
+                        activeDevice = devices[0];
+                    }
+                    else {
+                        activeDevice =
+                            devices[
+                                devices.findIndex(
+                                    (x) => x.id === activeDevice?.id
+                                )
+                            ];
+                    }
+                }
+
                 break;
             case "init-message":
                 devices = JSON.parse(message.value) as Device[];
@@ -122,14 +133,11 @@ import type { Device } from "../../src/Models/deviceData";
     function handleMessage(event: any) {
         switch (event.detail.type) {
             case "update":
-            // tsvscode.postMessage({
-            //     command: "update",
-            //     value: JSON.stringify(jsonData),
-            // });
-            // tsvscode.postMessage({
-            //     command: "save",
-            // });
-            // break;
+                tsvscode.postMessage({
+                    command: "update",
+                    value: JSON.stringify(devices),
+                });
+                break;
             case "updateDevice":
                 let tmp : Device[] = devices.filter(
                                 (x) => x.id === event.detail.updateID
@@ -217,9 +225,7 @@ import type { Device } from "../../src/Models/deviceData";
 
     const tabChange = (e: { detail: string }) => {ModifyActiveDevice(); activeItem = e.detail; };
 
-    const vertTabChange = (e: { detail: any }) => {ModifyActiveDevice();
-        activeDevice = devices.find((x) => x.id === e.detail.id)!;
-    };
+    const vertTabChange = (e: { detail: any }) => {ModifyActiveDevice(); activeDevice = devices.find((x) => x.id === e.detail.id)!;};
 
     function addDevice() {
         tsvscode.postMessage({

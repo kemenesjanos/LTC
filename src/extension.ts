@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import { Device } from "./Models/deviceData";
 import { createCpp, createHeader } from './Repository/classCreator';
 import { DevicesDataHandler } from "./Repository/devicesDataHandler";
+import { Console } from "console";
 
 var model = new DevicesData();
 
@@ -197,7 +198,7 @@ void loop(){
       DeviceSettingPanel.createOrShow(context.extensionUri, model);
 
       //Handle messages from device setting panel
-      DeviceSettingPanel.currentPanel!._panel.webview.onDidReceiveMessage(
+      DeviceSettingPanel.currentPanel?._panel.webview.onDidReceiveMessage(
         (message) => {
           switch (message.command) {
             case 'save':
@@ -218,7 +219,11 @@ void loop(){
                 //Add Libraries folder to vscode
                 //TODO: test it
                 if (!vscode.workspace.workspaceFolders?.find(x => x.uri.path === tmpFilePath?.path)) {
+                  console.log("Nincs");
                   vscode.workspace.updateWorkspaceFolders(0, null, { uri: tmpFilePath, name: "Libraries" });
+                }
+                else{
+                  console.log("Van libraries folder");
                 }
 
               }

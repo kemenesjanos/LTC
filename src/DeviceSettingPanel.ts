@@ -137,7 +137,6 @@ export class DeviceSettingPanel {
 	}
 
 	public dispose() {
-
 		DeviceSettingPanel.currentPanel = undefined;
 		// Clean up our resources
 		this._panel.dispose();
@@ -153,6 +152,7 @@ export class DeviceSettingPanel {
 	}
 
 	private _update() {
+
 		const webview = this._panel.webview;
 		this._panel.webview.html = this._getHtmlForWebview(webview);
 
