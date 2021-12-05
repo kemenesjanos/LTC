@@ -51,6 +51,7 @@ import type { Device } from "../../src/Models/deviceData";
     // }
 
     function ModifyActiveDevice() {
+        console.log("Ez mi jó élet ?");
         tsvscode.postMessage({
                 command: "updateDevice",
                 value: JSON.stringify(activeDevice),
@@ -65,6 +66,7 @@ import type { Device } from "../../src/Models/deviceData";
             value: null,
         });
     });
+    
     
     window.addEventListener("message", (event) => {
         const message = event.data;
@@ -254,13 +256,15 @@ import type { Device } from "../../src/Models/deviceData";
 </script>
 
 {#if loaded}
-        <button class="roundButton" on:click={() => addDevice()}>Add</button>
+        
         {#if devices.length !== 0}
         <div class="DeviceSettingPanelContainer">
             
             <div>
                 <div style="display: flex;">
-                    <button class="roundButton" disabled={devices.length !== 0} on:click={() => removeDevice()}>Remove</button>
+                    <button class="roundButton" on:click={() => addDevice()}>Add</button>
+                    <button class="roundButton" disabled={!activeDevice} on:click={() => removeDevice()}>Remove</button>
+                    <button class="roundButton" disabled={!activeDevice} on:click={() => ModifyActiveDevice()}>Save</button>
                 </div>
 
                 <div style="margin-top: 5px;">
@@ -308,6 +312,7 @@ import type { Device } from "../../src/Models/deviceData";
                             />
                         </p>
                     {/if}
+                    
                 </div>
             {/if}
         </div>
