@@ -122,3 +122,8 @@
 {/each}
 <button class="roundButton" style="width: 150px;" on:click={() => addProperty()}> Add </button>
 
+<div class="DescriptionHeader">
+    Extra private properties to paste into the header file: 
+</div> 
+<TextArea bind:value={data.extra} minRows={4}
+maxRows={40}/>

@@ -216,3 +216,9 @@
     <div>There are no methods yet.</div>
 {/each}
 <button class="roundButton" style="width: 150px;" on:click={() => addMethod()}> Add Method</button>
+
+<div class="DescriptionHeader">
+    Extra private methods to paste into the header file: 
+</div> 
+<TextArea bind:value={data.extra} minRows={4}
+maxRows={40}/>

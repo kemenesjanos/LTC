@@ -65,6 +65,62 @@ function createProperty(param: Property | Parameter, isCpp: boolean): string {
 <Accordion>
 
     <div aria-orientation="vertical">
+      
+
+      <AccordionItem key = 1110>
+        <div slot='header' class='accheader'>
+          <div>
+              <h2>Parancsok</h2>
+              <p>Ezekkel tudod irányítani a program működését</p>
+          </div>
+        </div>
+        <div slot='body' class='accbody'>
+<strong><u>Típusok:</u></strong>
+
+A programozási nyelveken a változóknak megadjuk a típusát, hogy tudjuk, milyen jellegű adatokat tárolnak.
+Ha valakinek el akarjuk tárolni a nevét, akkor azt szöveg típusú változóban tudjuk tárolni, ha a korát, akkor azt szám típusban.
+
+<strong>String</strong> : szöveg ( az értéket " jelek közé kell tennünk, hogy a program tudja, hogy itt nem kódot írunk)
+  pl.: String neve = "Karcsika";
+
+<strong>int</strong> : egész szám
+  pl.: int kora = 18;
+
+<strong>double</strong> : nem egész szám (itt pontot kell használni a tizedesveszző helyett)
+  pl.: double sulya = 56.8;
+
+<strong>bool</strong> : igaz-hamis ( az értéke csak true vagy false lehet)
+  pl.: bool ferfi = true;
+
+<strong>char</strong> : karakter ( az értéket ' jelek közé kell tennünk, hogy a program tudja, hogy itt nem kódot írunk)
+  pl.: char kezdoBetuje = 'K';
+
+          <hr>
+<strong><u>Elágazás IF-ELSE:</u></strong>
+
+Amit a zárójelek közé írsz az egy feltétel amelynek az értéke lehet igaz(true) vagy hamis(false).
+Írhatsz bele olyat, hogy a==b ami megvizsgálja, hogy a egyenlő-e b-vel.
+Vagy a {"<"} b vagy a {">"} b vagy a {"<="} b vagy a {">="} b.
+Illetve olyan függvényt is használhatsz ami bool típusú eredményt ad vissza. Például: button.isButtonPushed(1).
+
+Írhatsz csak egy if részt is, a többi nem kötelező.
+
+if(IDE_ÍRSZ_EGY_ÁLLÍTÁST)
+{"{"}
+    HA_IGAZ_AKKOR_EZ_A_RÉSZ_FUT_LE
+{"}"}
+else if(MÁSIK_ÁLLÍTÁS)
+{"{"}
+    HA_IGAZ_AKKOR_EZ_A_RÉSZ_FUT_LE
+{"}"}
+else
+{"{"}
+    HA_MINDEGYIK_HAMIS_AKKOR_EZ
+{"}"}
+<hr>
+
+        </div>
+      </AccordionItem>
 
     {#each devices.devices as item}
 

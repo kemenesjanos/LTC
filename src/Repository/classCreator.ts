@@ -15,15 +15,17 @@ export function createHeader(model: Device): string {
   if (model.descriptionTabData.type !== "Nothing") {
 
     if (model.descriptionTabData.type === "I2C") {
-      pre += `\n#include "I2cController.h"\n\n`;;
+      pre += `\n#include <I2cController.h>\n\n`;;
     }
     else if (model.descriptionTabData.type === "Switch") {
-      pre += `\n#include "../SwichesController/SwichesController.h"\n\n`;
+      pre += `\n#include <SwichesController.h>\n\n`;
     }
     else if (model.descriptionTabData.type === "Sensor") {
-      pre += `\n#include "../SensorsController/SensorsController.h"\n\n`;
+      pre += `\n#include <SensorsController.h>\n\n`;
     }
   }
+
+  pre += model.descriptionTabData.includes + "\n\n";
 
 
 
@@ -138,6 +140,10 @@ function createHeaderBlock(isPublic: boolean, model: Device): string {
     });
   }
 
+  if(!isPublic && model.methodsTabData.extra){
+    pre += model.methodsTabData.extra+"\n";
+  }
+
 
   pre += `\n\t\t\t`;
 
@@ -147,6 +153,10 @@ function createHeaderBlock(isPublic: boolean, model: Device): string {
       pre += createProperty(pro,false);
       pre += `;\n\t\t`;
     });
+  }
+
+  if(!isPublic && model.methodsTabData.extra){
+    pre += model.propertiesTabData.extra+"\n";
   }
 
   return pre;

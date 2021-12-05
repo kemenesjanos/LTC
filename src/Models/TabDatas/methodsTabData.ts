@@ -1,8 +1,6 @@
 import { Method } from "../method";
 
 export class MethodsTabData {
-    methods: Method[];
-    constructor() {
-        this.methods = [new Method("name","desc")];
-    }
+    methods: Method[] = [];
+    extra: string = "";
 }

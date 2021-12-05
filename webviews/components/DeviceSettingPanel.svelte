@@ -51,7 +51,6 @@ import type { Device } from "../../src/Models/deviceData";
     // }
 
     function ModifyActiveDevice() {
-        console.log("Ez mi jó élet ?");
         tsvscode.postMessage({
                 command: "updateDevice",
                 value: JSON.stringify(activeDevice),
