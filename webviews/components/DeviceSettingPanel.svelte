@@ -153,18 +153,21 @@ import type { Device } from "../../src/Models/deviceData";
                 }
                 break;
             case "removeDevice":
+                ModifyActiveDevice();
                 tsvscode.postMessage({
                     command: "removeDevice",
                     value: JSON.stringify(event.detail.removeId),
                 });
                 break;
             case "addDevice":
+                ModifyActiveDevice();
                 tsvscode.postMessage({
                     command: "addDevice",
                     value: null,
                 });
                 break;
             case "removeProperty":
+                ModifyActiveDevice();
                 tsvscode.postMessage({
                     command: "removeProperty",
                     value: event.detail.propertyId,
@@ -172,12 +175,14 @@ import type { Device } from "../../src/Models/deviceData";
                 });
                 break;
             case "addProperty":
+                ModifyActiveDevice();
                 tsvscode.postMessage({
                     command: "addProperty",
                     deviceId: activeDevice?.id,
                 });
                 break;
             case "removeMethod":
+                ModifyActiveDevice();
                 tsvscode.postMessage({
                     command: "removeMethod",
                     value: event.detail.methodId,
@@ -185,12 +190,14 @@ import type { Device } from "../../src/Models/deviceData";
                 });
                 break;
             case "addMethod":
+                ModifyActiveDevice();
                 tsvscode.postMessage({
                     command: "addMethod",
                     deviceId: activeDevice?.id,
                 });
                 break;
             case "removeParameter":
+                ModifyActiveDevice();
                 tsvscode.postMessage({
                     command: "removeParameter",
                     value: event.detail.parameterId,
@@ -199,6 +206,7 @@ import type { Device } from "../../src/Models/deviceData";
                 });
                 break;
             case "addParameter":
+                ModifyActiveDevice();
                 tsvscode.postMessage({
                     command: "addParameter",
                     value: event.detail.methodId,

@@ -7,9 +7,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
 
-  //////////////////////////////////////////////////////////////////////////////
 	public model?: DevicesData;
-	//////////////////////////////////////////////////////////////////////////////
 
   constructor(private readonly _extensionUri: vscode.Uri, model: DevicesData) {
 
@@ -49,12 +47,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           vscode.commands.executeCommand('LTC.newLTCProject');
           break;
         }
-        case 'reInit':{
-          vscode.commands.executeCommand('LTC.reInit');
-          break;
-        }
-        case 'openLTCProject':{
-          vscode.commands.executeCommand('LTC.openLTCProject');
+        case 'openLTCProjects':{
+          vscode.commands.executeCommand('LTC.openLTCProjects');
           break;
         }
         case 'init-view':

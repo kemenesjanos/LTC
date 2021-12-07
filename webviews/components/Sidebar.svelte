@@ -7,18 +7,6 @@
 
     let loaded = false;
 
-    // let jsonData = {
-    //     devices: [
-    //         {
-    //             descriptionTabData: { name: "" },
-    //             propertiesTabData: {},
-    //             methodsTabData: {},
-    //             classTabData: {},
-    //             id: "",
-    //         },
-    //     ],
-    // };
-
     onMount(() => {
         tsvscode.postMessage({
             command: "init-view",
@@ -46,6 +34,11 @@
     on:click={() => {
         tsvscode.postMessage({ command: "newLTCProject", value: "" });
     }}>New LTC Project</button
+>
+<button class="roundButton"
+    on:click={() => {
+        tsvscode.postMessage({ command: "openLTCProjects", value: "" });
+    }}>Open LTC Projects</button
 >
 
 {#if loaded && devices.devices.length !== 0}
