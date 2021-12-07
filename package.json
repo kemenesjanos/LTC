@@ -50,17 +50,12 @@
         "category": "LTC"
       },
       {
-        "command": "LTC.reInit",
-        "title": "Re init the project",
-        "category": "LTC"
-      },
-      {
         "command": "LTC.newLTCProject",
         "title": "Create new LTC Project",
         "category": "LTC"
       },
       {
-        "command": "LTC.openLTCProject",
+        "command": "LTC.openLTCProjects",
         "title": "Open LTC Project",
         "category": "LTC"
       },
@@ -116,6 +111,7 @@
   },
   "dependencies": {
     "@smui/drawer": "^4.2.0",
+    "fs-extra": "^10.0.0",
     "nvm": "0.0.4",
     "rollup-plugin-typescript2": "^0.30.0",
     "smelte": "^1.1.6",

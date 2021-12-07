@@ -103,6 +103,7 @@ export class DeviceSettingPanel {
 						Object.assign(this.repo?.devicesData.devices, JSON.parse(message.value));
 						break;
 					case 'updateDevice':
+						
 						this.updateDevice(JSON.parse(message.value));
 						break;
 					case 'removeDevice':
