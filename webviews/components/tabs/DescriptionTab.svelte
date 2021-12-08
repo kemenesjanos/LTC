@@ -87,6 +87,13 @@
             <TextArea bind:value={data.example} minRows={4}
             maxRows={40}/>
         </div>
+        <div>
+            <div class="DescriptionHeader">
+                Includes(this part will paste to the header file): 
+            </div>
+            <TextArea bind:value={data.includes} minRows={4}
+            maxRows={40}/>
+        </div>
 
 </div>
 

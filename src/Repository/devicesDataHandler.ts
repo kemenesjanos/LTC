@@ -35,6 +35,10 @@ export class DevicesDataHandler {
      * removeDevice
      */
     public removeDevice(removeDeviceId: string): boolean {
+        let tmp = this.devicesData.devices.find(x => x.id === removeDeviceId);
+        if(tmp?.isProtected){
+            return false;
+        }
         let r = this.devicesData.devices.length;
         this.devicesData.devices = this.devicesData.devices.filter(dev => dev.id !== removeDeviceId);
         return r === this.devicesData.devices.length +1;
@@ -51,6 +55,9 @@ export class DevicesDataHandler {
      * updateDevice
      */
     public updateDevice(oldId: string, newDevice: Device): boolean {
+        if(newDevice.isProtected){
+            return false;
+        }
         var i = this.devicesData.devices.indexOf(this.devicesData.devices.filter( x => x.id === oldId)[0]);
         if (this.removeDevice(oldId)) {
             return this.addDeviceAtIndex(newDevice, i);
@@ -64,6 +71,10 @@ export class DevicesDataHandler {
      * addProperty
      */
     public addProperty(deviceId: string): boolean {
+        let tmp = this.devicesData.devices.find(x => x.id === deviceId);
+        if(tmp?.isProtected){
+            return false;
+        }
         if (this.devicesData.devices.find(x => x.id === deviceId)) {
             this.devicesData.devices.find(x => x.id === deviceId)?.propertiesTabData.properties.push(new Property("New Property"));
             return true;
@@ -75,7 +86,10 @@ export class DevicesDataHandler {
      * removeProperty
      */
     public removeProperty(propertyId: string, deviceId: string): boolean {
-
+        let tmp = this.devicesData.devices.find(x => x.id === deviceId);
+        if(tmp?.isProtected){
+            return false;
+        }
         var dev = this.devicesData.devices.findIndex(x => x.id === deviceId);
         if (dev !== -1) {
             var prop = this.devicesData.devices[dev].propertiesTabData.properties.findIndex(x => x.id === propertyId);
@@ -91,6 +105,10 @@ export class DevicesDataHandler {
      * addMethod
      */
     public addMethod(deviceId: string): boolean {
+        let tmp = this.devicesData.devices.find(x => x.id === deviceId);
+        if(tmp?.isProtected){
+            return false;
+        }
         if (this.devicesData.devices.find(x => x.id === deviceId)) {
             this.devicesData.devices.find(x => x.id === deviceId)?.methodsTabData.methods.push(new Method("NewMethod", "Description"));
             return true;
@@ -102,6 +120,11 @@ export class DevicesDataHandler {
      * removeMethod
      */
     public removeMethod(methodId: string, deviceId: string): boolean {
+
+        let tmp = this.devicesData.devices.find(x => x.id === deviceId);
+        if(tmp?.isProtected){
+            return false;
+        }
 
         var dev = this.devicesData.devices.findIndex(x => x.id === deviceId);
         if (dev !== -1) {
@@ -118,6 +141,10 @@ export class DevicesDataHandler {
      * addParameter
      */
     public addParameter(deviceId: string, methodId: string): boolean {
+        let tmp = this.devicesData.devices.find(x => x.id === deviceId);
+        if(tmp?.isProtected){
+            return false;
+        }
         if (this.devicesData.devices.find(x => x.id === deviceId)) {
             if (this.devicesData.devices.find(x => x.id === deviceId)?.methodsTabData.methods.find(y=> y.id === methodId)) {
                 this.devicesData.devices.find(x => x.id === deviceId)?.methodsTabData.methods.find(y=> y.id === methodId)?.parameters.push(new Parameter());
@@ -131,6 +158,11 @@ export class DevicesDataHandler {
      * removeParameter
      */
     public removeParameter(paramId: string, methodId: string, deviceId: string): boolean {
+
+        let tmp = this.devicesData.devices.find(x => x.id === deviceId);
+        if(tmp?.isProtected){
+            return false;
+        }
 
         var dev = this.devicesData.devices.findIndex(x => x.id === deviceId);
         if (dev !== -1) {
@@ -151,6 +183,9 @@ export class DevicesDataHandler {
      */
     public static validateModel(dev: Device) : string {
         var res = "Invalid: \n";
+        if (dev.isProtected) {
+            res += "Protected device.\n";
+        }
         if(this.validTitle(dev.descriptionTabData.name) || dev.descriptionTabData.name === "")
         {
             res += "Device name in DESCRIPTION.\n";
