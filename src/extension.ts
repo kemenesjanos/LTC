@@ -82,6 +82,18 @@ export function activate(context: vscode.ExtensionContext) {
     const filePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'Data', 'baseDevices.json');
     let rawdata = fs.readFileSync(filePath.fsPath);
     model.devices = JSON.parse(rawdata.toString());
+    const fse = require('fs-extra');
+    const srcDir = vscode.Uri.joinPath(context.extensionUri, 'src', 'Data', 'BaseDevices').fsPath;
+    const destDir = context.globalState.get<vscode.Uri>("arduinoLibrariesPath")?.fsPath;
+
+    // To copy a folder or file  
+    fse.copySync(srcDir, destDir, { overwrite: true }, function (err: any) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("success to copy base devices!");
+      }
+    });
   }
 
   const item = vscode.window.createStatusBarItem(
@@ -189,7 +201,7 @@ void loop(){
           canSelectFiles: false,
           canSelectMany: false,
           openLabel: "Select",
-          title: "Select your arduino libraries folder!\n(Default: C:\\Users\\USERNAME\\Documents\\Arduino\\libraries)"
+          title: "Select your arduino libraries folder!\n (Default: C:\\Users\\USERNAME\\Documents\\Arduino\\libraries)"
         });
 
       if (!answer) {
@@ -356,7 +368,7 @@ void loop(){
       var librariesPath = context.globalState.get<vscode.Uri>("arduinoLibrariesPath");
 
       if (librariesPath) {
-        var filePath = vscode.Uri.joinPath(vscode.Uri.file(librariesPath.path), "LTCfiles.h");
+        var filePath = vscode.Uri.joinPath(vscode.Uri.file(librariesPath.path), "LTCfiles", "LTCfiles.h");
 
         let initString = "#include <Arduino.h>\n";
         model.devices.forEach(dev => {

@@ -95,7 +95,55 @@ Ha valakinek el akarjuk tárolni a nevét, akkor azt szöveg típusú változób
 <strong>char</strong> : karakter ( az értéket ' jelek közé kell tennünk, hogy a program tudja, hogy itt nem kódot írunk)
   pl.: char kezdoBetuje = 'K';
 
+<strong>Tömbbök</strong> : ez bármelyik fentebbi típussal képezhető.
+  Egy tömb több azonos típusú értéket fog össze.
+  A tömb egyes elemeit sorszámmal tudjuk kezelni, de a sorszám az 0-val indul.
+  
+  Így lehet létrehozni egy három elemű tömböt ami neveket tárol:
+
+    String[] nevek = new String[3];
+    nevek[0] = "Kati";
+    nevek[1] = "Jóska";
+    nevek[2] = "Emő";
+
+  Vagy ha egyből megtudjuk adni az adatokat, akkor így:
+
+    String[] nevek = {"{"} "Kati", "Jóska", "Emő" {"}"};
+
+  A használata során oda kell figyelni, mert ha nagyobb számmal kérdezzük le mint ahány elemű, akkor hibára fog futni a kódunk.
+
           <hr>
+<strong><u>delay:</u></strong>
+
+A delay egy olyan metódus amit ha meghívsz annyi milliszekundumot vár amennyit paraméterként megkap.
+  Például vár egy másodpercet:
+  delay(1000);
+<hr>
+
+<strong><u>For ciklus:</u></strong>
+
+A for ciklus segítségével a kapcsos-zárójelek közé írt kódot valahányszor meg tudod ismételni.
+A for felépítése három részből áll amiket a ;-jel választ el.
+Az első az inícializáció, ami egyszer fut le az elején.
+A második a feltétel, ameddig az igaz, addig ismétlődjön.
+A harmadik pedig amit minden körben elvégez.
+
+Általában az alábbi formában szoktuk használni:
+
+for (int i = 0; i {"<"} 10; i++) {"{"}
+  // kód
+{"}"}
+
+Ez a kód 10-szer fut le. A belsejében tudjuk használni az i változót, amelyik azt mutatja meg, hogy hanyadjára fut le a kódunk (0-val kezdődik).
+Érdemes lehet úgy is használni, hogy egy tömb minden elemével csináljon valamit:
+
+int[] tomb = {"{"}0,1,2,3,4{"}"};
+for (int i = 0; i {"<"} tomb.length; i++) {"{"}
+  Console.println(tomb[i]);
+{"}"}
+
+<hr>
+
 <strong><u>Elágazás IF-ELSE:</u></strong>
 
 Amit a zárójelek közé írsz az egy feltétel amelynek az értéke lehet igaz(true) vagy hamis(false).
@@ -118,8 +166,17 @@ else
     HA_MINDEGYIK_HAMIS_AKKOR_EZ
 {"}"}
 <hr>
+<strong><u>While:</u></strong>
+
+A kapcsos-zárójelek közé írt kódot, addig futtatja ameddig a zárojelek közé írt állítás igaz, amikor hamis lesz, akkor kilép belőle.
+
+while(button.isPushed(1)){"{"}
+  delay(100);
+{"}"}
+<hr>
 
         </div>
+        <hr>
       </AccordionItem>
 
     {#each devices.devices as item}

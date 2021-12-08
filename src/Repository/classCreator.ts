@@ -174,6 +174,7 @@ export function createCpp(model: Device, currentCppText?: string): string {
   res += `#include "` + model.descriptionTabData.name + `.h"\n\n`;
 
   model.methodsTabData.methods.forEach(meth => {
+    res += comment(meth, "Method") + "\n";
     res += createMethod(meth, true, model.descriptionTabData.name);
     res += "{\n"+meth.body+"\n}\n\n";
     
