@@ -11,7 +11,6 @@
 
 </script>
     <div>
-        <div>Class</div>
 </div>
 
     
