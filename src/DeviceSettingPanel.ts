@@ -57,11 +57,6 @@ export class DeviceSettingPanel {
 
 	}
 
-	// public static kill() {
-	// 	DeviceSettingPanel.currentPanel?.dispose();
-	// 	DeviceSettingPanel.currentPanel = undefined;
-	// }
-
 	public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
 		DeviceSettingPanel.currentPanel = new DeviceSettingPanel(panel, extensionUri);
 	}

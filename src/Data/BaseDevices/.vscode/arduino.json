@@ -1,0 +1,6 @@
+{
+    "sketch": "ShiftRegister74HC595-master\\examples\\example\\example.ino",
+    "port": "COM5",
+    "board": "arduino:avr:uno",
+    "output": "out"
+}

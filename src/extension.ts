@@ -74,7 +74,6 @@ export function activate(context: vscode.ExtensionContext) {
     //   } 
     //   console.log('Write model to json');
     // });
-
   }
   else {
     //First initialization
@@ -309,22 +308,6 @@ void loop(){
     )
   );
 
-
-
-
-  //If there is already an opened panel it will show just that
-  // if (vscode.window.registerWebviewPanelSerializer) {
-
-  //   // Make sure we register a serializer in activation event
-  //   vscode.window.registerWebviewPanelSerializer(DeviceSettingPanel.viewType, {
-  //     async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: any) {
-  //       console.log(`Got state: ${state}`);
-  //       // Reset the webview options so we use latest uri for `localResourceRoots`.
-  //       webviewPanel.webview.options = getWebviewOptions(context.extensionUri);
-  //       DeviceSettingPanel.revive(webviewPanel, context.extensionUri);
-  //     }
-  //   });
-  // }
 
   function createClass(value: string) {
     var tmp = new Device();

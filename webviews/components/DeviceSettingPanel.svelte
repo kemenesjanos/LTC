@@ -10,17 +10,6 @@ import type { Device } from "../../src/Models/deviceData";
 
     let loaded = false;
 
-    // let jsonData = {
-    //     devices: [
-    //         {
-    //             descriptionTabData: { name: "" },
-    //             propertiesTabData: {},
-    //             methodsTabData: {},
-    //             classTabData: {},
-    //             id: "",
-    //         },
-    //     ],
-    // };
     let devices: Device[];
 
     let items = ["Description", "Properties", "Methods", "Class"];
@@ -28,33 +17,14 @@ import type { Device } from "../../src/Models/deviceData";
 
     let activeDevice: Device | null = null;
 
-    // let actualDevice = "";
-    // let actualDeviceSN = 0;
-
-    // $: {
-    //     if (loaded) {
-    //         actualDevice = devices[actualDeviceSN].id;
-    //     }
-    // }
-
-    // $: {
-    //     if (loaded && activeDevice && activeDevice.id !== "") {
-    //                 tsvscode.postMessage({
-    //                     command: "updateDevice",
-    //                     value: JSON.stringify(activeDevice),
-    //                 });
-    //         // tsvscode.postMessage({
-    //         //     command: "save",
-    //         // });
-    //         //tsvscode.setState({ state: {activeDevice: JSON.stringify(jsonData)} });
-    //     }
-    // }
-
     function ModifyActiveDevice() {
-        tsvscode.postMessage({
+        if(!activeDevice?.isProtected){
+            tsvscode.postMessage({
                 command: "updateDevice",
                 value: JSON.stringify(activeDevice),
             });
+        }
+        
             
     }
 
@@ -117,15 +87,6 @@ import type { Device } from "../../src/Models/deviceData";
                 loaded = true;
 
                 break;
-            /* case "update":
-                const value = message.value;
-                // Update our webview's content
-                jsonData = JSON.parse(value);
-                // Then persist state information.
-                // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
-                tsvscode.setState({ value });
-
-                return; */
         }
     });
 
@@ -219,19 +180,6 @@ import type { Device } from "../../src/Models/deviceData";
         }
     }
 
-    
-    // if (tsvscode.getState()?.value.activeDevice) {
-    //     console.log(JSON.parse(tsvscode.getState()?.value.activeDevice))
-    // }
-
-    // $: {
-    //     if (devices.length !== 0 && activeDevice) {
-    //         devices[
-    //             devices.findIndex((x) => x.id === activeDevice.id)
-    //         ] = activeDevice;
-    //     }
-    // }
-
     const tabChange = (e: { detail: string }) => {ModifyActiveDevice(); activeItem = e.detail; };
 
     const vertTabChange = (e: { detail: any }) => {ModifyActiveDevice(); activeDevice = devices.find((x) => x.id === e.detail.id)!;};
@@ -268,7 +216,7 @@ import type { Device } from "../../src/Models/deviceData";
         <div class="DeviceSettingPanelContainer">
             
             <div>
-                <div style="display: flex;">
+                <div style="display: flex; width: 100%;">
                     <button class="roundButton" on:click={() => addDevice()}>Add</button>
                     <button class="roundButton" disabled={!activeDevice} on:click={() => removeDevice()}>Remove</button>
                     <button class="roundButton" disabled={!activeDevice} on:click={() => ModifyActiveDevice()}>Save</button>
