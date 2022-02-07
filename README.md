@@ -2,6 +2,12 @@
 
 This is the LTC (Learn To Code) VSCode extension for programming education.
 
+## Images
+
+![](images/DeviceHandlerPage.png)
+![](images/MainPage.png)
+![](images/Device.jpg)
+
 ## Features
 
 You can handle and create new arduino libraries with Devices setting panel. You can add descriptions to every method, and parameter. In the Device search panel there will be the summery about your components.
