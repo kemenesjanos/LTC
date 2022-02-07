@@ -2,16 +2,24 @@
 
 This is the LTC (Learn To Code) VSCode extension for programming education.
 
+## Features
+
+You can handle and create new arduino libraries with Devices setting panel. You can add descriptions to every method, and parameter. In the Device search panel there will be the summery about your components.
+During the programming, your descriptions will guide the user through your methods. 
+
 ## Images
 
 <img src="images/DeviceHandlerPage.png" width="800">
 <img src="images/MainPage.png" width="800">
 <img src="images/Device.jpg" width="800">
 
-## Features
+## Example - Reversing radar
 
-You can handle and create new arduino libraries with Devices setting panel. You can add descriptions to every method, and parameter. In the Device search panel there will be the summery about your components.
-During the programming, your descriptions will guide the user through your methods. 
+In this example the task is to implement a reversing radar.
+The built in rgb led lights up red if the measured distance is less then 20 cm and green otherwise.
+
+<img src="images/Example.png" width="800">
+
 
 ## Requirements
 
