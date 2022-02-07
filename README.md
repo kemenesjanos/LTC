@@ -4,9 +4,9 @@ This is the LTC (Learn To Code) VSCode extension for programming education.
 
 ## Images
 
-<img src="images/DeviceHandlerPage.png" width="300">
-<img src="images/MainPage.png" width="300">
-<img src="images/Device.jpg" width="300">
+<img src="images/DeviceHandlerPage.png" width="800">
+<img src="images/MainPage.png" width="800">
+<img src="images/Device.jpg" width="800">
 
 ## Features
 
